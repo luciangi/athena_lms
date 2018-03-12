@@ -1,6 +1,5 @@
-package com.nyx.athena.repository
+package com.nyx.athena.course
 
-import com.nyx.athena.domain.Course
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.rest.core.annotation.RepositoryRestResource
 import java.util.*

@@ -1,4 +1,4 @@
-package com.nyx.athena.domain
+package com.nyx.athena.course
 
 import org.hibernate.annotations.GenericGenerator
 import org.hibernate.annotations.Type

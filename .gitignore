@@ -1,9 +1,11 @@
 ### IntelliJ
-/out/
-.idea
 *.iml
+/.idea/*
+!/.idea/codeStyles/Project.xml
+!/.idea/codeStyles/codeStyleConfig.xml
 
 ### Gradle
+/out/
 /.gradle/
 /build/
 

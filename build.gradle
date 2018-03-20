@@ -57,7 +57,8 @@ dependencies {
 // TODO: uncomment when needed
 //            "org.springframework.boot:spring-boot-starter-security",
             "io.springfox:springfox-swagger2:$springfoxSwaggerVersion",
-            "io.springfox:springfox-data-rest:$springfoxSwaggerVersion"
+            "io.springfox:springfox-data-rest:$springfoxSwaggerVersion",
+            "io.springfox:springfox-swagger-ui:$springfoxSwaggerVersion"
     )
     runtime(
             "org.postgresql:postgresql",

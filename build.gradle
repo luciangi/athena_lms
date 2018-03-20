@@ -48,7 +48,7 @@ dependencies {
     compile(
             "org.jetbrains.kotlin:kotlin-stdlib-jdk8",
             "org.jetbrains.kotlin:kotlin-reflect",
-            "com.fasterxml.jackson.module:jackson-module-kotlin",
+            "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.4.1",
             "org.springframework.boot:spring-boot-devtools",
             "org.springframework.boot:spring-boot-starter-actuator",
             "org.springframework.boot:spring-boot-starter-data-jpa",

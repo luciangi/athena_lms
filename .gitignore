@@ -1,0 +1,18 @@
+### IntelliJ
+*.iml
+/.idea/*
+!/.idea/codeStyles/Project.xml
+!/.idea/codeStyles/codeStyleConfig.xml
+
+### Gradle
+/out/
+/.gradle/
+/build/
+
+
+### Node
+/node_modules/
+package-lock.json
+
+### Webpack
+/src/main/resources/static/build/

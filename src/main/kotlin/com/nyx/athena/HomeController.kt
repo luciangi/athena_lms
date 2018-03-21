@@ -5,6 +5,6 @@ import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
 class HomeController {
-    @RequestMapping("/")
+    @RequestMapping(value = ["/", "/user/**", "/admin/**"])
     fun index(): String = "build/index.html"
 }

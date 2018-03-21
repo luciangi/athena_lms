@@ -1,4 +1,4 @@
-const {resolve} = require("path");
+const { resolve } = require("path");
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
 
@@ -10,20 +10,21 @@ module.exports = (env, argv) => ({
         filename: argv.mode === "production" ? "[name].[hash].bundle.js" : "[name].bundle.js"
     },
     resolve: {
-        extensions: [".js", ".jsx"],
+        extensions: [ ".js", ".jsx" ]
     },
     module: {
         rules: [
             {
                 test: /\.jsx$/,
                 include: [
-                    resolve(__dirname, "src/main/js"),
+                    resolve(__dirname, "src/main/js")
                 ],
                 use: {
                     loader: "babel-loader",
                     query: {
                         cacheDirectory: true,
-                        presets: ["env", "react"]
+                        presets: [ "env", "react" ],
+                        plugins: [ "transform-decorators-legacy" ]
                     }
                 }
             },
@@ -32,20 +33,24 @@ module.exports = (env, argv) => ({
                 use: [
                     {
                         loader: "html-loader",
-                        options: {minimize: true}
+                        options: { minimize: true }
                     }
                 ]
             },
             {
-                test: /\.css$/,
-                use: ["css-loader/locals"]
+                test: /(\.css$)/,
+                loaders: [ "style-loader", "css-loader" ]
+            },
+            {
+                test: /\.(png|woff|woff2|eot|ttf|svg)$/,
+                loader: "url-loader?limit=100000"
             }
         ]
     },
     plugins: [
         new HtmlWebPackPlugin({
-            template: resolve(__dirname, "src/main/js/index.html"),
+            template: resolve(__dirname, "src/main/js/index.html")
         }),
-        new CleanWebpackPlugin(resolve(__dirname, "src/main/resources/static/build/")),
+        new CleanWebpackPlugin(resolve(__dirname, "src/main/resources/static/build/"))
     ]
 });

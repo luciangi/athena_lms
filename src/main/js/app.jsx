@@ -1,21 +1,22 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./app.css";
-import "typeface-roboto";
-import { Provider } from "react-redux";
-import store from "./store"
-import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
-import darkBaseTheme from "material-ui/styles/baseThemes/darkBaseTheme";
-import getMuiTheme from "material-ui/styles/getMuiTheme";
 import injectTapEventPlugin from "react-tap-event-plugin";
-import Main from "./components/Main";
+import "typeface-roboto";
+import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
+import getMuiTheme from "material-ui/styles/getMuiTheme";
+import "./app.css";
+import Layout from "./components/Layout";
+import { Provider } from "react-redux";
+import store from "./redux/store"
+import Notification from "./components/Notification";
 
 injectTapEventPlugin();
 
 const App = () => (
     <Provider store={store}>
-        <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
-            <Main/>
+        <MuiThemeProvider muiTheme={getMuiTheme()}>
+            <Layout/>
+            <Notification/>
         </MuiThemeProvider>
     </Provider>
 );

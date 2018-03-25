@@ -2,10 +2,10 @@ import { userConstants } from "../constants";
 
 export default (state = { user: null }, action) => {
     switch (action.type) {
-        case userConstants.LOGIN: {
-            return { ...state, user: { username: action.username, password: action.password } }
+        case userConstants.USER_LOGIN: {
+            return { ...state, user: action.user }
         }
-        case userConstants.LOGOUT: {
+        case userConstants.USER_LOGOUT: {
             return { ...state, user: null }
         }
     }

@@ -10,7 +10,7 @@ import {
 import Login from "./Login";
 import { SocialPersonOutline } from "material-ui/svg-icons/index";
 import { connect } from "react-redux";
-import { logout } from "../redux/actions";
+import { logoutUser } from "../redux/actions/index";
 
 @connect((store) => ({ user: store.auth.user }))
 class Menu extends React.Component {
@@ -31,10 +31,13 @@ class Menu extends React.Component {
         const logInButton = <FlatButton label="Login" onClick={() => this.setState({ loginOpened: true })}/>;
         const logOutButton = (
             <IconMenu
-                iconButtonElement={<IconButton><SocialPersonOutline/></IconButton>}
+                iconButtonElement={<div>
+                    <span>{isLoggedIn && this.props.user.username}</span>
+                    <IconButton><SocialPersonOutline/></IconButton>
+                </div>}
                 anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
                 targetOrigin={{ horizontal: "right", vertical: "top" }}>
-                <MenuItem primaryText="Logout" onClick={() => this.props.dispatch(logout())}/>
+                <MenuItem primaryText="Logout" onClick={() => this.props.dispatch(logoutUser())}/>
             </IconMenu>
         );
 

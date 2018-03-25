@@ -2,10 +2,10 @@ import { notificationConstants } from "../constants";
 
 export default (state = { message: "" }, action) => {
     switch (action.type) {
-        case notificationConstants.OPEN_NOTIFICATION: {
+        case notificationConstants.NOTIFICATION_OPEN: {
             return { ...state, message: action.message }
         }
-        case notificationConstants.CLOSE_NOTIFICATION: {
+        case notificationConstants.NOTIFICATION_CLOSE: {
             return { ...state, message: "" }
         }
     }

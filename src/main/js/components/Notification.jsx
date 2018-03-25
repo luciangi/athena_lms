@@ -1,7 +1,7 @@
 import React from "react";
 import { Snackbar } from "material-ui";
 import { connect } from "react-redux";
-import { closeNotification } from "../redux/actions";
+import { closeNotification } from "../redux/actions/index";
 import { ContentClear } from "material-ui/svg-icons/index";
 import { white } from "material-ui/styles/colors";
 

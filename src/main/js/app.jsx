@@ -15,8 +15,10 @@ injectTapEventPlugin();
 const App = () => (
     <Provider store={store}>
         <MuiThemeProvider muiTheme={getMuiTheme()}>
-            <Layout/>
-            <Notification/>
+            <div>
+                <Layout/>
+                <Notification/>
+            </div>
         </MuiThemeProvider>
     </Provider>
 );

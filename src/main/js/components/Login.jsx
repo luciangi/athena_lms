@@ -6,7 +6,7 @@ import {
     TextField
 } from "material-ui";
 import { connect } from "react-redux";
-import { login } from "../redux/actions";
+import { loginUser } from "../redux/actions/index";
 
 @connect(() => ({}))
 class Login extends React.Component {
@@ -21,7 +21,7 @@ class Login extends React.Component {
     render() {
         const { opened, actions: { closeLogin } } = this.props;
         const submit = () => {
-            this.props.dispatch(login(this.state.username, this.state.password));
+            this.props.dispatch(loginUser(this.state.username, this.state.password));
             closeLogin()
         };
 

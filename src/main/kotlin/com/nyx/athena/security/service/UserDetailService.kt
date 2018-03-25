@@ -20,6 +20,4 @@ class UserDetailService : UserDetailsService {
         return User(username, currentUser.password,
                 createAuthorityList(*fold))
     }
-
-
 }

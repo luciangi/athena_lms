@@ -1,4 +1,4 @@
-package com.nyx.athena.security.configuration
+package com.nyx.athena.security
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier

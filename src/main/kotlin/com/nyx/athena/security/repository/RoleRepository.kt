@@ -7,5 +7,5 @@ import java.util.*
 
 @Repository
 interface RoleRepository : CrudRepository<Role, UUID> {
-    fun findByPrivilege(privilege: String): Role
+    fun findByAuthority(authority: String): Role
 }

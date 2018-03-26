@@ -1,7 +1,7 @@
 import { notificationConstants } from "../constants";
 
-export const openNotification = (message) => {
-    return { type: notificationConstants.NOTIFICATION_OPEN, message }
+export const openNotification = (message, error) => {
+    return { type: notificationConstants.NOTIFICATION_OPEN, message, error }
 };
 
 export const closeNotification = () => {

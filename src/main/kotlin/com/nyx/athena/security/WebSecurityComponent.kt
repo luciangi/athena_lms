@@ -18,6 +18,9 @@ open class WebSecurityComponent : WebSecurityConfigurerAdapter() {
     private lateinit var dataSource: DataSource
 
     @Autowired
+    private lateinit var userDetailService: UserDetailService
+
+    @Autowired
     private lateinit var passwordEncoder: PasswordEncoder
 
     @Throws(Exception::class)
@@ -38,6 +41,8 @@ open class WebSecurityComponent : WebSecurityConfigurerAdapter() {
                 .deleteCookies("JSESSIONID")
                 .and()
                 .exceptionHandling().authenticationEntryPoint(Http403ForbiddenEntryPoint())
+                .and()
+                .userDetailsService(userDetailService)
     }
 
     @Throws(Exception::class)

@@ -1,6 +1,9 @@
 export const userConstants = {
-    USER_LOGIN: "USER_LOGIN",
-    USER_LOGOUT: "USER_LOGOUT"
+    LOGIN_OPEN: "LOGIN_OPEN",
+    LOGIN_CLOSE: "LOGIN_CLOSE",
+    LOGIN_ERROR: "LOGIN_ERROR",
+    LOGIN_SUCCESS: "LOGIN_SUCCESS",
+    LOGOUT_SUCCESS: "LOGOUT_SUCCESS"
 };
 
 export const notificationConstants = {

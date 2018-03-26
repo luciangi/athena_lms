@@ -12,17 +12,13 @@ export const closeLogin = () => {
 
 export const loginUser = (username, password) => {
     return (dispatch) => {
-        let user = null;
         const bodyFormData = new FormData();
         bodyFormData.append("username", username);
         bodyFormData.append("password", password);
 
         axios.post("/login", bodyFormData)
             .then(function () {
-                user = { username, password };
-                dispatch(loginSuccess(user));
-                dispatch(closeLogin());
-                dispatch(openNotification(`Hello ${username}`));
+                dispatch(loadUser())
             })
             .catch(function (error) {
                 console.error(error.response);
@@ -39,6 +35,24 @@ export const loginError = () => {
 export const loginSuccess = (user) => {
     return { type: userConstants.LOGIN_SUCCESS, user: user }
 };
+
+export const loadUser = () => {
+    return (dispatch) => {
+        axios.get("/user")
+            .then(function (response) {
+                dispatch(loginSuccess(response.data));
+                dispatch(openNotification(`Hello ${response.data.username}`));
+                dispatch(closeLogin());
+
+            })
+            .catch(function (error) {
+                console.error(error.response);
+                dispatch(loginError());
+                dispatch(openNotification(`Login error: ${error.response.data.message}`, true));
+            });
+    }
+};
+
 export const logoutUser = () => {
     return (dispatch) => {
         axios.get("/logout")

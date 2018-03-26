@@ -27,10 +27,11 @@ open class UserDetailService : UserDetailsService {
     @Throws(UsernameNotFoundException::class)
     override fun loadUserByUsername(username: String): UserDetails {
         val user: User = repository.findByUsername(username) ?: throw UsernameNotFoundException("User $username not found")
-        val fold = user.roles.fold(ArrayList<String>(),
-                { accumulator, item -> accumulator.add(item.toString()); accumulator }).toTypedArray()
+        val authorities = user.roles
+                .fold(ArrayList<String>(), { accumulator, item -> accumulator.add(item.authority); accumulator })
+                .toTypedArray()
         return org.springframework.security.core.userdetails.User(username,
                 user.password,
-                AuthorityUtils.createAuthorityList(*fold))
+                AuthorityUtils.createAuthorityList(*authorities))
     }
 }

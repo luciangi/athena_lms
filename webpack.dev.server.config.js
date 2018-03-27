@@ -3,9 +3,12 @@ const HtmlWebPackPlugin = require("html-webpack-plugin");
 
 module.exports = (env, argv) => ({
     devServer: {
-        port: 3000
+        port: 3000,
+        proxy: [ {
+            context: [ "/**" ],
+            target: "http://localhost:8080"
+        } ]
     },
-
     entry: resolve(__dirname, "src/main/js/app.jsx"),
     output: {
         path: resolve(__dirname, "build"),

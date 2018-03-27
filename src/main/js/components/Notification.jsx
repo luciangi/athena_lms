@@ -17,7 +17,7 @@ const Notification = (props) => {
             open={message !== ""}
             message={message}
             autoHideDuration={6000}
-            bodyStyle={{ minWidth: 1000 }}
+            bodyStyle={{ minWidth: 800 }}
             contentStyle={{ color: error ? red500 : white }}
             action={<ContentClear style={{ marginTop: 5, color: props.muiTheme.palette.accent1Color }}/>}
             onActionClick={close}

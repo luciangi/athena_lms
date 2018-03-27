@@ -3,7 +3,6 @@ import {
     AppBar,
     Drawer,
     FlatButton,
-    IconButton,
     IconMenu,
     MenuItem
 } from "material-ui";
@@ -14,6 +13,7 @@ import {
     logoutUser,
     openLogin
 } from "../redux/actions";
+import { white } from "material-ui/styles/colors";
 
 @connect((store) => ({ user: store.auth.user }))
 class Menu extends React.Component {
@@ -32,10 +32,16 @@ class Menu extends React.Component {
         const logInButton = <FlatButton label="Login" onClick={() => this.props.dispatch(openLogin())}/>;
         const logOutButton = (
             <IconMenu
-                iconButtonElement={<div>
-                    <span>{isLoggedIn && this.props.user.username}</span>
-                    <IconButton><SocialPersonOutline/></IconButton>
-                </div>}
+                iconButtonElement={
+                    <FlatButton
+                        label={isLoggedIn && this.props.user.username}
+                        labelPosition="before"
+                        secondary={false}
+                        style={{ marginTop: 7 }}
+                        labelStyle={{ color: white }}
+                        icon={<SocialPersonOutline color={white}/>}
+                    />
+                }
                 anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
                 targetOrigin={{ horizontal: "right", vertical: "top" }}>
                 <MenuItem primaryText="Logout" onClick={() => this.props.dispatch(logoutUser())}/>

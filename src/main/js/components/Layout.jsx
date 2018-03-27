@@ -3,13 +3,13 @@ import Menu from "./Menu";
 import { connect } from "react-redux";
 import { loadUser } from "../redux/actions";
 
-@connect(() => {
-})
+@connect((store) => ({
+    user: store.auth.user
+}))
 class Layout extends React.Component {
     componentWillMount() {
-        debugger
-        if (localStorage.getItem("jsessionId")) {
-            this.props.dispatch(loadUser)
+        if (!this.props.user) {
+            this.props.dispatch(loadUser())
         }
     }
 

@@ -1,14 +1,17 @@
 package com.nyx.athena.security
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler
 import org.springframework.stereotype.Component
+import javax.servlet.http.HttpServletResponse
+import javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED
 import javax.sql.DataSource
 
 @Component
@@ -32,8 +35,15 @@ open class WebSecurityComponent : WebSecurityConfigurerAdapter() {
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().loginPage("/login")
-                .failureHandler(SimpleUrlAuthenticationFailureHandler())
-                .defaultSuccessUrl("/").permitAll()
+                .failureHandler({ _, response: HttpServletResponse, _ ->
+                    response.sendError(SC_UNAUTHORIZED, "Bad credentials")
+                })
+                .successHandler({ _, response: HttpServletResponse, _ ->
+                    response.contentType = APPLICATION_JSON_VALUE
+                    val out = response.writer
+                    out.print(ObjectMapper().writeValueAsString(userDetailService.loadUserResponse()))
+                    out.flush()
+                }).permitAll()
                 .and()
                 .httpBasic().and().csrf().disable()
                 .logout().logoutSuccessUrl("/")

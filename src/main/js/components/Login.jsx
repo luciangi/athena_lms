@@ -18,8 +18,8 @@ const initialState = {
 
 @connect((store) => ({
     user: store.auth.user,
-    loginOpened: store.auth.loginOpened,
-    error: store.auth.error
+    loginOpened: store.menu.loginOpened,
+    error: store.menu.error
 }))
 class Login extends React.Component {
     constructor(props) {

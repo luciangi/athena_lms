@@ -1,13 +1,26 @@
 import { openNotification } from "./index";
-import { userConstants } from "../constants";
+import { authConstants } from "../constants";
 import axios from "axios/index";
+import {
+    closeLogin,
+    loginError
+} from "./menu";
 
-export const openLogin = () => {
-    return { type: userConstants.LOGIN_OPEN }
-};
-
-export const closeLogin = () => {
-    return { type: userConstants.LOGIN_CLOSE }
+export const loadUser = (afterLogin) => {
+    return (dispatch) => {
+        axios.get("/user")
+            .then(function (response) {
+                dispatch(loginSuccess(response.data));
+            })
+            .catch(function (error) {
+                if (error.response.status === 401) {
+                    dispatch(logoutSuccess());
+                } else {
+                    console.error(error);
+                    dispatch(openNotification(`Fetch user error: ${error.response.data.message}`, true));
+                }
+            });
+    }
 };
 
 export const loginUser = (username, password) => {
@@ -17,40 +30,20 @@ export const loginUser = (username, password) => {
         bodyFormData.append("password", password);
 
         axios.post("/login", bodyFormData)
-            .then(function () {
-                dispatch(loadUser())
-            })
-            .catch(function (error) {
-                console.error(error.response);
-                dispatch(loginError());
-                dispatch(openNotification(`Login error: ${error.response.data.message}`, true));
-            });
-    }
-};
-
-export const loginError = () => {
-    return { type: userConstants.LOGIN_ERROR }
-};
-
-export const loginSuccess = (user) => {
-    return { type: userConstants.LOGIN_SUCCESS, user: user }
-};
-
-export const loadUser = () => {
-    return (dispatch) => {
-        axios.get("/user")
             .then(function (response) {
                 dispatch(loginSuccess(response.data));
                 dispatch(openNotification(`Hello ${response.data.username}`));
                 dispatch(closeLogin());
-
             })
             .catch(function (error) {
-                console.error(error.response);
                 dispatch(loginError());
                 dispatch(openNotification(`Login error: ${error.response.data.message}`, true));
             });
     }
+};
+
+export const loginSuccess = (user) => {
+    return { type: authConstants.LOGIN_SUCCESS, user: user }
 };
 
 export const logoutUser = () => {
@@ -61,12 +54,11 @@ export const logoutUser = () => {
                 dispatch(openNotification("Logged Out"));
             })
             .catch(function (error) {
-                console.error(error);
                 dispatch(openNotification(`An error occurred while logging out: ${error}`, true));
             });
     }
 };
 
-export const logoutSuccess = (user) => {
-    return { type: userConstants.LOGOUT_SUCCESS, user: user }
+export const logoutSuccess = () => {
+    return { type: authConstants.LOGOUT_SUCCESS }
 };

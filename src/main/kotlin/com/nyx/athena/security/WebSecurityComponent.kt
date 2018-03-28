@@ -30,9 +30,13 @@ open class WebSecurityComponent : WebSecurityConfigurerAdapter() {
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
         http.authorizeRequests()
-                .antMatchers("/",
-                        "/build/**",
-                        "/swagger-resources/**").permitAll()
+                .antMatchers(
+                        "/*.js",
+                        "/*.html",
+                        "/*.css",
+                        "/",
+                        "/swagger-resources/**"
+                ).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().loginPage("$API_ENDPOINT_PREFIX/login")

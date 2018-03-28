@@ -5,8 +5,8 @@ const CleanWebpackPlugin = require("clean-webpack-plugin");
 module.exports = (env, argv) => ({
     entry: resolve(__dirname, "src/main/js/app.jsx"),
     output: {
-        path: resolve(__dirname, "src/main/resources/static/build/"),
-        publicPath: "build/",
+        path: resolve(__dirname, "src/main/resources/static/"),
+        publicPath: "/",
         filename: argv.mode === "production" ? "[name].[hash].bundle.js" : "[name].bundle.js"
     },
     resolve: {
@@ -51,6 +51,6 @@ module.exports = (env, argv) => ({
         new HtmlWebPackPlugin({
             template: resolve(__dirname, "src/main/js/index.html")
         }),
-        new CleanWebpackPlugin(resolve(__dirname, "src/main/resources/static/build/"))
+        new CleanWebpackPlugin(resolve(__dirname, "src/main/resources/static/"))
     ]
 });

@@ -1,14 +1,17 @@
 import { openNotification } from "./index";
-import { authConstants } from "../constants";
+import {
+    apiSuffix,
+    authConstants
+} from "../constants";
 import axios from "axios/index";
 import {
     closeLogin,
     loginError
 } from "./menu";
 
-export const loadUser = (afterLogin) => {
+export const loadUser = () => {
     return (dispatch) => {
-        axios.get("/user")
+        axios.get(`${apiSuffix}/user`)
             .then(function (response) {
                 dispatch(loginSuccess(response.data));
             })
@@ -29,7 +32,7 @@ export const loginUser = (username, password) => {
         bodyFormData.append("username", username);
         bodyFormData.append("password", password);
 
-        axios.post("/login", bodyFormData)
+        axios.post(`${apiSuffix}/login`, bodyFormData)
             .then(function (response) {
                 dispatch(loginSuccess(response.data));
                 dispatch(openNotification(`Hello ${response.data.username}`));
@@ -48,7 +51,7 @@ export const loginSuccess = (user) => {
 
 export const logoutUser = () => {
     return (dispatch) => {
-        axios.get("/logout")
+        axios.get(`${apiSuffix}/logout`)
             .then(function () {
                 dispatch(logoutSuccess());
                 dispatch(openNotification("Logged Out"));

@@ -1,3 +1,6 @@
+//TODO: maybe move to server and load with the load user request
+export const apiSuffix = "/api";
+
 export const menuConstants = {
     LOGIN_OPEN: "LOGIN_OPEN",
     LOGIN_CLOSE: "LOGIN_CLOSE",

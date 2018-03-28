@@ -1,14 +1,15 @@
 package com.nyx.athena.security
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.nyx.athena.API_ENDPOINT_PREFIX
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.boot.autoconfigure.security.Http401AuthenticationEntryPoint
 import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint
 import org.springframework.stereotype.Component
 import javax.servlet.http.HttpServletResponse
 import javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED
@@ -34,7 +35,7 @@ open class WebSecurityComponent : WebSecurityConfigurerAdapter() {
                         "/swagger-resources/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .formLogin().loginPage("/login")
+                .formLogin().loginPage("$API_ENDPOINT_PREFIX/login")
                 .failureHandler({ _, response: HttpServletResponse, _ ->
                     response.sendError(SC_UNAUTHORIZED, "Bad credentials")
                 })
@@ -46,11 +47,11 @@ open class WebSecurityComponent : WebSecurityConfigurerAdapter() {
                 }).permitAll()
                 .and()
                 .httpBasic().and().csrf().disable()
-                .logout().logoutSuccessUrl("/")
+                .logout().logoutUrl("$API_ENDPOINT_PREFIX/logout").logoutSuccessUrl("/")
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
                 .and()
-                .exceptionHandling().authenticationEntryPoint(Http403ForbiddenEntryPoint())
+                .exceptionHandling().authenticationEntryPoint(Http401AuthenticationEntryPoint("Unauthorized"))
                 .and()
                 .userDetailsService(userDetailService)
     }

@@ -2,6 +2,15 @@ import React from "react";
 import Menu from "./Menu";
 import { connect } from "react-redux";
 import { loadUser } from "../redux/actions";
+import {
+    BrowserRouter,
+    Route,
+    Switch
+} from "react-router-dom";
+import Admin from "./routes/Admin";
+import Home from "./routes/Home";
+import Tutor from "./routes/Tutor";
+import Student from "./routes/Student";
 
 @connect((store) => ({
     user: store.auth.user
@@ -17,7 +26,14 @@ class Layout extends React.Component {
         return (
             <div>
                 <Menu/>
-                <span>Layout</span>
+                <BrowserRouter>
+                    <Switch>
+                        <Route exact path='/' component={Home}/>
+                        <Route exact path='/admin' component={Admin}/>
+                        <Route exact path='/tutor' component={Tutor}/>
+                        <Route exact path='/student' component={Student}/>
+                    </Switch>
+                </BrowserRouter>
             </div>
         );
     }

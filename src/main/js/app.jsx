@@ -5,20 +5,16 @@ import "typeface-roboto";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import getMuiTheme from "material-ui/styles/getMuiTheme";
 import "./app.css";
-import Layout from "./components/Layout";
 import { Provider } from "react-redux";
 import store from "./redux/store"
-import Notification from "./components/Notification";
+import Layout from "./components/Layout";
 
 injectTapEventPlugin();
 
 const App = () => (
     <Provider store={store}>
         <MuiThemeProvider muiTheme={getMuiTheme()}>
-            <div>
-                <Layout/>
-                <Notification/>
-            </div>
+            <Layout/>
         </MuiThemeProvider>
     </Provider>
 );

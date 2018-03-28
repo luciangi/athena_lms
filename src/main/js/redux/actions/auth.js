@@ -1,7 +1,8 @@
 import { openNotification } from "./index";
 import {
-    apiSuffix,
-    authConstants
+    API_SUFFIX,
+    authConstants,
+    authoritiesConstants
 } from "../constants";
 import axios from "axios/index";
 import {
@@ -11,7 +12,7 @@ import {
 
 export const loadUser = () => {
     return (dispatch) => {
-        axios.get(`${apiSuffix}/user`)
+        axios.get(`${API_SUFFIX}/user`)
             .then(function (response) {
                 dispatch(loginSuccess(response.data));
             })
@@ -32,7 +33,7 @@ export const loginUser = (username, password) => {
         bodyFormData.append("username", username);
         bodyFormData.append("password", password);
 
-        axios.post(`${apiSuffix}/login`, bodyFormData)
+        axios.post(`${API_SUFFIX}/login`, bodyFormData)
             .then(function (response) {
                 dispatch(loginSuccess(response.data));
                 dispatch(openNotification(`Hello ${response.data.username}`));
@@ -51,7 +52,7 @@ export const loginSuccess = (user) => {
 
 export const logoutUser = () => {
     return (dispatch) => {
-        axios.get(`${apiSuffix}/logout`)
+        axios.get(`${API_SUFFIX}/logout`)
             .then(function () {
                 dispatch(logoutSuccess());
                 dispatch(openNotification("Logged Out"));
@@ -64,4 +65,27 @@ export const logoutUser = () => {
 
 export const logoutSuccess = () => {
     return { type: authConstants.LOGOUT_SUCCESS }
+};
+
+export const isAdminUser = (user) => {
+    return user && user.roles.includes(authoritiesConstants.ROLE_ADMIN)
+};
+
+export const isTutorUser = (user) => {
+    return user && user.roles.includes(authoritiesConstants.ROLE_TUTOR)
+};
+
+export const isStudentUser = (user) => {
+    return user && user.roles.includes(authoritiesConstants.ROLE_STUDENT)
+};
+
+export const getDefaultRouteByHighestPriorityAuthority = (user) => {
+    if (isAdminUser(user)) {
+        return authoritiesConstants.ADMIN_ROOT
+    } else if (isTutorUser(user)) {
+        return authoritiesConstants.TUTOR_ROOT
+    } else if (isStudentUser(user)) {
+        return authoritiesConstants.STUDENT_ROOT
+    }
+    return authoritiesConstants.ROOT;
 };

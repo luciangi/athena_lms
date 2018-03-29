@@ -11,7 +11,9 @@ export const routesConstants = {
     ROOT: "/",
     ADMIN_ROOT: "/admin",
     TUTOR_ROOT: "/tutor",
-    STUDENT_ROOT: "/student"
+    STUDENT_ROOT: "/student",
+    USER_ROOT: "/user",
+    LOGIN_ROOT: "/login"
 };
 
 export const menuConstants = {

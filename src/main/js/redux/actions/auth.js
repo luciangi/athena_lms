@@ -2,8 +2,10 @@ import { openNotification } from "./index";
 import {
     API_SUFFIX,
     authConstants,
-    authoritiesConstants
+    authoritiesConstants,
+    routesConstants
 } from "../constants";
+import { push } from "react-router-redux"
 import axios from "axios/index";
 import {
     closeLogin,
@@ -12,7 +14,7 @@ import {
 
 export const loadUser = () => {
     return (dispatch) => {
-        axios.get(`${API_SUFFIX}/user`)
+        axios.get(`${API_SUFFIX}${routesConstants.USER_ROOT}`)
             .then(function (response) {
                 dispatch(loginSuccess(response.data));
             })
@@ -33,7 +35,7 @@ export const loginUser = (username, password) => {
         bodyFormData.append("username", username);
         bodyFormData.append("password", password);
 
-        axios.post(`${API_SUFFIX}/login`, bodyFormData)
+        axios.post(`${API_SUFFIX}${routesConstants.LOGIN_ROOT}`, bodyFormData)
             .then(function (response) {
                 dispatch(loginSuccess(response.data));
                 dispatch(openNotification(`Hello ${response.data.username}`));
@@ -47,7 +49,10 @@ export const loginUser = (username, password) => {
 };
 
 export const loginSuccess = (user) => {
-    return { type: authConstants.LOGIN_SUCCESS, user: user }
+    return (dispatch) => {
+        dispatch(push(getDefaultRouteByHighestPriorityAuthority(user)));
+        dispatch({ type: authConstants.LOGIN_SUCCESS, user: user })
+    }
 };
 
 export const logoutUser = () => {
@@ -64,7 +69,10 @@ export const logoutUser = () => {
 };
 
 export const logoutSuccess = () => {
-    return { type: authConstants.LOGOUT_SUCCESS }
+    return (dispatch) => {
+        dispatch(push(routesConstants.ROOT));
+        dispatch({ type: authConstants.LOGOUT_SUCCESS })
+    }
 };
 
 export const isAdminUser = (user) => {
@@ -81,11 +89,11 @@ export const isStudentUser = (user) => {
 
 export const getDefaultRouteByHighestPriorityAuthority = (user) => {
     if (isAdminUser(user)) {
-        return authoritiesConstants.ADMIN_ROOT
+        return routesConstants.ADMIN_ROOT
     } else if (isTutorUser(user)) {
-        return authoritiesConstants.TUTOR_ROOT
+        return routesConstants.TUTOR_ROOT
     } else if (isStudentUser(user)) {
-        return authoritiesConstants.STUDENT_ROOT
+        return routesConstants.STUDENT_ROOT
     }
-    return authoritiesConstants.ROOT;
+    return routesConstants.ROOT;
 };

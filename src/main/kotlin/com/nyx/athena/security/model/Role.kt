@@ -1,4 +1,4 @@
-package com.nyx.athena.course
+package com.nyx.athena.security.model
 
 import org.hibernate.annotations.GenericGenerator
 import org.hibernate.annotations.Type
@@ -9,15 +9,13 @@ import javax.persistence.Id
 import javax.persistence.Table
 
 @Entity
-@Table(name = "course")
-class Course {
+@Table
+data class Role(val authority: String = Authority.ROLE_STUDENT.name) {
+    enum class Authority { ROLE_ADMIN, ROLE_TUTOR, ROLE_STUDENT }
+
     @Id
     @GenericGenerator(name = "uuid-gen", strategy = "uuid2")
     @GeneratedValue(generator = "uuid-gen")
     @Type(type = "pg-uuid")
-    val id: UUID? = null
-
-    val name: String = ""
-
-    val description: String = ""
+    val id: UUID = UUID.randomUUID()
 }

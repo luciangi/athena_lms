@@ -15,4 +15,5 @@
 package-lock.json
 
 ### Webpack
-/src/main/resources/static/build/
+/src/main/resources/static/index.html
+/src/main/resources/static/main.bundle.js

@@ -1,4 +1,4 @@
-package com.nyx.athena.config
+package com.nyx.athena.swagger
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -13,7 +13,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2
 @Configuration
 @EnableSwagger2
 @Import(SpringDataRestConfiguration::class)
-open class Swagger {
+open class SwaggerConfiguration {
     @Bean
     open fun api(): Docket {
         return Docket(DocumentationType.SWAGGER_2)

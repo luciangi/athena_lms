@@ -1,12 +1,17 @@
 const { resolve } = require("path");
 const HtmlWebPackPlugin = require("html-webpack-plugin");
-const CleanWebpackPlugin = require("clean-webpack-plugin");
 
 module.exports = (env, argv) => ({
+    devServer: {
+        port: 3000,
+        proxy: [ {
+            context: [ "/**" ],
+            target: "http://localhost:8080"
+        } ]
+    },
     entry: resolve(__dirname, "src/main/js/app.jsx"),
     output: {
-        path: resolve(__dirname, "src/main/resources/static/"),
-        publicPath: "/",
+        path: resolve(__dirname, "build"),
         filename: argv.mode === "production" ? "[name].[hash].bundle.js" : "[name].bundle.js"
     },
     resolve: {
@@ -50,7 +55,6 @@ module.exports = (env, argv) => ({
     plugins: [
         new HtmlWebPackPlugin({
             template: resolve(__dirname, "src/main/js/index.html")
-        }),
-        new CleanWebpackPlugin(resolve(__dirname, "src/main/resources/static/"))
+        })
     ]
 });

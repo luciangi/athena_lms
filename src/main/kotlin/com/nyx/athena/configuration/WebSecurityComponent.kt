@@ -37,6 +37,7 @@ open class WebSecurityComponent : WebSecurityConfigurerAdapter() {
                         "/",
                         "/swagger-resources/**"
                 ).permitAll()
+                //TODO: secure by user
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().loginPage("/api/login")

@@ -7,7 +7,11 @@ import {
     MenuItem
 } from "material-ui";
 import Login from "./Login";
-import { SocialPersonOutline } from "material-ui/svg-icons/index";
+import {
+    ActionAssignment,
+    ActionClass,
+    SocialPersonOutline
+} from "material-ui/svg-icons/index";
 import { connect } from "react-redux";
 import {
     logoutUser,
@@ -59,8 +63,8 @@ class Menu extends React.Component {
                     width={200}
                     open={this.state.navigationOpened}
                     onRequestChange={closeMenu}>
-                    <MenuItem onClick={closeMenu}>Menu Item</MenuItem>
-                    <MenuItem onClick={closeMenu}>Menu Item 2</MenuItem>
+                    <MenuItem leftIcon={<ActionClass/>} onClick={closeMenu}>Courses</MenuItem>
+                    <MenuItem leftIcon={<ActionAssignment/>} onClick={closeMenu}>Assignments</MenuItem>
                 </Drawer>
                 <Login/>
             </div>

@@ -1,19 +1,20 @@
-package com.nyx.athena.security
+package com.nyx.athena.controller
 
-import com.nyx.athena.API_ENDPOINT_PREFIX
+import com.nyx.athena.service.UserDetailService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping(API_ENDPOINT_PREFIX)
-class UserDetailEndpoint {
+@RequestMapping("/api")
+@Suppress("unused")
+class UserDetailController {
     @Autowired
     private lateinit var userDetailService: UserDetailService
 
-    @GetMapping("/user")
-    fun user(): Map<String, Any> {
-        return userDetailService.loadUserResponse()
+    @GetMapping("/userDetail")
+    fun userDetail(): Map<String, Any> {
+        return userDetailService.userDetail()
     }
 }

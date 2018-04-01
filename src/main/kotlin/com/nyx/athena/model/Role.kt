@@ -1,4 +1,4 @@
-package com.nyx.athena.security.model
+package com.nyx.athena.model
 
 import org.hibernate.annotations.GenericGenerator
 import org.hibernate.annotations.Type
@@ -17,5 +17,6 @@ class Role(val authority: String = Authority.ROLE_STUDENT.name) {
     @GenericGenerator(name = "uuid-gen", strategy = "uuid2")
     @GeneratedValue(generator = "uuid-gen")
     @Type(type = "pg-uuid")
+    @Suppress("unused")
     val id: UUID = UUID.randomUUID()
 }

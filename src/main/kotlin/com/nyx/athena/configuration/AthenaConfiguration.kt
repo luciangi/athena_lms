@@ -1,12 +1,13 @@
-package com.nyx.athena
+package com.nyx.athena.configuration
 
-import com.nyx.athena.security.model.Role
-import com.nyx.athena.security.model.Role.Authority.*
-import com.nyx.athena.security.model.User
-import com.nyx.athena.security.repository.RoleRepository
-import com.nyx.athena.security.repository.UserRepository
-import com.nyx.athena.tutor.TutorService
-import org.springframework.boot.CommandLineRunner
+import com.nyx.athena.model.Role
+import com.nyx.athena.model.Role.Authority.*
+import com.nyx.athena.model.Tutor
+import com.nyx.athena.model.User
+import com.nyx.athena.repository.RoleRepository
+import com.nyx.athena.repository.TutorRepository
+import com.nyx.athena.repository.UserRepository
+import org.springframework.beans.factory.InitializingBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -22,8 +23,8 @@ open class AthenaConfiguration {
     @Bean
     open fun dataSourceInit(roleRepository: RoleRepository,
                             userRepository: UserRepository,
-                            tutorService: TutorService,
-                            passwordEncoder: PasswordEncoder) = CommandLineRunner {
+                            tutorRepository: TutorRepository,
+                            passwordEncoder: PasswordEncoder) = InitializingBean {
         val adminRole = Role(ROLE_ADMIN.name)
         val tutorRole = Role(ROLE_TUTOR.name)
         val studentRole = Role(ROLE_STUDENT.name)
@@ -34,7 +35,16 @@ open class AthenaConfiguration {
                 "admin@email.com")
         adminUser.roles += adminRole
 
-        tutorService.registerTutor()
+        val tutorUser = Tutor(
+                "tutor",
+                passwordEncoder.encode("tutor"),
+                "tutor@email.com",
+                "Tutor",
+                "Demo",
+                "A tutor user used for demo purposes"
+        )
+        tutorUser.roles += roleRepository.findByAuthority(Role.Authority.ROLE_TUTOR.name)
+        tutorRepository.save(tutorUser)
 
         val studentUser = User("student",
                 passwordEncoder.encode("student"),

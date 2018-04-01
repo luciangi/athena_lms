@@ -1,7 +1,7 @@
-package com.nyx.athena.security
+package com.nyx.athena.configuration
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.nyx.athena.API_ENDPOINT_PREFIX
+import com.nyx.athena.service.UserDetailService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.security.Http401AuthenticationEntryPoint
@@ -39,19 +39,19 @@ open class WebSecurityComponent : WebSecurityConfigurerAdapter() {
                 ).permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .formLogin().loginPage("$API_ENDPOINT_PREFIX/login")
+                .formLogin().loginPage("/api/login")
                 .failureHandler({ _, response: HttpServletResponse, _ ->
                     response.sendError(SC_UNAUTHORIZED, "Bad credentials")
                 })
                 .successHandler({ _, response: HttpServletResponse, _ ->
                     response.contentType = APPLICATION_JSON_VALUE
                     val out = response.writer
-                    out.print(ObjectMapper().writeValueAsString(userDetailService.loadUserResponse()))
+                    out.print(ObjectMapper().writeValueAsString(userDetailService.userDetail()))
                     out.flush()
                 }).permitAll()
                 .and()
                 .httpBasic().and().csrf().disable()
-                .logout().logoutUrl("$API_ENDPOINT_PREFIX/logout").logoutSuccessUrl("/")
+                .logout().logoutUrl("/api/logout").logoutSuccessUrl("/")
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
                 .and()

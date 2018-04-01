@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping(API_ENDPOINT_PREFIX)
 class UserDetailEndpoint {
     @Autowired
-    lateinit var userDetailService: UserDetailService
+    private lateinit var userDetailService: UserDetailService
 
     @GetMapping("/user")
     fun user(): Map<String, Any> {

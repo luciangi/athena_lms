@@ -10,7 +10,7 @@ import javax.persistence.Table
 
 @Entity
 @Table
-data class Role(val authority: String = Authority.ROLE_STUDENT.name) {
+class Role(val authority: String = Authority.ROLE_STUDENT.name) {
     enum class Authority { ROLE_ADMIN, ROLE_TUTOR, ROLE_STUDENT }
 
     @Id

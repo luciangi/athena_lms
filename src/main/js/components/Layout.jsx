@@ -29,10 +29,10 @@ class Layout extends React.Component {
             <div>
                 <Menu/>
                 <Router history={history}>
-                    <Route path={routesConstants.ROOT} component={Home}/>
-                    <Route path={routesConstants.ADMIN_ROOT} component={Admin}/>
-                    <Route path={routesConstants.TUTOR_ROOT} component={Tutor}/>
-                    <Route path={routesConstants.STUDENT_ROOT} component={Student}/>
+                    <Route path={"/"} component={Home}/>
+                    <Route path={"/admin"} component={Admin}/>
+                    <Route path={"/tutor"} component={Tutor}/>
+                    <Route path={"/student"} component={Student}/>
                 </Router>
                 <Notification/>
             </div>

@@ -1,9 +1,7 @@
 import { openNotification } from "./index";
 import {
-    API_SUFFIX,
     authConstants,
-    authoritiesConstants,
-    routesConstants
+    authoritiesConstants
 } from "../constants";
 import { push } from "react-router-redux"
 import axios from "axios/index";
@@ -14,7 +12,7 @@ import {
 
 export const loadUser = () => {
     return (dispatch) => {
-        axios.get(`${API_SUFFIX}${routesConstants.USER_ROOT}`)
+        axios.get("api/userDetails")
             .then(function (response) {
                 dispatch(loginSuccess(response.data));
             })
@@ -35,7 +33,7 @@ export const loginUser = (username, password) => {
         bodyFormData.append("username", username);
         bodyFormData.append("password", password);
 
-        axios.post(`${API_SUFFIX}${routesConstants.LOGIN_ROOT}`, bodyFormData)
+        axios.post("api/login", bodyFormData)
             .then(function (response) {
                 dispatch(loginSuccess(response.data));
                 dispatch(openNotification(`Hello ${response.data.username}`));
@@ -57,7 +55,7 @@ export const loginSuccess = (user) => {
 
 export const logoutUser = () => {
     return (dispatch) => {
-        axios.get(`${API_SUFFIX}/logout`)
+        axios.get("api/logout")
             .then(function () {
                 dispatch(logoutSuccess());
                 dispatch(openNotification("Logged Out"));
@@ -70,7 +68,7 @@ export const logoutUser = () => {
 
 export const logoutSuccess = () => {
     return (dispatch) => {
-        dispatch(push(routesConstants.ROOT));
+        dispatch(push("/"));
         dispatch({ type: authConstants.LOGOUT_SUCCESS })
     }
 };
@@ -89,11 +87,11 @@ export const isStudentUser = (user) => {
 
 export const getDefaultRouteByHighestPriorityAuthority = (user) => {
     if (isAdminUser(user)) {
-        return routesConstants.ADMIN_ROOT
+        return "/admin"
     } else if (isTutorUser(user)) {
-        return routesConstants.TUTOR_ROOT
+        return "/tutor"
     } else if (isStudentUser(user)) {
-        return routesConstants.STUDENT_ROOT
+        return "/student"
     }
-    return routesConstants.ROOT;
+    return "/";
 };

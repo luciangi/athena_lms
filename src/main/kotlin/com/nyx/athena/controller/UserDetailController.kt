@@ -13,7 +13,7 @@ class UserDetailController {
     @Autowired
     private lateinit var userDetailService: UserDetailService
 
-    @GetMapping("/userDetail")
+    @GetMapping("/userDetails")
     fun userDetail(): Map<String, Any> {
         return userDetailService.userDetail()
     }

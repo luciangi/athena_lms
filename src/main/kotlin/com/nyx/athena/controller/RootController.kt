@@ -6,6 +6,6 @@ import org.springframework.web.bind.annotation.GetMapping
 @Controller
 @Suppress("unused")
 class RootController {
-    @GetMapping(value = ["/", "/home/**", "/admin/**", "/tutor/**", "/student/**"])
-    fun index(): String = "index.html"
+    @GetMapping("/{[path:[^\\.]*}")
+    fun index(): String = "forward:index.html"
 }

@@ -1,18 +1,17 @@
 import React from "react";
-import Menu from "./Menu";
 import { connect } from "react-redux";
-import Admin from "./routes/Admin";
-import Home from "./routes/Home";
-import Tutor from "./routes/Tutor";
-import Student from "./routes/Student";
-import Notification from "./Notification";
 import { loadUser } from "../redux/actions";
+import AppMenu from "./AppMenu";
+import Notification from "./Notification";
 import {
     Route,
     Router
 } from "react-router";
 import { history } from "../redux/store";
-import { routesConstants } from "../redux/constants";
+import Home from "./routes/Home";
+import Admin from "./routes/Admin";
+import Tutor from "./routes/Tutor";
+import Student from "./routes/Student";
 
 @connect((store) => ({
     user: store.auth.user
@@ -27,7 +26,7 @@ class Layout extends React.Component {
     render() {
         return (
             <div>
-                <Menu/>
+                <AppMenu/>
                 <Router history={history}>
                     <Route path={"/"} component={Home}/>
                     <Route path={"/admin"} component={Admin}/>

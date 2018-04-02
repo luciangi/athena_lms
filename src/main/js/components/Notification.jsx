@@ -1,13 +1,14 @@
 import React from "react";
-import { Snackbar } from "material-ui";
-import { muiThemeable } from "material-ui/styles/index";
 import {
-    red500,
-    white
-} from "material-ui/styles/colors";
-import { ContentClear } from "material-ui/svg-icons/index";
+    IconButton,
+    Snackbar,
+    withTheme
+} from "material-ui";
 import { connect } from "react-redux";
 import { closeNotification } from "../redux/actions";
+import { Clear } from "material-ui-icons";
+import red from "material-ui/es/colors/red";
+import grey from "material-ui/es/colors/grey";
 
 const Notification = (props) => {
     const { message, error } = props;
@@ -18,10 +19,10 @@ const Notification = (props) => {
             message={message}
             autoHideDuration={6000}
             bodyStyle={{ minWidth: 800 }}
-            contentStyle={{ color: error ? red500 : white }}
-            action={<ContentClear style={{ marginTop: 5, color: props.muiTheme.palette.accent1Color }}/>}
-            onActionClick={close}
-            onRequestClose={close}
+
+            SnackbarContentProps={{ style: { color: error ? red[ 500 ] : grey[ 50 ] } }}
+            action={<IconButton onClick={close}><Clear color="secondary" style={{ color: props.theme.palette.accent1Color }}/></IconButton>}
+            onClose={close}
         />
     )
 };
@@ -29,4 +30,4 @@ const Notification = (props) => {
 export default connect((store) => ({
     message: store.notification.message,
     error: store.notification.error
-}))(muiThemeable()(Notification))
+}))(withTheme()(Notification))

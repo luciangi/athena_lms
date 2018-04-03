@@ -1,5 +1,6 @@
 import { push } from "react-router-redux";
 import { getDefaultRouteByHighestPriorityAuthority } from "./index";
+import store from "../store";
 
 export const homeRoute = () => {
     return (dispatch) => {
@@ -7,9 +8,9 @@ export const homeRoute = () => {
     }
 };
 
-export const profileRoute = () => {
+export const profileRoute = (user = store.getState().auth.user) => {
     return (dispatch) => {
-        dispatch(push(getDefaultRouteByHighestPriorityAuthority()));
+        dispatch(push(getDefaultRouteByHighestPriorityAuthority(user)));
     }
 };
 
@@ -33,18 +34,18 @@ export const subjectsRoute = () => {
 
 export const enrolmentsRoute = () => {
     return (dispatch) => {
-        dispatch(push("/tutors"));
+        dispatch(push("/enrolments"));
     }
 };
 
 export const assignmentsRoute = () => {
     return (dispatch) => {
-        dispatch(push("/tutors"));
+        dispatch(push("/assignments"));
     }
 };
 
 export const coursesRoute = () => {
     return (dispatch) => {
-        dispatch(push("/tutors"));
+        dispatch(push("/courses"));
     }
 };

@@ -31,10 +31,10 @@ import {
 } from "@devexpress/dx-react-grid-material-ui";
 import {
     Add,
-    Book,
     Cancel,
     Delete,
     Edit,
+    FolderOpen,
     Save
 } from "material-ui-icons";
 
@@ -94,9 +94,7 @@ const Command = ({ id, onExecute }) => {
 };
 
 @withStyles(styles)
-@connect((store) => ({
-    subjects: store.subjects.rows
-}))
+@connect((store) => ({}))
 class Subjects extends React.Component {
     constructor(props) {
         super(props);
@@ -141,7 +139,7 @@ class Subjects extends React.Component {
         return (
             <div>
                 <Paper className={classes.root} elevation={1}>
-                    <Typography variant="headline" component="h3"><Book/> Subjects</Typography>
+                    <Typography variant="headline" component="h3"><FolderOpen/> Subjects</Typography>
                     <Grid rows={rows} columns={columns}>
                         <FilteringState defaultFilters={defaultFilters}/>
                         <IntegratedFiltering/>

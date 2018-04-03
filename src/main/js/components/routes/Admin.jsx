@@ -1,9 +1,10 @@
 import React from "react";
+import { SettingsApplications } from "material-ui-icons";
 
 const Admin = () => {
     return (
         <div>
-            <span>Admin</span>
+            <span><SettingsApplications/> Admin</span>
         </div>
     )
 };

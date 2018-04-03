@@ -12,8 +12,13 @@ import Home from "./routes/Home";
 import Admin from "./routes/Admin";
 import Tutor from "./routes/Tutor";
 import Student from "./routes/Student";
-import Subjects from "./routes/Subjects";
 import { withStyles } from "material-ui";
+import Tutors from "./routes/Tutors";
+import Students from "./routes/Students";
+import Subjects from "./routes/Subjects";
+import Enrolments from "./routes/Enrolments";
+import Assignments from "./routes/Assignments";
+import Courses from "./routes/Courses";
 
 const styles = theme => ({
     root: {
@@ -61,7 +66,12 @@ class Layout extends React.Component {
                         <Route path={"/admin"} component={Admin}/>
                         <Route path={"/tutor"} component={Tutor}/>
                         <Route path={"/student"} component={Student}/>
+                        <Route path={"/tutors"} component={Tutors}/>
+                        <Route path={"/students"} component={Students}/>
                         <Route path={"/subjects"} component={Subjects}/>
+                        <Route path={"/enrolments"} component={Enrolments}/>
+                        <Route path={"/assignments"} component={Assignments}/>
+                        <Route path={"/courses"} component={Courses}/>
                     </Router>
                     <Notification/>
                 </main>

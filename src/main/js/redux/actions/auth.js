@@ -51,7 +51,7 @@ export const loginUser = (username, password) => {
 export const loginSuccess = (user, fromLogin = false) => {
     return (dispatch) => {
         if (fromLogin) {
-            dispatch(profileRoute());
+            dispatch(profileRoute(user));
         }
         dispatch({ type: authConstants.LOGIN_SUCCESS, user: user })
     }
@@ -77,27 +77,24 @@ export const logoutSuccess = () => {
     }
 };
 
-export const isAdminUser = () => {
-    const user = store.getState().auth.user;
+export const isAdminUser = (user = store.getState().auth.user) => {
     return user && user.roles.includes(authoritiesConstants.ROLE_ADMIN)
 };
 
-export const isTutorUser = () => {
-    const user = store.getState().auth.user;
+export const isTutorUser = (user = store.getState().auth.user) => {
     return user && user.roles.includes(authoritiesConstants.ROLE_TUTOR)
 };
 
-export const isStudentUser = () => {
-    const user = store.getState().auth.user;
+export const isStudentUser = (user = store.getState().auth.user) => {
     return user && user.roles.includes(authoritiesConstants.ROLE_STUDENT)
 };
 
-export const getDefaultRouteByHighestPriorityAuthority = () => {
-    if (isAdminUser()) {
+export const getDefaultRouteByHighestPriorityAuthority = (user = store.getState().auth.user) => {
+    if (isAdminUser(user)) {
         return "/admin"
-    } else if (isTutorUser()) {
+    } else if (isTutorUser(user)) {
         return "/tutor"
-    } else if (isStudentUser()) {
+    } else if (isStudentUser(user)) {
         return "/student"
     }
     return "/";

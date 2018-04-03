@@ -9,6 +9,7 @@ import {
     closeLogin,
     loginError
 } from "./menu";
+import store from "../store";
 
 export const loadUser = () => {
     return (dispatch) => {
@@ -85,7 +86,7 @@ export const isStudentUser = (user) => {
     return user && user.roles.includes(authoritiesConstants.ROLE_STUDENT)
 };
 
-export const getDefaultRouteByHighestPriorityAuthority = (user) => {
+export const getDefaultRouteByHighestPriorityAuthority = (user = store.getState().auth.user) => {
     if (isAdminUser(user)) {
         return "/admin"
     } else if (isTutorUser(user)) {

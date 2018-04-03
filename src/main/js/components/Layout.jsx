@@ -12,7 +12,32 @@ import Home from "./routes/Home";
 import Admin from "./routes/Admin";
 import Tutor from "./routes/Tutor";
 import Student from "./routes/Student";
+import Subjects from "./routes/Subjects";
+import { withStyles } from "material-ui";
 
+const styles = theme => ({
+    root: {
+        flexGrow: 1,
+        zIndex: 1,
+        overflow: "hidden",
+        position: "relative",
+        display: "flex"
+    },
+    toolbar: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "flex-end",
+        padding: "0 8px",
+        ...theme.mixins.toolbar
+    },
+    content: {
+        flexGrow: 1,
+        backgroundColor: theme.palette.background.default,
+        padding: theme.spacing.unit * 3
+    }
+});
+
+@withStyles(styles, { withTheme: true })
 @connect((store) => ({
     user: store.auth.user
 }))
@@ -24,16 +49,22 @@ class Layout extends React.Component {
     }
 
     render() {
+        const { classes } = this.props;
+
         return (
-            <div>
+            <div className={classes.root}>
                 <AppMenu/>
-                <Router history={history}>
-                    <Route path={"/"} component={Home}/>
-                    <Route path={"/admin"} component={Admin}/>
-                    <Route path={"/tutor"} component={Tutor}/>
-                    <Route path={"/student"} component={Student}/>
-                </Router>
-                <Notification/>
+                <main className={classes.content}>
+                    <div className={classes.toolbar}/>
+                    <Router history={history}>
+                        <Route path={"/"} component={Home}/>
+                        <Route path={"/admin"} component={Admin}/>
+                        <Route path={"/tutor"} component={Tutor}/>
+                        <Route path={"/student"} component={Student}/>
+                        <Route path={"/subjects"} component={Subjects}/>
+                    </Router>
+                    <Notification/>
+                </main>
             </div>
         );
     }

@@ -26,12 +26,14 @@
     "prod": "webpack --mode production"
   },
   "dependencies": {
+    "@devexpress/dx-react-core": "^1.1.1",
+    "@devexpress/dx-react-grid": "^1.1.1",
+    "@devexpress/dx-react-grid-material-ui": "^1.1.1",
     "axios": "^0.18.0",
     "classnames": "^2.2.5",
     "history": "^3.2.1",
     "material-ui": "^1.0.0-beta.40",
     "material-ui-icons": "^1.0.0-beta.36",
-    "material-ui-table-edit": "^3.0.3",
     "prop-types": "^15.6.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",

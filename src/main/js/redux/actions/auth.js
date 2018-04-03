@@ -36,7 +36,7 @@ export const loginUser = (username, password) => {
 
         axios.post("api/login", bodyFormData)
             .then(function (response) {
-                dispatch(loginSuccess(response.data));
+                dispatch(loginSuccess(response.data, true));
                 dispatch(openNotification(`Hello ${response.data.username}`));
                 dispatch(closeLogin());
             })
@@ -47,9 +47,11 @@ export const loginUser = (username, password) => {
     }
 };
 
-export const loginSuccess = (user) => {
+export const loginSuccess = (user, fromLogin = false) => {
     return (dispatch) => {
-        dispatch(push(getDefaultRouteByHighestPriorityAuthority(user)));
+        if (fromLogin) {
+            dispatch(push(getDefaultRouteByHighestPriorityAuthority(user)));
+        }
         dispatch({ type: authConstants.LOGIN_SUCCESS, user: user })
     }
 };

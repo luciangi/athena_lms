@@ -19,3 +19,5 @@ export const notificationConstants = {
     NOTIFICATION_OPEN: "NOTIFICATION_OPEN",
     NOTIFICATION_CLOSE: "NOTIFICATION_CLOSE"
 };
+
+export const subjectConstants = {};

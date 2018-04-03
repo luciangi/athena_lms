@@ -11,7 +11,8 @@ import javax.persistence.Table
 
 @Entity
 @Table
-class Subject(var name: String, var description: String) {
+class Subject(var name: String,
+              var description: String? = null) {
     @Suppress("unused")
     constructor() : this(name = "", description = "")
 

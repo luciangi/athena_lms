@@ -1,14 +1,15 @@
-import { openNotification } from "./index";
+import {
+    closeLogin,
+    homeRoute,
+    loginError,
+    openNotification,
+    profileRoute
+} from "./index";
 import {
     authConstants,
     authoritiesConstants
 } from "../constants";
-import { push } from "react-router-redux"
 import axios from "axios/index";
-import {
-    closeLogin,
-    loginError
-} from "./menu";
 import store from "../store";
 
 export const loadUser = () => {
@@ -50,7 +51,7 @@ export const loginUser = (username, password) => {
 export const loginSuccess = (user, fromLogin = false) => {
     return (dispatch) => {
         if (fromLogin) {
-            dispatch(push(getDefaultRouteByHighestPriorityAuthority(user)));
+            dispatch(profileRoute());
         }
         dispatch({ type: authConstants.LOGIN_SUCCESS, user: user })
     }
@@ -71,29 +72,32 @@ export const logoutUser = () => {
 
 export const logoutSuccess = () => {
     return (dispatch) => {
-        dispatch(push("/"));
+        dispatch(homeRoute());
         dispatch({ type: authConstants.LOGOUT_SUCCESS })
     }
 };
 
-export const isAdminUser = (user) => {
+export const isAdminUser = () => {
+    const user = store.getState().auth.user;
     return user && user.roles.includes(authoritiesConstants.ROLE_ADMIN)
 };
 
-export const isTutorUser = (user) => {
+export const isTutorUser = () => {
+    const user = store.getState().auth.user;
     return user && user.roles.includes(authoritiesConstants.ROLE_TUTOR)
 };
 
-export const isStudentUser = (user) => {
+export const isStudentUser = () => {
+    const user = store.getState().auth.user;
     return user && user.roles.includes(authoritiesConstants.ROLE_STUDENT)
 };
 
-export const getDefaultRouteByHighestPriorityAuthority = (user = store.getState().auth.user) => {
-    if (isAdminUser(user)) {
+export const getDefaultRouteByHighestPriorityAuthority = () => {
+    if (isAdminUser()) {
         return "/admin"
-    } else if (isTutorUser(user)) {
+    } else if (isTutorUser()) {
         return "/tutor"
-    } else if (isStudentUser(user)) {
+    } else if (isStudentUser()) {
         return "/student"
     }
     return "/";

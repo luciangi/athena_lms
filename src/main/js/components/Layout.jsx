@@ -1,9 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import {
-    isAdminUser,
-    loadUser
-} from "../redux/actions";
+import { loadUser } from "../redux/actions";
 import AppMenu from "./AppMenu";
 import Notification from "./Notification";
 import {
@@ -64,7 +61,7 @@ class Layout extends React.Component {
                         <Route path={"/admin"} component={Admin}/>
                         <Route path={"/tutor"} component={Tutor}/>
                         <Route path={"/student"} component={Student}/>
-                        <Route path={"/subjects"} component={Subjects} hasAccess={isAdminUser}/>
+                        <Route path={"/subjects"} component={Subjects}/>
                     </Router>
                     <Notification/>
                 </main>

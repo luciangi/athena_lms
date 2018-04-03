@@ -15,7 +15,7 @@ const styles = {
         width: "100%"
     },
     media: {
-        height: 400
+        height: 700
     },
     containingPaper: {
         width: "100%"
@@ -29,8 +29,8 @@ const styles = {
         flexWrap: "wrap"
     },
     box: {
-        minHeight: "100%",
         width: 400,
+        height: 400,
         marginLeft: 10,
         marginTop: 10
     }
@@ -45,8 +45,8 @@ const Home = (props) => {
                 <Card className={classes.card}>
                     <CardMedia
                         className={classes.media}
-                        image="/images/apple.jpg"
-                        title="Contemplative Reptile"
+                        image="/images/back-to-school.jpg"
+                        title="Back to school"
                     />
                     <CardContent>
                         <Typography gutterBottom variant="headline" component="h2">
@@ -144,6 +144,46 @@ const Home = (props) => {
                             </Card>
 
 
+                            <Card className={classes.box}>
+                                <CardContent>
+                                    <Typography className={classes.title} color="textSecondary">
+                                        Course 1
+                                    </Typography>
+                                    <Typography variant="headline" component="h2">
+                                        Course 1
+                                    </Typography>
+                                    <Typography className={classes.pos} color="textSecondary">
+                                        adjective
+                                    </Typography>
+                                    <Typography component="p">
+                                        well meaning and kindly.<br/>
+                                        {"\"a benevolent smile\""}
+                                    </Typography>
+                                </CardContent>
+                                <CardActions>
+                                    <Button size="small">Learn More</Button>
+                                </CardActions>
+                            </Card>
+                            <Card className={classes.box}>
+                                <CardContent>
+                                    <Typography className={classes.title} color="textSecondary">
+                                        Course 1
+                                    </Typography>
+                                    <Typography variant="headline" component="h2">
+                                        Course 1
+                                    </Typography>
+                                    <Typography className={classes.pos} color="textSecondary">
+                                        adjective
+                                    </Typography>
+                                    <Typography component="p">
+                                        well meaning and kindly.<br/>
+                                        {"\"a benevolent smile\""}
+                                    </Typography>
+                                </CardContent>
+                                <CardActions>
+                                    <Button size="small">Learn More</Button>
+                                </CardActions>
+                            </Card>
                             <Card className={classes.box}>
                                 <CardContent>
                                     <Typography className={classes.title} color="textSecondary">

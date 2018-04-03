@@ -18,20 +18,29 @@ import {
 } from "material-ui";
 import {
     AccountCircle,
+    Assignment,
+    AssignmentInd,
     Book,
     ChevronLeft,
     ChevronRight,
+    FolderOpen,
+    Person,
+    PersonOutline,
     School
 } from "material-ui-icons";
 import MenuIcon from "material-ui-icons/Menu";
 import { connect } from "react-redux";
 import {
+    assignmentsRoute,
+    coursesRoute,
+    enrolmentsRoute,
     homeRoute,
-    isAdminUser,
     logoutUser,
     openLogin,
     profileRoute,
-    subjectsRoute
+    studentsRoute,
+    subjectsRoute,
+    tutorsRoute
 } from "../redux/actions";
 import Login from "./Login";
 
@@ -197,19 +206,42 @@ class AppMenu extends React.Component {
                         <Divider/>
                         <List>
                             <div>
-                                {isAdminUser(user) && (
-                                    <ListItem button onClick={() => this.props.dispatch(subjectsRoute())}>
-                                        <ListItemIcon>
-                                            <Book/>
-                                        </ListItemIcon>
-                                        <ListItemText primary="Subjects"/>
-                                    </ListItem>)}
-                                {/*<ListItem button>*/}
-                                {/*<ListItemIcon>*/}
-                                {/*<Assignment/>*/}
-                                {/*</ListItemIcon>*/}
-                                {/*<ListItemText primary="Assignments"/>*/}
-                                {/*</ListItem>*/}
+                                <ListItem button onClick={() => this.props.dispatch(tutorsRoute())}>
+                                    <ListItemIcon>
+                                        <Person/>
+                                    </ListItemIcon>
+                                    <ListItemText primary="Tutors"/>
+                                </ListItem>
+                                <ListItem button onClick={() => this.props.dispatch(studentsRoute())}>
+                                    <ListItemIcon>
+                                        <PersonOutline/>
+                                    </ListItemIcon>
+                                    <ListItemText primary="Students"/>
+                                </ListItem>
+                                <ListItem button onClick={() => this.props.dispatch(subjectsRoute())}>
+                                    <ListItemIcon>
+                                        <FolderOpen/>
+                                    </ListItemIcon>
+                                    <ListItemText primary="Subjects"/>
+                                </ListItem>
+                                <ListItem button onClick={() => this.props.dispatch(enrolmentsRoute())}>
+                                    <ListItemIcon>
+                                        <AssignmentInd/>
+                                    </ListItemIcon>
+                                    <ListItemText primary="Enrolments"/>
+                                </ListItem>
+                                <ListItem button onClick={() => this.props.dispatch(assignmentsRoute())}>
+                                    <ListItemIcon>
+                                        <Assignment/>
+                                    </ListItemIcon>
+                                    <ListItemText primary="Assignments"/>
+                                </ListItem>
+                                <ListItem button onClick={() => this.props.dispatch(coursesRoute())}>
+                                    <ListItemIcon>
+                                        <Book/>
+                                    </ListItemIcon>
+                                    <ListItemText primary="Courses"/>
+                                </ListItem>
                             </div>
                         </List>
                         <Divider/>

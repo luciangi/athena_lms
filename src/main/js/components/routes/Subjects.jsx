@@ -140,7 +140,7 @@ class Subjects extends React.Component {
 
         return (
             <div>
-                <Paper className={classes.root} elevation={4}>
+                <Paper className={classes.root} elevation={1}>
                     <Typography variant="headline" component="h3"><Book/> Subjects</Typography>
                     <Grid rows={rows} columns={columns}>
                         <FilteringState defaultFilters={defaultFilters}/>

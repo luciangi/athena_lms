@@ -34,6 +34,7 @@ open class WebSecurityComponent : WebSecurityConfigurerAdapter() {
                         "/*.js",
                         "/*.html",
                         "/*.css",
+                        "/images/**",
                         "/",
                         "/swagger-resources/**"
                 ).permitAll()

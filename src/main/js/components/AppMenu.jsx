@@ -27,6 +27,7 @@ import MenuIcon from "material-ui-icons/Menu";
 import { connect } from "react-redux";
 import {
     homeRoute,
+    isAdminUser,
     logoutUser,
     openLogin,
     profileRoute,
@@ -93,7 +94,8 @@ const styles = theme => ({
         marginLeft: 12
     },
     homeIcon: {
-        marginRight: 12
+        marginRight: 12,
+        marginLeft: 12
     }
 });
 
@@ -160,13 +162,15 @@ class AppMenu extends React.Component {
                     position="absolute"
                     className={classNames(classes.appBar, this.state.drawerOpened && classes.appBarShift)}>
                     <Toolbar disableGutters={!this.state.drawerOpened}>
-                        <IconButton
-                            color="inherit"
-                            aria-label="open drawer"
-                            onClick={openDrawer}
-                            className={classNames(classes.menuButton, this.state.drawerOpened && classes.hide)}>
-                            <MenuIcon/>
-                        </IconButton>
+                        {user && (
+                            <IconButton
+                                color="inherit"
+                                aria-label="open drawer"
+                                onClick={openDrawer}
+                                className={classNames(classes.menuButton, this.state.drawerOpened && classes.hide)}>
+                                <MenuIcon/>
+                            </IconButton>)
+                        }
                         <Typography variant="title"
                                     color="inherit"
                                     className={classes.flex}
@@ -178,36 +182,38 @@ class AppMenu extends React.Component {
                         {isLoggedIn && logOutButton}
                     </Toolbar>
                 </AppBar>
-                <Drawer
-                    variant="permanent"
-                    classes={{
-                        paper: classNames(classes.drawerPaper, !this.state.drawerOpened && classes.drawerPaperClose)
-                    }}
-                    open={this.state.drawerOpened}>
-                    <div className={classes.toolbar}>
-                        <IconButton onClick={closeDrawer}>
-                            {theme.direction === "rtl" ? <ChevronRight/> : <ChevronLeft/>}
-                        </IconButton>
-                    </div>
-                    <Divider/>
-                    <List>
-                        <div>
-                            <ListItem button onClick={() => this.props.dispatch(subjectsRoute())}>
-                                <ListItemIcon>
-                                    <Book/>
-                                </ListItemIcon>
-                                <ListItemText primary="Subjects"/>
-                            </ListItem>
-                            {/*<ListItem button>*/}
-                            {/*<ListItemIcon>*/}
-                            {/*<Assignment/>*/}
-                            {/*</ListItemIcon>*/}
-                            {/*<ListItemText primary="Assignments"/>*/}
-                            {/*</ListItem>*/}
+                {user && (
+                    <Drawer
+                        variant="permanent"
+                        classes={{
+                            paper: classNames(classes.drawerPaper, !this.state.drawerOpened && classes.drawerPaperClose)
+                        }}
+                        open={this.state.drawerOpened}>
+                        <div className={classes.toolbar}>
+                            <IconButton onClick={closeDrawer}>
+                                {theme.direction === "rtl" ? <ChevronRight/> : <ChevronLeft/>}
+                            </IconButton>
                         </div>
-                    </List>
-                    <Divider/>
-                </Drawer>
+                        <Divider/>
+                        <List>
+                            <div>
+                                {isAdminUser(user) && (
+                                    <ListItem button onClick={() => this.props.dispatch(subjectsRoute())}>
+                                        <ListItemIcon>
+                                            <Book/>
+                                        </ListItemIcon>
+                                        <ListItemText primary="Subjects"/>
+                                    </ListItem>)}
+                                {/*<ListItem button>*/}
+                                {/*<ListItemIcon>*/}
+                                {/*<Assignment/>*/}
+                                {/*</ListItemIcon>*/}
+                                {/*<ListItemText primary="Assignments"/>*/}
+                                {/*</ListItem>*/}
+                            </div>
+                        </List>
+                        <Divider/>
+                    </Drawer>)}
                 <Login/>
             </div>
         );

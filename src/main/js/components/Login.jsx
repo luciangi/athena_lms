@@ -96,10 +96,11 @@ class Login extends React.Component {
                 <DialogActions>
                     <Button
                         onClick={close}
-                        color="primary">Cancel</Button>
+                        color="secondary">Cancel</Button>
                     <Button
                         disabled={this.state.pristine || !this.state.username || !this.state.password}
                         onClick={submit}
+                        variant="raised"
                         color="primary">
                         Submit
                     </Button>

@@ -1,5 +1,6 @@
 import React from "react";
 import {
+    IconButton,
     Paper,
     Typography,
     withStyles
@@ -7,8 +8,12 @@ import {
 import { connect } from "react-redux";
 import {
     EditingState,
+    FilteringState,
+    IntegratedFiltering,
     IntegratedPaging,
-    PagingState
+    IntegratedSorting,
+    PagingState,
+    SortingState
 } from "@devexpress/dx-react-grid";
 import {
     ColumnChooser,
@@ -20,10 +25,18 @@ import {
     TableColumnVisibility,
     TableEditColumn,
     TableEditRow,
+    TableFilterRow,
     TableHeaderRow,
     Toolbar
 } from "@devexpress/dx-react-grid-material-ui";
-import { Book } from "material-ui-icons";
+import {
+    Add,
+    Book,
+    Cancel,
+    Delete,
+    Edit,
+    Save
+} from "material-ui-icons";
 
 const styles = theme => ({
     root: theme.mixins.gutters({
@@ -32,6 +45,53 @@ const styles = theme => ({
         marginTop: theme.spacing.unit * 3
     })
 });
+
+const AddButton = ({ onExecute }) => (
+    <IconButton onClick={onExecute} title="Add row">
+        <Add/>
+    </IconButton>
+);
+
+const EditButton = ({ onExecute }) => (
+    <IconButton onClick={onExecute} title="Edit row">
+        <Edit/>
+    </IconButton>
+);
+
+const DeleteButton = ({ onExecute }) => (
+    <IconButton color="secondary" onClick={onExecute} title="Delete row">
+        <Delete/>
+    </IconButton>
+);
+
+const CommitButton = ({ onExecute }) => (
+    <IconButton onClick={onExecute} title="Save changes">
+        <Save/>
+    </IconButton>
+);
+
+const CancelButton = ({ onExecute }) => (
+    <IconButton color="secondary" onClick={onExecute} title="Cancel changes">
+        <Cancel/>
+    </IconButton>
+);
+
+const commandComponents = {
+    add: AddButton,
+    edit: EditButton,
+    delete: DeleteButton,
+    commit: CommitButton,
+    cancel: CancelButton
+};
+
+const Command = ({ id, onExecute }) => {
+    const CommandButton = commandComponents[ id ];
+    return (
+        <CommandButton
+            onExecute={onExecute}
+        />
+    );
+};
 
 @withStyles(styles)
 @connect((store) => ({
@@ -52,6 +112,8 @@ class Subjects extends React.Component {
                 { name: "name", title: "Name" },
                 { name: "description", title: "Description" }
             ],
+            defaultFilters: [],
+            defaultSorting: [ { columnName: "name", direction: "desc" } ],
             defaultOrder: [ "name", "description" ],
             defaultHiddenColumnNames: [],
             defaultCurrentPage: 0,
@@ -65,6 +127,8 @@ class Subjects extends React.Component {
         const {
             rows,
             columns,
+            defaultFilters,
+            defaultSorting,
             defaultOrder,
             defaultHiddenColumnNames,
             defaultCurrentPage,
@@ -79,24 +143,40 @@ class Subjects extends React.Component {
                 <Paper className={classes.root} elevation={4}>
                     <Typography variant="headline" component="h3"><Book/> Subjects</Typography>
                     <Grid rows={rows} columns={columns}>
-                        <EditingState onCommitChanges={commitChanges}/>
+                        <FilteringState defaultFilters={defaultFilters}/>
+                        <IntegratedFiltering/>
+
+                        <SortingState defaultSorting={defaultSorting}/>
+                        <IntegratedSorting/>
+
                         <PagingState
                             defaultCurrentPage={defaultCurrentPage}
                             pageSize={pageSize}/>
                         <IntegratedPaging/>
+
                         <DragDropProvider/>
+
+                        <EditingState onCommitChanges={commitChanges}/>
+
                         <Table/>
-                        <TableHeaderRow/>
                         <TableEditRow/>
                         <TableEditColumn
                             showAddCommand
                             showEditCommand
                             showDeleteCommand
+                            commandComponent={Command}
                         />
+
                         <TableColumnReordering defaultOrder={defaultOrder}/>
+
                         <TableColumnVisibility defaultHiddenColumnNames={defaultHiddenColumnNames}/>
+
+                        <TableHeaderRow showSortingControls/>
+                        <TableFilterRow/>
+
                         <Toolbar/>
                         <ColumnChooser/>
+
                         <PagingPanel pageSizes={pageSizes}/>
                     </Grid>
                 </Paper>

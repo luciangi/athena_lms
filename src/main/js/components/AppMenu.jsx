@@ -4,6 +4,7 @@ import classNames from "classnames";
 import {
     AppBar,
     Button,
+    Dialog,
     Divider,
     Drawer,
     IconButton,
@@ -23,6 +24,7 @@ import {
     Book,
     ChevronLeft,
     ChevronRight,
+    Close,
     FolderOpen,
     Person,
     PersonOutline,
@@ -43,6 +45,7 @@ import {
     tutorsRoute
 } from "../redux/actions";
 import Login from "./Login";
+import Slide from "material-ui/es/transitions/Slide";
 
 const drawerWidth = 240;
 
@@ -102,11 +105,15 @@ const styles = theme => ({
     accountIcon: {
         marginLeft: 12
     },
-    homeIcon: {
+    actionsMargins: {
         marginRight: 12,
         marginLeft: 12
     }
 });
+
+const Transition = (props) => {
+    return <Slide direction="up" {...props} />;
+};
 
 @withStyles(styles, { withTheme: true })
 @connect((store) => ({ user: store.auth.user }))
@@ -115,6 +122,7 @@ class AppMenu extends React.Component {
         super(props);
         this.state = {
             drawerOpened: false,
+            userRegisterOpen: false,
             userMenuAnchorEl: null
         };
     }
@@ -126,14 +134,32 @@ class AppMenu extends React.Component {
         const closeDrawer = () => this.setState({ drawerOpened: false });
         const openUserMenu = (event) => this.setState({ userMenuAnchorEl: event.currentTarget });
         const closeUserMenu = () => this.setState({ userMenuAnchorEl: null });
+        const openUserRegister = () => this.setState({ userRegisterOpen: true });
+        const closeUserRegister = () => this.setState({ userRegisterOpen: false });
 
-        const logInButton = (<Button color="inherit" onClick={() => this.props.dispatch(openLogin())}>Login</Button>);
+        const registerButton = (
+            <Button color="inherit"
+                    className={classes.actionsMargins}
+                    onClick={openUserRegister}>
+                Register
+            </Button>
+        );
+
+        const logInButton = (
+            <Button color="inherit"
+                    className={classes.actionsMargins}
+                    onClick={() => this.props.dispatch(openLogin())}>
+                Login
+            </Button>
+        );
+
         const logOutButton = (
             <div>
                 <Button aria-owns={this.state.userMenuAnchorEl ? "menu-appbar" : null}
                         aria-haspopup="true"
                         onClick={openUserMenu}
-                        color="inherit">
+                        color="inherit"
+                        className={classes.actionsMargins}>
                     {isLoggedIn && this.props.user.username}
                     <AccountCircle className={classes.accountIcon}/>
                 </Button>
@@ -184,9 +210,10 @@ class AppMenu extends React.Component {
                                     color="inherit"
                                     className={classes.flex}
                                     onClick={() => this.props.dispatch(homeRoute())}>
-                            <School className={classes.homeIcon}/>
+                            <School className={classes.actionsMargins}/>
                             Athena
                         </Typography>
+                        {!isLoggedIn && registerButton}
                         {!isLoggedIn && logInButton}
                         {isLoggedIn && logOutButton}
                     </Toolbar>
@@ -247,6 +274,22 @@ class AppMenu extends React.Component {
                         <Divider/>
                     </Drawer>)}
                 <Login/>
+                <Dialog
+                    fullScreen
+                    open={this.state.userRegisterOpen}
+                    onClose={closeUserRegister}
+                    transition={Transition}>
+                    <AppBar className={classes.appBar}>
+                        <Toolbar>
+                            <IconButton color="inherit" onClick={closeUserRegister} aria-label="Close">
+                                <Close/>
+                            </IconButton>
+                            <Typography variant="title" color="inherit">
+                                Register Student
+                            </Typography>
+                        </Toolbar>
+                    </AppBar>
+                </Dialog>
             </div>
         );
     }

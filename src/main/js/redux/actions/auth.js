@@ -15,10 +15,10 @@ import store from "../store";
 export const loadUser = () => {
     return (dispatch) => {
         axios.get("api/userDetails")
-            .then(function (response) {
+            .then(response => {
                 dispatch(loginSuccess(response.data));
             })
-            .catch(function (error) {
+            .catch(error => {
                 if (error.response.status === 401) {
                     dispatch(logoutSuccess());
                 } else {
@@ -36,12 +36,12 @@ export const loginUser = (username, password) => {
         bodyFormData.append("password", password);
 
         axios.post("api/login", bodyFormData)
-            .then(function (response) {
+            .then(response => {
                 dispatch(loginSuccess(response.data, true));
                 dispatch(openNotification(`Hello ${response.data.username}`));
                 dispatch(closeLogin());
             })
-            .catch(function (error) {
+            .catch(error => {
                 dispatch(loginError());
                 dispatch(openNotification(`Login error: ${error.response.data.message}`, true));
             });
@@ -60,11 +60,11 @@ export const loginSuccess = (user, fromLogin = false) => {
 export const logoutUser = () => {
     return (dispatch) => {
         axios.get("api/logout")
-            .then(function () {
+            .then(() => {
                 dispatch(logoutSuccess());
                 dispatch(openNotification("Logged Out"));
             })
-            .catch(function (error) {
+            .catch(error => {
                 dispatch(openNotification(`An error occurred while logging out: ${error}`, true));
             });
     }

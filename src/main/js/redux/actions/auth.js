@@ -13,7 +13,7 @@ import axios from "axios/index";
 import store from "../store";
 
 export const loadUser = () => {
-    return (dispatch) => {
+    return async (dispatch) => {
         axios.get("api/userDetails")
             .then(response => {
                 dispatch(loginSuccess(response.data));
@@ -30,7 +30,7 @@ export const loadUser = () => {
 };
 
 export const loginUser = (username, password) => {
-    return (dispatch) => {
+    return async (dispatch) => {
         const bodyFormData = new FormData();
         bodyFormData.append("username", username);
         bodyFormData.append("password", password);
@@ -49,16 +49,16 @@ export const loginUser = (username, password) => {
 };
 
 export const loginSuccess = (user, fromLogin = false) => {
-    return (dispatch) => {
+    return async (dispatch) => {
         if (fromLogin) {
             dispatch(profileRoute(user));
         }
-        dispatch({ type: authConstants.LOGIN_SUCCESS, user: user })
+        dispatch({ type: authConstants.LOGIN_SUCCESS, user })
     }
 };
 
 export const logoutUser = () => {
-    return (dispatch) => {
+    return async (dispatch) => {
         axios.get("api/logout")
             .then(() => {
                 dispatch(logoutSuccess());
@@ -71,7 +71,7 @@ export const logoutUser = () => {
 };
 
 export const logoutSuccess = () => {
-    return (dispatch) => {
+    return async (dispatch) => {
         dispatch(homeRoute());
         dispatch({ type: authConstants.LOGOUT_SUCCESS })
     }

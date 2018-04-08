@@ -18,8 +18,6 @@ const Notification = (props) => {
             open={message !== ""}
             message={message}
             autoHideDuration={6000}
-            bodyStyle={{ minWidth: 800 }}
-
             SnackbarContentProps={{ style: { color: error ? red[ 500 ] : grey[ 50 ] } }}
             action={<IconButton onClick={close}><Clear color="secondary" style={{ color: props.theme.palette.accent1Color }}/></IconButton>}
             onClose={close}

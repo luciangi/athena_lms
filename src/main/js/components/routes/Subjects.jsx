@@ -17,7 +17,7 @@ const styles = theme => ({
 });
 
 @withStyles(styles)
-@connect((store) => ({}))
+@connect(() => ({}))
 class Subjects extends React.Component {
     constructor(props) {
         super(props);
@@ -32,15 +32,11 @@ class Subjects extends React.Component {
             <div>
                 <Paper className={classes.root} elevation={1}>
                     <Typography variant="headline" component="h3"><FolderOpen/> Subjects</Typography>
-                    <DataTable apiType="subjects"
+                    <DataTable profile="subjects"
                                columns={[
                                    { name: "name", title: "Name" },
                                    { name: "description", title: "Description" }
-                               ]}
-                               defaultSorting={[
-                                   { columnName: "name", direction: "desc" }
-                               ]}
-                    />
+                               ]}/>
                 </Paper>
             </div>
         )

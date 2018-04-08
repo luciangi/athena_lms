@@ -1,10 +1,8 @@
 import React from "react";
+import PropTypes from "prop-types";
 import {
+    CustomPaging,
     EditingState,
-    FilteringState,
-    IntegratedFiltering,
-    IntegratedPaging,
-    IntegratedSorting,
     PagingState,
     SortingState
 } from "@devexpress/dx-react-grid";
@@ -18,7 +16,6 @@ import {
     TableColumnVisibility,
     TableEditColumn,
     TableEditRow,
-    TableFilterRow,
     TableHeaderRow,
     Toolbar
 } from "@devexpress/dx-react-grid-material-ui";
@@ -30,35 +27,52 @@ import {
     Edit,
     Save
 } from "material-ui-icons";
-import { loadData } from "../redux/actions/dataTable";
 import { connect } from "react-redux";
+import {
+    addData,
+    changePage,
+    changePageSize,
+    changePageSorting,
+    loadData
+} from "../redux/actions";
+import { dataTableInitialState } from "../redux/reducers/dataTable";
 
 const AddButton = ({ onExecute }) => (
-    <IconButton onClick={onExecute} title="Add row">
+    <IconButton
+        title="Add row"
+        onClick={onExecute}>
         <Add/>
     </IconButton>
 );
 
 const EditButton = ({ onExecute }) => (
-    <IconButton onClick={onExecute} title="Edit row">
+    <IconButton
+        title="Edit row"
+        onClick={onExecute}
+    >
         <Edit/>
     </IconButton>
 );
 
 const DeleteButton = ({ onExecute }) => (
-    <IconButton color="secondary" onClick={onExecute} title="Delete row">
+    <IconButton title="Delete row"
+                color="secondary"
+                onClick={onExecute}>
         <Delete/>
     </IconButton>
 );
 
 const CommitButton = ({ onExecute }) => (
-    <IconButton onClick={onExecute} title="Save changes">
+    <IconButton title="Save changes"
+                onClick={onExecute}>
         <Save/>
     </IconButton>
 );
 
 const CancelButton = ({ onExecute }) => (
-    <IconButton color="secondary" onClick={onExecute} title="Cancel changes">
+    <IconButton title="Cancel changes"
+                color="secondary"
+                onClick={onExecute}>
         <Cancel/>
     </IconButton>
 );
@@ -78,48 +92,40 @@ const Command = ({ id, onExecute }) => {
 
 @connect((store) => ({ data: store.dataTable }))
 class DataTable extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            defaultOrder: [ "name", "description" ],
-            defaultHiddenColumnNames: [],
-            defaultCurrentPage: 0,
-            pageSize: 10,
-            pageSizes: [ 10, 50, 100 ]
-        };
-    }
-
     componentWillMount() {
-        this.props.dispatch(loadData(this.props.apiType));
+        this.props.dispatch(loadData(this.props.profile));
     }
 
     render() {
-        const { apiType, columns, defaultSorting, data: data } = this.props;
-        const {
-            defaultOrder,
-            defaultHiddenColumnNames,
-            defaultCurrentPage,
-            pageSize,
-            pageSizes
-        } = this.state;
+        const { profile, columns, data: data, dispatch } = this.props;
+        const defaultOrder = columns.map((column) => column.name);
+        const { rows, currentPage, totalCount, sorting } = (!!data[ profile ] && data[ profile ]) || dataTableInitialState;
 
-        const { rows } = (!!data[ apiType ] && data[ apiType ]) || { rows: [] };
-
-        const commitChanges = () => {
+        const commitChanges = ({ added, changed, deleted }) => {
+            if (added) {
+                dispatch(addData(profile, added[ 0 ]));
+            } else if (changed) {
+                // dispatch(updateData());
+                console.log("CHANGED", changed)
+            } else if (deleted) {
+                // dispatch(deleteData());
+                console.log("DELETED", deleted)
+            }
         };
 
         return (
-            <Grid rows={rows} columns={columns}>
-                <FilteringState defaultFilters={[]}/>
-                <IntegratedFiltering/>
 
-                <SortingState defaultSorting={defaultSorting}/>
-                <IntegratedSorting/>
+            <Grid rows={rows} columns={columns}>
+                <SortingState sorting={sorting}
+                              onSortingChange={(sorting) => dispatch(changePageSorting(profile, sorting))}
+                />
 
                 <PagingState
-                    defaultCurrentPage={defaultCurrentPage}
-                    pageSize={pageSize}/>
-                <IntegratedPaging/>
+                    currentPage={currentPage}
+                    onCurrentPageChange={(currentPage) => dispatch(changePage(profile, currentPage))}
+                    onPageSizeChange={(pageSize) => dispatch(changePageSize(profile, pageSize))}
+                />
+                <CustomPaging totalCount={totalCount}/>
 
                 <DragDropProvider/>
 
@@ -136,20 +142,21 @@ class DataTable extends React.Component {
 
                 <TableColumnReordering defaultOrder={defaultOrder}/>
 
-                <TableColumnVisibility defaultHiddenColumnNames={defaultHiddenColumnNames}/>
+                <TableColumnVisibility defaultHiddenColumnNames={[]}/>
 
                 <TableHeaderRow showSortingControls/>
-                <TableFilterRow/>
-
                 <Toolbar/>
                 <ColumnChooser/>
 
-                <PagingPanel pageSizes={pageSizes}/>
+                <PagingPanel pageSizes={[ 10, 50, 100 ]}/>
             </Grid>
         )
     }
 }
 
-DataTable.propTypes = {};
+DataTable.propTypes = {
+    profile: PropTypes.string.isRequired,
+    columns: PropTypes.arrayOf(PropTypes.object).isRequired
+};
 
 export default DataTable

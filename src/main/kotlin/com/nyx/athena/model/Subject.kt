@@ -8,7 +8,6 @@ import javax.persistence.GeneratedValue
 import javax.persistence.Id
 import javax.persistence.Table
 
-
 @Entity
 @Table
 class Subject(var name: String,
@@ -22,5 +21,4 @@ class Subject(var name: String,
     @Type(type = "pg-uuid")
     @Suppress("unused")
     val id: UUID = UUID.randomUUID()
-
 }

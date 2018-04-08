@@ -128,7 +128,7 @@ class AppMenu extends React.Component {
     }
 
     render() {
-        const { classes, theme, user } = this.props;
+        const { classes, theme, user, dispatch } = this.props;
         const isLoggedIn = !!user;
         const openDrawer = () => this.setState({ drawerOpened: true });
         const closeDrawer = () => this.setState({ drawerOpened: false });
@@ -148,7 +148,7 @@ class AppMenu extends React.Component {
         const logInButton = (
             <Button color="inherit"
                     className={classes.actionsMargins}
-                    onClick={() => this.props.dispatch(openLogin())}>
+                    onClick={() => dispatch(openLogin())}>
                 Login
             </Button>
         );
@@ -177,13 +177,14 @@ class AppMenu extends React.Component {
                       onClose={closeUserMenu}>
                     <MenuItem onClick={() => {
                         closeUserMenu();
-                        this.props.dispatch(profileRoute())
+                        dispatch(profileRoute());
                     }}>
                         Profile
                     </MenuItem>
                     <MenuItem onClick={() => {
                         closeUserMenu();
-                        this.props.dispatch(logoutUser())
+                        this.setState({ drawerOpened: false });
+                        dispatch(logoutUser());
                     }}>
                         Logout
                     </MenuItem>
@@ -209,7 +210,7 @@ class AppMenu extends React.Component {
                         <Typography variant="title"
                                     color="inherit"
                                     className={classes.flex}
-                                    onClick={() => this.props.dispatch(homeRoute())}>
+                                    onClick={() => dispatch(homeRoute())}>
                             <School className={classes.actionsMargins}/>
                             Athena
                         </Typography>
@@ -233,37 +234,37 @@ class AppMenu extends React.Component {
                         <Divider/>
                         <List>
                             <div>
-                                <ListItem button onClick={() => this.props.dispatch(tutorsRoute())}>
+                                <ListItem button onClick={() => dispatch(tutorsRoute())}>
                                     <ListItemIcon>
                                         <Person/>
                                     </ListItemIcon>
                                     <ListItemText primary="Tutors"/>
                                 </ListItem>
-                                <ListItem button onClick={() => this.props.dispatch(studentsRoute())}>
+                                <ListItem button onClick={() => dispatch(studentsRoute())}>
                                     <ListItemIcon>
                                         <PersonOutline/>
                                     </ListItemIcon>
                                     <ListItemText primary="Students"/>
                                 </ListItem>
-                                <ListItem button onClick={() => this.props.dispatch(subjectsRoute())}>
+                                <ListItem button onClick={() => dispatch(subjectsRoute())}>
                                     <ListItemIcon>
                                         <FolderOpen/>
                                     </ListItemIcon>
                                     <ListItemText primary="Subjects"/>
                                 </ListItem>
-                                <ListItem button onClick={() => this.props.dispatch(enrolmentsRoute())}>
+                                <ListItem button onClick={() => dispatch(enrolmentsRoute())}>
                                     <ListItemIcon>
                                         <AssignmentInd/>
                                     </ListItemIcon>
                                     <ListItemText primary="Enrolments"/>
                                 </ListItem>
-                                <ListItem button onClick={() => this.props.dispatch(assignmentsRoute())}>
+                                <ListItem button onClick={() => dispatch(assignmentsRoute())}>
                                     <ListItemIcon>
                                         <Assignment/>
                                     </ListItemIcon>
                                     <ListItemText primary="Assignments"/>
                                 </ListItem>
-                                <ListItem button onClick={() => this.props.dispatch(coursesRoute())}>
+                                <ListItem button onClick={() => dispatch(coursesRoute())}>
                                     <ListItemIcon>
                                         <Book/>
                                     </ListItemIcon>

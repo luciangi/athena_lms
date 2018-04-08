@@ -1,30 +1,76 @@
 import axios from "axios/index";
 import { openNotification } from "./index";
 import { dataTableConstants } from "../constants";
+import { dataTableInitialState } from "../reducers/dataTable";
 
-export const loadData = (apiType) => {
-    return (dispatch) => {
-        dispatch(loadDataBegin(apiType));
-        axios.get(`api/${apiType}`)
-            .then((response) => {
-                dispatch(loadDataSuccess(apiType, response.data));
-            })
-            .catch((error) => {
-                console.error(error);
-                dispatch(loadDataError(apiType, error));
-                dispatch(openNotification(`Load data error for ${apiType}: ${error.response.data.message}`, true));
+const loadBegin = profile => {
+    return { type: dataTableConstants.LOAD_BEGIN, profile }
+};
+
+const loadEnd = profile => {
+    return { type: dataTableConstants.LOAD_END, profile }
+};
+
+export const loadData = (profile) => {
+    return (dispatch, getState) => {
+        const { currentPage, pageSize, sorting } = getState().dataTable[ profile ] || dataTableInitialState;
+        dispatch(loadBegin(profile));
+        axios.get(`api/${profile}`, {
+            params: {
+                page: currentPage,
+                size: pageSize,
+                sort: sorting.length > 0 && `${sorting[ 0 ].columnName},${sorting[ 0 ].direction}`
+            }
+        }).then((response) => {
+            const data = response.data;
+            dispatch({
+                type: dataTableConstants.LOAD_DATA_SUCCESS,
+                profile,
+                rows: data.content,
+                currentPage: data.page.number,
+                pageSize: data.page.size,
+                totalCount: data.page.totalElements
             });
+            dispatch(loadEnd(profile));
+        }).catch((error) => {
+            console.error(error);
+            dispatch({ type: dataTableConstants.LOAD_DATA_ERROR, profile, error: error });
+            dispatch(openNotification(`Load data error for ${profile}: ${error.response.data.message}`, true));
+        });
     }
 };
 
-function loadDataBegin(apiType) {
-    return { type: dataTableConstants.LOAD_DATA_BEGIN, apiType }
-}
+export const changePage = (profile, currentPage) => {
+    return (dispatch) => {
+        dispatch({ type: dataTableConstants.CHANGE_PAGE, profile, currentPage: currentPage });
+        dispatch(loadData(profile))
+    }
+};
 
-function loadDataSuccess(apiType, data) {
-    return { type: dataTableConstants.LOAD_DATA_SUCCESS, apiType, rows: data._embedded[ apiType ] }
-}
+export const changePageSize = (profile, pageSize) => {
+    return (dispatch) => {
+        dispatch({ type: dataTableConstants.CHANGE_PAGE_SIZE, profile, pageSize: pageSize });
+        dispatch(loadData(profile))
+    }
+};
 
-function loadDataError(apiType, error) {
-    return { type: dataTableConstants.LOAD_DATA_ERROR, apiType, error: error }
-}
+export const changePageSorting = (profile, sorting) => {
+    return (dispatch) => {
+        dispatch({ type: dataTableConstants.CHANGE_PAGE_SORTING, profile, sorting: sorting });
+        dispatch(loadData(profile))
+    }
+};
+
+export const addData = (profile, data) => {
+    return (dispatch) => {
+        axios.post(`api/${profile}`, data)
+            .then(() => {
+                dispatch(loadData(profile));
+                dispatch(openNotification(`Added ${"profile"}`));
+            })
+            .catch((error) => {
+                console.error(error);
+                dispatch(openNotification(`Load data error for ${profile}: ${error.response.data.message}`, true));
+            });
+    }
+};

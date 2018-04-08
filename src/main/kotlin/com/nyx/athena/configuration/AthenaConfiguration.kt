@@ -1,14 +1,8 @@
 package com.nyx.athena.configuration
 
-import com.nyx.athena.model.Role
+import com.nyx.athena.model.*
 import com.nyx.athena.model.Role.Authority.*
-import com.nyx.athena.model.Subject
-import com.nyx.athena.model.Tutor
-import com.nyx.athena.model.User
-import com.nyx.athena.repository.RoleRepository
-import com.nyx.athena.repository.SubjectRepository
-import com.nyx.athena.repository.TutorRepository
-import com.nyx.athena.repository.UserRepository
+import com.nyx.athena.repository.*
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -26,14 +20,19 @@ open class AthenaConfiguration {
     open fun dataSourceInit(roleRepository: RoleRepository,
                             userRepository: UserRepository,
                             tutorRepository: TutorRepository,
+                            studentRepository: StudentRepository,
                             passwordEncoder: PasswordEncoder,
                             subjectRepository: SubjectRepository) = InitializingBean {
-        authInit(roleRepository, passwordEncoder, tutorRepository, userRepository)
+        authInit(roleRepository, passwordEncoder, tutorRepository, studentRepository, userRepository)
 
         subjectsInit(subjectRepository)
     }
 
-    private fun authInit(roleRepository: RoleRepository, passwordEncoder: PasswordEncoder, tutorRepository: TutorRepository, userRepository: UserRepository) {
+    private fun authInit(roleRepository: RoleRepository,
+                         passwordEncoder: PasswordEncoder,
+                         tutorRepository: TutorRepository,
+                         studentRepository: StudentRepository,
+                         userRepository: UserRepository) {
         val adminRole = Role(ROLE_ADMIN.name)
         val tutorRole = Role(ROLE_TUTOR.name)
         val studentRole = Role(ROLE_STUDENT.name)
@@ -44,7 +43,8 @@ open class AthenaConfiguration {
                 password = passwordEncoder.encode("admin"),
                 email = "admin@email.com"
         )
-        adminUser.roles += adminRole
+        adminUser.roles += roleRepository.findByAuthority(ROLE_ADMIN.name)
+        userRepository.save(adminUser)
 
         val tutorUser = Tutor(
                 username = "tutor",
@@ -52,19 +52,23 @@ open class AthenaConfiguration {
                 email = "tutor@email.com",
                 firstName = "Tutor",
                 lastName = "Demo",
-                otherDetails = "A tutor user used for demo purposes"
+                otherDetails = "A tutor user for demo purposes"
         )
         tutorUser.roles += roleRepository.findByAuthority(ROLE_TUTOR.name)
         tutorRepository.save(tutorUser)
 
-        val studentUser = User(
+        val studentUser = Student(
                 username = "student",
                 password = passwordEncoder.encode("student"),
-                email = "student@email.com"
+                email = "student@email.com",
+                firstName = "Student",
+                lastName = "Demo",
+                address = "Street address",
+                otherDetails = "A student for demo purposes"
         )
-        studentUser.roles += studentRole
+        studentUser.roles += roleRepository.findByAuthority(ROLE_STUDENT.name)
 
-        userRepository.save(hashSetOf(adminUser, studentUser))
+        studentRepository.save(studentUser)
     }
 
     private fun subjectsInit(subjectRepository: SubjectRepository) {

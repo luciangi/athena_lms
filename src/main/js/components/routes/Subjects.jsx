@@ -4,7 +4,6 @@ import {
     Typography,
     withStyles
 } from "material-ui";
-import { connect } from "react-redux";
 import { FolderOpen } from "material-ui-icons";
 import DataTable from "../DataTable";
 
@@ -17,17 +16,9 @@ const styles = theme => ({
 });
 
 @withStyles(styles)
-@connect(() => ({}))
 class Subjects extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {}
-    }
-
     render() {
         const { classes } = this.props;
-        const {} = this.state;
-
         return (
             <div>
                 <Paper className={classes.root} elevation={1}>

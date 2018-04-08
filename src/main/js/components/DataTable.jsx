@@ -33,7 +33,9 @@ import {
     changePage,
     changePageSize,
     changePageSorting,
-    loadData
+    deleteData,
+    loadData,
+    updateData
 } from "../redux/actions";
 import { dataTableInitialState } from "../redux/reducers/dataTable";
 
@@ -105,11 +107,9 @@ class DataTable extends React.Component {
             if (added) {
                 dispatch(addData(profile, added[ 0 ]));
             } else if (changed) {
-                // dispatch(updateData());
-                console.log("CHANGED", changed)
+                dispatch(updateData(profile, changed));
             } else if (deleted) {
-                // dispatch(deleteData());
-                console.log("DELETED", deleted)
+                dispatch(deleteData(profile, deleted[ 0 ]));
             }
         };
 
@@ -142,7 +142,7 @@ class DataTable extends React.Component {
 
                 <TableColumnReordering defaultOrder={defaultOrder}/>
 
-                <TableColumnVisibility defaultHiddenColumnNames={[]}/>
+                <TableColumnVisibility defaultHiddenColumnNames={[ "id" ]}/>
 
                 <TableHeaderRow showSortingControls/>
                 <Toolbar/>

@@ -66,11 +66,42 @@ export const addData = (profile, data) => {
         axios.post(`api/${profile}`, data)
             .then(() => {
                 dispatch(loadData(profile));
-                dispatch(openNotification(`Added ${"profile"}`));
+                dispatch(openNotification(`Added ${profile}`));
             })
             .catch((error) => {
                 console.error(error);
-                dispatch(openNotification(`Load data error for ${profile}: ${error.response.data.message}`, true));
+                dispatch(openNotification(`Add data error for ${profile}: ${error.response.data.message}`, true));
+            });
+    }
+};
+
+export const updateData = (profile, data) => {
+    return (dispatch, getState) => {
+        const rowId = Object.keys(data)[ 0 ];
+        const uuid = (getState().dataTable[ profile ] || dataTableInitialState).rows[ rowId ].id;
+        axios.patch(`api/${profile}/${uuid}`, data[ rowId ])
+            .then(() => {
+                dispatch(loadData(profile));
+                dispatch(openNotification(`Added ${profile}`));
+            })
+            .catch((error) => {
+                console.error(error);
+                dispatch(openNotification(`Update data error for ${profile}: ${error.response.data.message}`, true));
+            });
+    }
+};
+
+export const deleteData = (profile, rowId) => {
+    return (dispatch, getState) => {
+        const uuid = (getState().dataTable[ profile ] || dataTableInitialState).rows[ rowId ].id;
+        axios.delete(`api/${profile}/${uuid}`)
+            .then(() => {
+                dispatch(loadData(profile));
+                dispatch(openNotification(`Deleted ${profile}`));
+            })
+            .catch((error) => {
+                console.error(error);
+                dispatch(openNotification(`Delete data error for ${profile}: ${error.response.data.message}`, true));
             });
     }
 };

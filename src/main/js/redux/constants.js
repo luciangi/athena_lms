@@ -1,19 +1,7 @@
-//TODO: maybe move to server and load with the load user request
-export const API_SUFFIX = "/api";
-
 export const authoritiesConstants = {
     ROLE_ADMIN: "ROLE_ADMIN",
     ROLE_TUTOR: "ROLE_TUTOR",
     ROLE_STUDENT: "ROLE_STUDENT"
-};
-
-export const routesConstants = {
-    ROOT: "/",
-    ADMIN_ROOT: "/admin",
-    TUTOR_ROOT: "/tutor",
-    STUDENT_ROOT: "/student",
-    USER_ROOT: "/user",
-    LOGIN_ROOT: "/login"
 };
 
 export const menuConstants = {
@@ -30,4 +18,14 @@ export const authConstants = {
 export const notificationConstants = {
     NOTIFICATION_OPEN: "NOTIFICATION_OPEN",
     NOTIFICATION_CLOSE: "NOTIFICATION_CLOSE"
+};
+
+export const dataTableConstants = {
+    LOAD_BEGIN: "LOAD_BEGIN",
+    LOAD_END: "LOAD_END",
+    LOAD_DATA_SUCCESS: "LOAD_DATA_SUCCESS",
+    LOAD_DATA_ERROR: "LOAD_DATA_ERROR",
+    CHANGE_PAGE: "CHANGE_PAGE",
+    CHANGE_PAGE_SIZE: "CHANGE_PAGE_SIZE",
+    CHANGE_PAGE_SORTING: "CHANGE_PAGE_SORTING"
 };

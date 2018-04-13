@@ -1,18 +1,10 @@
 import React from "react";
-import { Link } from "react-router";
+import { SettingsApplications } from "material-ui-icons";
 
 const Admin = () => {
     return (
         <div>
-            <nav>
-                <ul>
-                    <li><Link to='/'>Home</Link></li>
-                    <li><Link to='/admin'>Admin</Link></li>
-                    <li><Link to='/tutor'>Tutor</Link></li>
-                    <li><Link to='/student'>Student</Link></li>
-                </ul>
-            </nav>
-            <span>Admin</span>
+            <span><SettingsApplications/> Admin</span>
         </div>
     )
 };

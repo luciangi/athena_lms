@@ -28,8 +28,8 @@ module.exports = (env, argv) => ({
                     loader: "babel-loader",
                     query: {
                         cacheDirectory: true,
-                        presets: [ "env", "react" ],
-                        plugins: [ "transform-decorators-legacy" ]
+                        presets: [ "env", "react", "es2015" ],
+                        plugins: [ "transform-decorators-legacy", "transform-es2015-destructuring", "transform-object-rest-spread" ]
                     }
                 }
             },

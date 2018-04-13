@@ -1,4 +1,4 @@
-package com.nyx.athena.security.model
+package com.nyx.athena.model
 
 import org.hibernate.annotations.GenericGenerator
 import org.hibernate.annotations.Type
@@ -13,26 +13,26 @@ import javax.persistence.CascadeType.ALL
 
 @Entity
 @Table(name = "\"user\"")
-data class User(@NotEmpty(message = "{user.username.notEmpty}")
-                var username: String = "",
-
-                @NotEmpty(message = "{user.password.notEmpty}")
+open class User(@NotEmpty(message = "{user.username.notEmpty}")
+                var username: String, @NotEmpty(message = "{user.password.notEmpty}")
                 @Length(min = 5, message = "{user.password.length}")
                 @Transient
-                var password: String = "",
-
-                @NotEmpty(message = "{user.email.notEmpty}")
+                var password: String, @NotEmpty(message = "{user.email.notEmpty}")
                 @Email(message = "{user.email.email}")
-                var email: String = "",
+                var email: String) {
+    @Suppress("unused")
+    constructor() : this(username = "", password = "", email = "")
 
-                @ManyToMany(cascade = [ALL])
-                @JoinTable
-                var roles: Set<Role> = hashSetOf()) {
     @Id
     @GenericGenerator(name = "uuid-gen", strategy = "uuid2")
     @GeneratedValue(generator = "uuid-gen")
     @Type(type = "pg-uuid")
+    @Suppress("unused")
     val id: UUID = randomUUID()
 
     var active: Boolean = true
+
+    @ManyToMany(cascade = [ALL])
+    @JoinTable
+    var roles: Set<Role> = hashSetOf()
 }

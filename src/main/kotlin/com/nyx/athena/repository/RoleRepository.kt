@@ -1,6 +1,6 @@
-package com.nyx.athena.security.repository
+package com.nyx.athena.repository
 
-import com.nyx.athena.security.model.Role
+import com.nyx.athena.model.Role
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 import java.util.*

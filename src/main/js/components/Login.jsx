@@ -1,14 +1,21 @@
 import React from "react";
 import {
     Dialog,
-    FlatButton,
-    TextField
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    FormControl,
+    FormHelperText,
+    Input,
+    InputLabel
 } from "material-ui";
 import { connect } from "react-redux";
 import {
     closeLogin,
     loginUser
 } from "../redux/actions";
+import Button from "material-ui/Button";
 
 const initialState = {
     username: null,
@@ -46,35 +53,58 @@ class Login extends React.Component {
             }
         };
 
-        const cancelButton = <FlatButton
-            label="Cancel"
-            onClick={close}/>;
-        const submitButton = <FlatButton
-            label="Submit"
-            primary
-            disabled={this.state.pristine || !this.state.username || !this.state.password}
-            onClick={submit}/>;
-
         return (
             <Dialog
-                title="Login to Athena"
-                actions={[ cancelButton, submitButton ]}
-                modal={true}
                 open={this.props.loginOpened}
-                onRequestClose={close}>
-                <div>
-                    <TextField
-                        floatingLabelText="Username"
-                        errorText={this.state.pristine ? this.props.error : (!this.state.username ? "Username is required" : false)}
-                        onChange={(_, username) => this.setState({ username, pristine: false })}/>
-                </div>
-                <div>
-                    <TextField
-                        type="password"
-                        floatingLabelText="Password"
-                        errorText={this.state.pristine ? this.props.error : (!this.state.password ? "Password is required" : false)}
-                        onChange={(_, password) => this.setState({ password, pristine: false })}/>
-                </div>
+                onClose={close}
+                aria-labelledby="form-dialog-title">
+                <DialogTitle id="form-dialog-title">Login to Athena</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Login to Athena using a tutor or student user. If you are a student you can create an account using the register button.
+                    </DialogContentText>
+                    <br/>
+                    <div>
+                        <FormControl error={this.state.pristine ? this.props.error : !this.state.username}
+                                     aria-describedby="name-error-text"
+                                     fullWidth>
+                            <InputLabel htmlFor="username">Username</InputLabel>
+                            <Input id="username"
+                                   onChange={(event) => this.setState({ username: event.target.value, pristine: false })}/>
+                            {(!this.state.pristine && !this.state.username) && (
+                                <FormHelperText id="username-required">
+                                    Username is required
+                                </FormHelperText>)}
+                        </FormControl>
+                    </div>
+                    <br/>
+                    <div>
+                        <FormControl error={this.state.pristine ? this.props.error : !this.state.password}
+                                     aria-describedby="name-error-text"
+                                     fullWidth>
+                            <InputLabel htmlFor="password">Password</InputLabel>
+                            <Input id="password"
+                                   type="password"
+                                   onChange={(event) => this.setState({ password: event.target.value, pristine: false })}/>
+                            {(!this.state.pristine && !this.state.password) && (
+                                <FormHelperText id="password-required">
+                                    Password is required
+                                </FormHelperText>)}
+                        </FormControl>
+                    </div>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        onClick={close}
+                        color="secondary">Cancel</Button>
+                    <Button
+                        disabled={this.state.pristine || !this.state.username || !this.state.password}
+                        onClick={submit}
+                        variant="raised"
+                        color="primary">
+                        Submit
+                    </Button>
+                </DialogActions>
             </Dialog>
         )
     }

@@ -1,5 +1,5 @@
 import React from "react";
-import { SettingsApplications } from "material-ui-icons";
+import { SettingsApplications } from "@material-ui/icons/es/index";
 
 const Admin = () => {
     return (

@@ -1,5 +1,5 @@
 import React from "react";
-import { Book } from "material-ui-icons";
+import { Book } from "@material-ui/icons/es/index";
 
 const Courses = () => {
     return (

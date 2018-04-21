@@ -1,5 +1,5 @@
 import React from "react";
-import { AccountBox } from "material-ui-icons";
+import { AccountBox } from "@material-ui/icons/es/index";
 
 const Tutor = () => {
     return (

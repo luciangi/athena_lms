@@ -20,13 +20,6 @@ import {
     Toolbar
 } from "@devexpress/dx-react-grid-material-ui";
 import { IconButton } from "material-ui";
-import {
-    Add,
-    Cancel,
-    Delete,
-    Edit,
-    Save
-} from "material-ui-icons";
 import { connect } from "react-redux";
 import {
     addData,
@@ -38,6 +31,13 @@ import {
     updateData
 } from "../redux/actions";
 import { dataTableInitialState } from "../redux/reducers/dataTable";
+import {
+    Add,
+    Cancel,
+    Delete,
+    Edit,
+    Save
+} from "@material-ui/icons/es/index";
 
 const AddButton = ({ onExecute }) => (
     <IconButton

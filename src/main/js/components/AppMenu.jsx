@@ -26,11 +26,11 @@ import {
     ChevronRight,
     Close,
     FolderOpen,
+    Menu as MenuIcon,
     Person,
     PersonOutline,
     School
-} from "material-ui-icons";
-import MenuIcon from "material-ui-icons/Menu";
+} from "@material-ui/icons/es/index";
 import { connect } from "react-redux";
 import {
     assignmentsRoute,

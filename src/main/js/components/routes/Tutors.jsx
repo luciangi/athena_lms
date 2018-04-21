@@ -1,11 +1,11 @@
 import React from "react";
-import { Person } from "material-ui-icons";
 import {
     Paper,
     Typography,
     withStyles
 } from "material-ui";
 import DataTable from "../DataTable";
+import { Person } from "@material-ui/icons/es/index";
 
 const styles = theme => ({
     root: theme.mixins.gutters({

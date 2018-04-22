@@ -5,7 +5,6 @@ import classNames from "classnames";
 import {
     AppBar,
     Button,
-    Dialog,
     Divider,
     Drawer,
     IconButton,
@@ -25,7 +24,6 @@ import {
     Book,
     ChevronLeft,
     ChevronRight,
-    Close,
     FolderOpen,
     Menu as MenuIcon,
     Person,
@@ -49,7 +47,7 @@ import {
     tutorsRoute
 } from "../redux/actions";
 import Login from "./Login";
-import Slide from "material-ui/es/transitions/Slide";
+import RegisterStudent from "./RegisterStudent";
 
 const drawerWidth = 240;
 
@@ -114,10 +112,6 @@ const styles = theme => ({
         marginLeft: 12
     }
 });
-
-const Transition = (props) => {
-    return <Slide direction="up" {...props} />;
-};
 
 @withStyles(styles, { withTheme: true })
 @connect((store) => ({ user: store.auth.user }))
@@ -279,22 +273,7 @@ class AppMenu extends React.Component {
                         <Divider/>
                     </Drawer>)}
                 <Login/>
-                <Dialog
-                    fullScreen
-                    open={this.state.userRegisterOpen}
-                    onClose={closeUserRegister}
-                    transition={Transition}>
-                    <AppBar className={classes.appBar}>
-                        <Toolbar>
-                            <IconButton color="inherit" onClick={closeUserRegister} aria-label="Close">
-                                <Close/>
-                            </IconButton>
-                            <Typography variant="title" color="inherit">
-                                Register Student
-                            </Typography>
-                        </Toolbar>
-                    </AppBar>
-                </Dialog>
+                <RegisterStudent open={this.state.userRegisterOpen} onClose={closeUserRegister}/>
             </div>
         );
     }

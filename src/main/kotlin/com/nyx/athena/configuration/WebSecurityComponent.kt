@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.nyx.athena.service.UserDetailService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
@@ -33,6 +34,7 @@ open class WebSecurityComponent : WebSecurityConfigurerAdapter() {
     override fun configure(http: HttpSecurity) {
         http.authorizeRequests()
                 .antMatchers(
+                        HttpMethod.GET,
                         "/*.js",
                         "/*.html",
                         "/*.css",
@@ -43,24 +45,31 @@ open class WebSecurityComponent : WebSecurityConfigurerAdapter() {
                         "/swagger-resources/**"
                 ).permitAll()
                 .antMatchers(
-                        "/api/**",
+                        HttpMethod.GET,
                         "/admin/**",
                         "/tutors/**",
-                        "/students/**",
-                        "/subjects/**"
+                        "/students/**"
                 ).hasRole("ADMIN")
                 .antMatchers(
+                        HttpMethod.GET,
                         "/tutor/**",
-                        "/subjects/**",
-//                        "/api/subjects",
-                        "/courses/**",
-                        "/assignments/**"
+                        "/courses/**"
                 ).hasRole("TUTOR")
                 .antMatchers(
+                        HttpMethod.GET,
                         "/student/**",
-                        "/assignments/**",
                         "/enrolments/**"
                 ).hasRole("STUDENT")
+                .antMatchers(
+                        HttpMethod.GET,
+                        "/subjects/**",
+                        "/api/subjects"
+                ).hasAnyRole("TUTOR", "ADMIN")
+                .antMatchers(
+                        HttpMethod.GET,
+                        "/assignments/**"
+                ).hasAnyRole("TUTOR", "STUDENT")
+                .antMatchers("/api/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().loginPage("/api/login")

@@ -39,10 +39,10 @@ open class WebSecurityComponent : WebSecurityConfigurerAdapter() {
                         "/images/**",
                         "/",
                         "/api/userDetails",
-                        "/genericError"
+                        "/genericError",
+                        "/swagger-resources/**"
                 ).permitAll()
                 .antMatchers(
-                        "/swagger-resources/**",
                         "/api/**",
                         "/admin/**",
                         "/tutors/**",
@@ -52,7 +52,7 @@ open class WebSecurityComponent : WebSecurityConfigurerAdapter() {
                 .antMatchers(
                         "/tutor/**",
                         "/subjects/**",
-                        "/api/subjects",
+//                        "/api/subjects",
                         "/courses/**",
                         "/assignments/**"
                 ).hasRole("TUTOR")
@@ -61,7 +61,7 @@ open class WebSecurityComponent : WebSecurityConfigurerAdapter() {
                         "/assignments/**",
                         "/enrolments/**"
                 ).hasRole("STUDENT")
-                .anyRequest().denyAll()
+                .anyRequest().authenticated()
                 .and()
                 .formLogin().loginPage("/api/login")
                 .failureHandler({ _, response: HttpServletResponse, _ ->

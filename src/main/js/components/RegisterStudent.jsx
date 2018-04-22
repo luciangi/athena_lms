@@ -17,7 +17,7 @@ import PropTypes from "prop-types";
 import { withStyles } from "material-ui/styles/index";
 import { Close } from "@material-ui/icons/es/index";
 
-const styles = theme => ({
+const styles = {
     appBar: {
         position: "relative"
     },
@@ -33,7 +33,7 @@ const styles = theme => ({
     formControl: {
         padding: "20px"
     }
-});
+};
 
 const Transition = (props) => {
     return <Slide direction="up" {...props} />;
@@ -172,4 +172,4 @@ RegisterStudent.propTypes = {
     onClose: PropTypes.func.isRequired
 };
 
-export default withStyles(styles, { withTheme: true })(RegisterStudent)
+export default withStyles(styles)(RegisterStudent)

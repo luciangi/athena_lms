@@ -3,6 +3,7 @@ package com.nyx.athena.service
 import com.nyx.athena.model.User
 import com.nyx.athena.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.authentication.AnonymousAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.authority.AuthorityUtils
 import org.springframework.security.core.context.SecurityContextHolder
@@ -31,9 +32,12 @@ open class UserDetailService : UserDetailsService {
                 AuthorityUtils.createAuthorityList(*authorities))
     }
 
-    fun userDetail(): HashMap<String, Serializable> {
+    fun userDetail(): Map<String, Serializable>? {
         val authentication: Authentication = SecurityContextHolder.getContext().authentication
-        return hashMapOf("username" to authentication.name,
-                "roles" to authentication.authorities.fold(ArrayList<String>(), { accumulator, item -> accumulator.add(item.authority); accumulator }))
+        if (authentication !is AnonymousAuthenticationToken) {
+            return hashMapOf("username" to authentication.name,
+                    "roles" to authentication.authorities.fold(ArrayList<String>(), { accumulator, item -> accumulator.add(item.authority); accumulator }))
+        }
+        return null
     }
 }

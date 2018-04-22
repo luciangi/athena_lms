@@ -19,12 +19,8 @@ export const loadUser = () => {
                 dispatch(loginSuccess(response.data));
             })
             .catch(error => {
-                if (error.response.status === 401) {
-                    dispatch(logoutSuccess());
-                } else {
-                    console.error(error);
-                    dispatch(openNotification(`Fetch user error: ${error.response.data.message}`, true));
-                }
+                console.error(error);
+                dispatch(openNotification(`Fetch user error: ${error.response.data.message}`, true));
             });
     }
 };

@@ -14,7 +14,7 @@ class UserDetailController {
     private lateinit var userDetailService: UserDetailService
 
     @GetMapping("/userDetails")
-    fun userDetail(): Map<String, Any> {
+    fun userDetail(): Map<String, Any>? {
         return userDetailService.userDetail()
     }
 }

@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { withStyles } from "material-ui/styles";
 import classNames from "classnames";
 import {
@@ -37,6 +38,9 @@ import {
     coursesRoute,
     enrolmentsRoute,
     homeRoute,
+    isAdminUser,
+    isStudentUser,
+    isTutorUser,
     logoutUser,
     openLogin,
     profileRoute,
@@ -234,42 +238,42 @@ class AppMenu extends React.Component {
                         <Divider/>
                         <List>
                             <div>
-                                <ListItem button onClick={() => dispatch(tutorsRoute())}>
-                                    <ListItemIcon>
-                                        <Person/>
-                                    </ListItemIcon>
-                                    <ListItemText primary="Tutors"/>
-                                </ListItem>
-                                <ListItem button onClick={() => dispatch(studentsRoute())}>
-                                    <ListItemIcon>
-                                        <PersonOutline/>
-                                    </ListItemIcon>
-                                    <ListItemText primary="Students"/>
-                                </ListItem>
-                                <ListItem button onClick={() => dispatch(subjectsRoute())}>
-                                    <ListItemIcon>
-                                        <FolderOpen/>
-                                    </ListItemIcon>
-                                    <ListItemText primary="Subjects"/>
-                                </ListItem>
-                                <ListItem button onClick={() => dispatch(enrolmentsRoute())}>
-                                    <ListItemIcon>
-                                        <AssignmentInd/>
-                                    </ListItemIcon>
-                                    <ListItemText primary="Enrolments"/>
-                                </ListItem>
-                                <ListItem button onClick={() => dispatch(assignmentsRoute())}>
-                                    <ListItemIcon>
-                                        <Assignment/>
-                                    </ListItemIcon>
-                                    <ListItemText primary="Assignments"/>
-                                </ListItem>
-                                <ListItem button onClick={() => dispatch(coursesRoute())}>
-                                    <ListItemIcon>
-                                        <Book/>
-                                    </ListItemIcon>
-                                    <ListItemText primary="Courses"/>
-                                </ListItem>
+                                <ConditionalListItem
+                                    label="Tutors"
+                                    onClick={() => dispatch(tutorsRoute())}
+                                    show={isAdminUser()}>
+                                    <Person/>
+                                </ConditionalListItem>
+                                <ConditionalListItem
+                                    label="Students"
+                                    onClick={() => dispatch(studentsRoute())}
+                                    show={isAdminUser()}>
+                                    <PersonOutline/>
+                                </ConditionalListItem>
+                                <ConditionalListItem
+                                    label="Subjects"
+                                    onClick={() => dispatch(subjectsRoute())}
+                                    show={isAdminUser() || isTutorUser()}>
+                                    <FolderOpen/>
+                                </ConditionalListItem>
+                                <ConditionalListItem
+                                    label="Courses"
+                                    onClick={() => dispatch(coursesRoute())}
+                                    show={isTutorUser()}>
+                                    <Book/>
+                                </ConditionalListItem>
+                                <ConditionalListItem
+                                    label="Assignments"
+                                    onClick={() => dispatch(assignmentsRoute())}
+                                    show={isTutorUser() || isStudentUser()}>
+                                    <Assignment/>
+                                </ConditionalListItem>
+                                <ConditionalListItem
+                                    label="Enrolments"
+                                    onClick={() => dispatch(enrolmentsRoute())}
+                                    show={isStudentUser()}>
+                                    <AssignmentInd/>
+                                </ConditionalListItem>
                             </div>
                         </List>
                         <Divider/>
@@ -299,3 +303,19 @@ class AppMenu extends React.Component {
 AppMenu.propTypes = {};
 
 export default AppMenu;
+
+const ConditionalListItem = ({ children, label, onClick, show }) => (
+    show && <ListItem button onClick={onClick}>
+        <ListItemIcon>
+            {children}
+        </ListItemIcon>
+        <ListItemText primary={label}/>
+    </ListItem>
+);
+
+ConditionalListItem.propTypes = {
+    label: PropTypes.string.isRequired,
+    children: PropTypes.node.isRequired,
+    onClick: PropTypes.func.isRequired,
+    show: PropTypes.bool.isRequired
+};

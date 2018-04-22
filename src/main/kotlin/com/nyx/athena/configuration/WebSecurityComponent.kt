@@ -4,13 +4,15 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.nyx.athena.service.UserDetailService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.boot.autoconfigure.security.Http401AuthenticationEntryPoint
 import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import org.springframework.security.core.AuthenticationException
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
+import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED
 import javax.sql.DataSource
@@ -36,10 +38,30 @@ open class WebSecurityComponent : WebSecurityConfigurerAdapter() {
                         "/*.css",
                         "/images/**",
                         "/",
-                        "/swagger-resources/**"
+                        "/api/userDetails",
+                        "/genericError"
                 ).permitAll()
-                //TODO: secure by user
-                .anyRequest().authenticated()
+                .antMatchers(
+                        "/swagger-resources/**",
+                        "/api/**",
+                        "/admin/**",
+                        "/tutors/**",
+                        "/students/**",
+                        "/subjects/**"
+                ).hasRole("ADMIN")
+                .antMatchers(
+                        "/tutor/**",
+                        "/subjects/**",
+                        "/api/subjects",
+                        "/courses/**",
+                        "/assignments/**"
+                ).hasRole("TUTOR")
+                .antMatchers(
+                        "/student/**",
+                        "/assignments/**",
+                        "/enrolments/**"
+                ).hasRole("STUDENT")
+                .anyRequest().denyAll()
                 .and()
                 .formLogin().loginPage("/api/login")
                 .failureHandler({ _, response: HttpServletResponse, _ ->
@@ -57,7 +79,13 @@ open class WebSecurityComponent : WebSecurityConfigurerAdapter() {
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
                 .and()
-                .exceptionHandling().authenticationEntryPoint(Http401AuthenticationEntryPoint("Unauthorized"))
+                .exceptionHandling()
+                .authenticationEntryPoint({ _: HttpServletRequest, response: HttpServletResponse, _: AuthenticationException ->
+                    response.sendRedirect("/genericError")
+                })
+                .accessDeniedHandler({ _: HttpServletRequest, response: HttpServletResponse, _: AccessDeniedException ->
+                    response.sendRedirect("/genericError")
+                })
                 .and()
                 .userDetailsService(userDetailService)
     }

@@ -1,12 +1,66 @@
 import React from "react";
-import { AccountBox } from "@material-ui/icons/es/index";
+import {
+    Assignment,
+    AssignmentInd,
+    ExpandMore
+} from "@material-ui/icons/es/index";
+import {
+    ExpansionPanel,
+    ExpansionPanelDetails,
+    ExpansionPanelSummary,
+    Typography,
+    withStyles
+} from "material-ui";
+import DataTable from "../DataTable";
 
-const Tutor = () => {
+const styles = theme => ({
+    heading: {
+        fontSize: theme.typography.pxToRem(15),
+        fontWeight: theme.typography.fontWeightRegular
+    },
+    root: {
+        display: "flex",
+        flexWrap: "wrap"
+    },
+    row: {
+        flex: "1 0 100%",
+        margin: "5px"
+    }
+});
+
+const Tutor = ({ classes }) => {
     return (
         <div>
-            <span><AccountBox/> Tutor</span>
+            <ExpansionPanel>
+                <ExpansionPanelSummary expandIcon={<ExpandMore/>}>
+                    <Typography className={classes.heading}><Assignment/> Active Assignments</Typography>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails className={classes.root}>
+                    <div className={classes.row}>
+                        <DataTable profile="subjects"
+                                   columns={[
+                                       { name: "name", title: "Name" },
+                                       { name: "description", title: "Description" }
+                                   ]}/>
+                    </div>
+                </ExpansionPanelDetails>
+            </ExpansionPanel>
+            <ExpansionPanel>
+                <ExpansionPanelSummary expandIcon={<ExpandMore/>}>
+                    <Typography className={classes.heading}><AssignmentInd/> Active Enrolments</Typography>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails className={classes.root}>
+                    <div className={classes.row}>
+                        <DataTable profile="subjects"
+                                   columns={[
+                                       { name: "name", title: "Name" },
+                                       { name: "description", title: "Description" }
+                                   ]}/>
+                    </div>
+                </ExpansionPanelDetails>
+            </ExpansionPanel>
         </div>
     )
 };
 
-export default Tutor
+export default withStyles(styles)(Tutor)

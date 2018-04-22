@@ -28,7 +28,7 @@ const styles = {
         marginLeft: "auto"
     },
     paper: {
-        margin: "10%"
+        margin: "10% 30% 10% 30%"
     },
     formControl: {
         padding: "20px"

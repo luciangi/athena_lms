@@ -81,10 +81,10 @@ open class WebSecurityComponent : WebSecurityConfigurerAdapter() {
                 .and()
                 .exceptionHandling()
                 .authenticationEntryPoint({ _: HttpServletRequest, response: HttpServletResponse, _: AuthenticationException ->
-                    response.sendRedirect("/genericError")
+                    response.sendRedirect("/genericError?error=401")
                 })
                 .accessDeniedHandler({ _: HttpServletRequest, response: HttpServletResponse, _: AccessDeniedException ->
-                    response.sendRedirect("/genericError")
+                    response.sendRedirect("/genericError?error=403")
                 })
                 .and()
                 .userDetailsService(userDetailService)

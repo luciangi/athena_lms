@@ -19,6 +19,7 @@ import Subjects from "./routes/Subjects";
 import Enrolments from "./routes/Enrolments";
 import Assignments from "./routes/Assignments";
 import Courses from "./routes/Courses";
+import GenericError from "./routes/GenericError";
 
 const styles = theme => ({
     root: {
@@ -72,6 +73,7 @@ class Layout extends React.Component {
                         <Route path={"/enrolments"} component={Enrolments}/>
                         <Route path={"/assignments"} component={Assignments}/>
                         <Route path={"/courses"} component={Courses}/>
+                        <Route path='*' exact={true} component={GenericError}/>
                     </Router>
                     <Notification/>
                 </main>

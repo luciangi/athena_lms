@@ -1,10 +1,10 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { withStyles } from "material-ui/styles";
 import classNames from "classnames";
 import {
     AppBar,
     Button,
-    Dialog,
     Divider,
     Drawer,
     IconButton,
@@ -24,19 +24,21 @@ import {
     Book,
     ChevronLeft,
     ChevronRight,
-    Close,
     FolderOpen,
+    Menu as MenuIcon,
     Person,
     PersonOutline,
     School
-} from "material-ui-icons";
-import MenuIcon from "material-ui-icons/Menu";
+} from "@material-ui/icons/es/index";
 import { connect } from "react-redux";
 import {
     assignmentsRoute,
     coursesRoute,
     enrolmentsRoute,
     homeRoute,
+    isAdminUser,
+    isStudentUser,
+    isTutorUser,
     logoutUser,
     openLogin,
     profileRoute,
@@ -45,7 +47,7 @@ import {
     tutorsRoute
 } from "../redux/actions";
 import Login from "./Login";
-import Slide from "material-ui/es/transitions/Slide";
+import RegisterStudent from "./RegisterStudent";
 
 const drawerWidth = 240;
 
@@ -110,10 +112,6 @@ const styles = theme => ({
         marginLeft: 12
     }
 });
-
-const Transition = (props) => {
-    return <Slide direction="up" {...props} />;
-};
 
 @withStyles(styles, { withTheme: true })
 @connect((store) => ({ user: store.auth.user }))
@@ -234,63 +232,48 @@ class AppMenu extends React.Component {
                         <Divider/>
                         <List>
                             <div>
-                                <ListItem button onClick={() => dispatch(tutorsRoute())}>
-                                    <ListItemIcon>
-                                        <Person/>
-                                    </ListItemIcon>
-                                    <ListItemText primary="Tutors"/>
-                                </ListItem>
-                                <ListItem button onClick={() => dispatch(studentsRoute())}>
-                                    <ListItemIcon>
-                                        <PersonOutline/>
-                                    </ListItemIcon>
-                                    <ListItemText primary="Students"/>
-                                </ListItem>
-                                <ListItem button onClick={() => dispatch(subjectsRoute())}>
-                                    <ListItemIcon>
-                                        <FolderOpen/>
-                                    </ListItemIcon>
-                                    <ListItemText primary="Subjects"/>
-                                </ListItem>
-                                <ListItem button onClick={() => dispatch(enrolmentsRoute())}>
-                                    <ListItemIcon>
-                                        <AssignmentInd/>
-                                    </ListItemIcon>
-                                    <ListItemText primary="Enrolments"/>
-                                </ListItem>
-                                <ListItem button onClick={() => dispatch(assignmentsRoute())}>
-                                    <ListItemIcon>
-                                        <Assignment/>
-                                    </ListItemIcon>
-                                    <ListItemText primary="Assignments"/>
-                                </ListItem>
-                                <ListItem button onClick={() => dispatch(coursesRoute())}>
-                                    <ListItemIcon>
-                                        <Book/>
-                                    </ListItemIcon>
-                                    <ListItemText primary="Courses"/>
-                                </ListItem>
+                                <ConditionalListItem
+                                    label="Tutors"
+                                    onClick={() => dispatch(tutorsRoute())}
+                                    show={isAdminUser()}>
+                                    <Person/>
+                                </ConditionalListItem>
+                                <ConditionalListItem
+                                    label="Students"
+                                    onClick={() => dispatch(studentsRoute())}
+                                    show={isAdminUser()}>
+                                    <PersonOutline/>
+                                </ConditionalListItem>
+                                <ConditionalListItem
+                                    label="Subjects"
+                                    onClick={() => dispatch(subjectsRoute())}
+                                    show={isAdminUser() || isTutorUser()}>
+                                    <FolderOpen/>
+                                </ConditionalListItem>
+                                <ConditionalListItem
+                                    label="Courses"
+                                    onClick={() => dispatch(coursesRoute())}
+                                    show={isTutorUser()}>
+                                    <Book/>
+                                </ConditionalListItem>
+                                <ConditionalListItem
+                                    label="Assignments"
+                                    onClick={() => dispatch(assignmentsRoute())}
+                                    show={isTutorUser() || isStudentUser()}>
+                                    <Assignment/>
+                                </ConditionalListItem>
+                                <ConditionalListItem
+                                    label="Enrolments"
+                                    onClick={() => dispatch(enrolmentsRoute())}
+                                    show={isStudentUser()}>
+                                    <AssignmentInd/>
+                                </ConditionalListItem>
                             </div>
                         </List>
                         <Divider/>
                     </Drawer>)}
                 <Login/>
-                <Dialog
-                    fullScreen
-                    open={this.state.userRegisterOpen}
-                    onClose={closeUserRegister}
-                    transition={Transition}>
-                    <AppBar className={classes.appBar}>
-                        <Toolbar>
-                            <IconButton color="inherit" onClick={closeUserRegister} aria-label="Close">
-                                <Close/>
-                            </IconButton>
-                            <Typography variant="title" color="inherit">
-                                Register Student
-                            </Typography>
-                        </Toolbar>
-                    </AppBar>
-                </Dialog>
+                <RegisterStudent open={this.state.userRegisterOpen} onClose={closeUserRegister}/>
             </div>
         );
     }
@@ -299,3 +282,19 @@ class AppMenu extends React.Component {
 AppMenu.propTypes = {};
 
 export default AppMenu;
+
+const ConditionalListItem = ({ children, label, onClick, show }) => (
+    show && <ListItem button onClick={onClick}>
+        <ListItemIcon>
+            {children}
+        </ListItemIcon>
+        <ListItemText primary={label}/>
+    </ListItem>
+);
+
+ConditionalListItem.propTypes = {
+    label: PropTypes.string.isRequired,
+    children: PropTypes.node.isRequired,
+    onClick: PropTypes.func.isRequired,
+    show: PropTypes.bool.isRequired
+};

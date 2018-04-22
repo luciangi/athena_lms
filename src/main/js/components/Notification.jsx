@@ -6,9 +6,9 @@ import {
 } from "material-ui";
 import { connect } from "react-redux";
 import { closeNotification } from "../redux/actions";
-import { Clear } from "material-ui-icons";
 import red from "material-ui/es/colors/red";
 import grey from "material-ui/es/colors/grey";
+import { Clear } from "@material-ui/icons/es/index";
 
 const Notification = (props) => {
     const { message, error } = props;

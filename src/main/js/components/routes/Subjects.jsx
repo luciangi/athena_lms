@@ -4,8 +4,8 @@ import {
     Typography,
     withStyles
 } from "material-ui";
-import { FolderOpen } from "material-ui-icons";
 import DataTable from "../DataTable";
+import { FolderOpen } from "@material-ui/icons/es/index";
 
 const styles = theme => ({
     root: theme.mixins.gutters({

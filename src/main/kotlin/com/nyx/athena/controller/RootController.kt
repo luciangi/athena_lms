@@ -7,5 +7,10 @@ import org.springframework.web.bind.annotation.GetMapping
 @Suppress("unused")
 class RootController {
     @GetMapping("/{[path:[^\\.]*}")
-    fun index(): String = "forward:index.html"
+    fun index(): String = "forward:/"
+
+    @GetMapping("/genericError")
+    fun genericError(): String {
+        return "forward:/"
+    }
 }

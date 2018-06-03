@@ -69,7 +69,8 @@ open class WebSecurityComponent : WebSecurityConfigurerAdapter() {
                         HttpMethod.GET,
                         "/assignments/**"
                 ).hasAnyRole("TUTOR", "STUDENT")
-                .antMatchers("/api/**").hasRole("ADMIN")
+                .antMatchers("/api/**")
+                .hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().loginPage("/api/login")
@@ -101,8 +102,20 @@ open class WebSecurityComponent : WebSecurityConfigurerAdapter() {
 
     @Throws(Exception::class)
     override fun configure(auth: AuthenticationManagerBuilder) {
-        val queryUsersByUsername = "SELECT username, password, active FROM \"user\" WHERE username=?"
-        val authoritiesByUsernameQuery = "SELECT u.username, r.authority FROM \"user\" u INNER JOIN user_roles ur ON(u.id=ur.user_id) INNER JOIN role r ON(ur.roles_id=r.id) WHERE u.username=?"
+        val queryUsersByUsername = """SELECT username,
+                                             password,
+                                             active
+                                      FROM "user"
+                                      WHERE username=?"""
+                .trimIndent()
+        val authoritiesByUsernameQuery = """SELECT u.username,
+                                                   r.authority
+                                            FROM \"user\" u
+                                            INNER JOIN user_roles ur
+                                             ON(u.id=ur.user_id)
+                                            INNER JOIN role r
+                                             ON(ur.roles_id=r.id) WHERE u.username=?"""
+                .trimIndent()
         auth.jdbcAuthentication()
                 .usersByUsernameQuery(queryUsersByUsername)
                 .authoritiesByUsernameQuery(authoritiesByUsernameQuery)

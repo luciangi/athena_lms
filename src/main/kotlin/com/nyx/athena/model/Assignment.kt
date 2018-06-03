@@ -13,10 +13,9 @@ class Assignment(@NotEmpty(message = "{assignments.course.notEmpty}")
                  var course: Course,
                  @NotEmpty(message = "{assignments.student.notEmpty}")
                  @ManyToOne
-                 var student: Student,
+                 var solutions: Set<Solution>,
                  @NotEmpty(message = "{assignments.due.notEmpty}")
-                 var due: Date,
-                 val result: Int) {
+                 var due: Date) {
     @Id
     @GenericGenerator(name = "uuid-gen", strategy = "uuid2")
     @GeneratedValue(generator = "uuid-gen")

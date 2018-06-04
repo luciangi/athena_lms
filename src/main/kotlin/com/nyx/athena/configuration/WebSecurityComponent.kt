@@ -110,7 +110,7 @@ open class WebSecurityComponent : WebSecurityConfigurerAdapter() {
                 .trimIndent()
         val authoritiesByUsernameQuery = """SELECT u.username,
                                                    r.authority
-                                            FROM \"user\" u
+                                            FROM "user" u
                                             INNER JOIN user_roles ur
                                              ON(u.id=ur.user_id)
                                             INNER JOIN role r

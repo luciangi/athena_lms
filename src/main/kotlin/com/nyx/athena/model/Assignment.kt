@@ -12,7 +12,8 @@ class Assignment(@NotEmpty(message = "{assignments.course.notEmpty}")
                  @ManyToOne
                  var course: Course,
                  @NotEmpty(message = "{assignments.student.notEmpty}")
-                 @ManyToOne
+                 @ManyToMany(cascade = [(CascadeType.ALL)])
+                 @JoinTable
                  var solutions: Set<Solution>,
                  @NotEmpty(message = "{assignments.due.notEmpty}")
                  var due: Date) {

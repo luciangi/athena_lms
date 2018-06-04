@@ -2,6 +2,7 @@ package com.nyx.athena.model
 
 import org.hibernate.annotations.GenericGenerator
 import org.hibernate.annotations.Type
+import org.hibernate.annotations.TypeDef
 import org.hibernate.validator.constraints.Email
 import org.hibernate.validator.constraints.Length
 import org.hibernate.validator.constraints.NotEmpty
@@ -13,6 +14,7 @@ import javax.persistence.CascadeType.ALL
 
 @Entity
 @Table(name = "\"user\"")
+@TypeDef(name = "uuid-custom", typeClass = UUIDCustomType::class)
 open class User(@NotEmpty(message = "{user.username.notEmpty}")
                 var username: String, @NotEmpty(message = "{user.password.notEmpty}")
                 @Length(min = 5, message = "{user.password.length}")
@@ -26,7 +28,7 @@ open class User(@NotEmpty(message = "{user.username.notEmpty}")
     @Id
     @GenericGenerator(name = "uuid-gen", strategy = "uuid2")
     @GeneratedValue(generator = "uuid-gen")
-    @Type(type = "pg-uuid")
+    @Type(type = "uuid-custom")
     @Suppress("unused")
     val id: UUID = randomUUID()
 

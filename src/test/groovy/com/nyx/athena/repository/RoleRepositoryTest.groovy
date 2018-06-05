@@ -14,6 +14,7 @@ class RoleRepositoryTest extends BaseIntegrationTest {
     def "test save"() {
         when:
         roleRepository.save(new Role(ROLE_STUDENT.name()))
+
         then:
         roleRepository.findAll().size() == 1
     }
@@ -22,6 +23,7 @@ class RoleRepositoryTest extends BaseIntegrationTest {
         when:
         roleRepository.save(new Role(ROLE_STUDENT.name()))
         roleRepository.save(new Role(ROLE_STUDENT.name()))
+
         then:
         thrown(DataIntegrityViolationException)
         roleRepository.findAll().size() == 1

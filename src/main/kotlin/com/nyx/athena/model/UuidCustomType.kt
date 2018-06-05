@@ -9,7 +9,7 @@ import org.hibernate.type.descriptor.sql.VarcharTypeDescriptor
 import java.io.IOException
 import java.util.*
 
-class UUIDCustomType : AbstractSingleColumnStandardBasicType<UUID>(SQL_DESCRIPTOR, TYPE_DESCRIPTOR) {
+class UuidCustomType : AbstractSingleColumnStandardBasicType<UUID>(SQL_DESCRIPTOR, TYPE_DESCRIPTOR) {
     override fun getName(): String {
         return "uuid-custom"
     }

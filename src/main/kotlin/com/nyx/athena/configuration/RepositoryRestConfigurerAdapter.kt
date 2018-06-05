@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component
 import javax.persistence.EntityManager
 
 @Component
-open class RepositoryRestConfigurerAdapter : RepositoryRestConfigurerAdapter() {
+class RepositoryRestConfigurerAdapter : RepositoryRestConfigurerAdapter() {
     @Autowired
     private lateinit var entityManager: EntityManager
 

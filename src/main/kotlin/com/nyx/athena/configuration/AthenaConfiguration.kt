@@ -11,21 +11,21 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 
 @Configuration
-open class AthenaConfiguration {
+class AthenaConfiguration {
     @Bean
-    open fun passwordEncoder(): PasswordEncoder {
+    fun passwordEncoder(): PasswordEncoder {
         return BCryptPasswordEncoder()
     }
 
     @Bean
     @Profile("prod")
-    open fun dataSourceInit(roleRepository: RoleRepository,
-                            userRepository: UserRepository,
-                            tutorRepository: TutorRepository,
-                            studentRepository: StudentRepository,
-                            passwordEncoder: PasswordEncoder,
-                            subjectRepository: SubjectRepository) = InitializingBean {
-        authInit(roleRepository, passwordEncoder, tutorRepository, studentRepository, userRepository)
+    fun dataSourceInit(roleRepository: RoleRepository,
+                       athenaUserRepository: AthenaUserRepository,
+                       tutorRepository: TutorRepository,
+                       studentRepository: StudentRepository,
+                       passwordEncoder: PasswordEncoder,
+                       subjectRepository: SubjectRepository) = InitializingBean {
+        authInit(roleRepository, passwordEncoder, tutorRepository, studentRepository, athenaUserRepository)
 
         subjectsInit(subjectRepository)
     }
@@ -34,19 +34,19 @@ open class AthenaConfiguration {
                          passwordEncoder: PasswordEncoder,
                          tutorRepository: TutorRepository,
                          studentRepository: StudentRepository,
-                         userRepository: UserRepository) {
+                         athenaUserRepository: AthenaUserRepository) {
         val adminRole = Role(ROLE_ADMIN.name)
         val tutorRole = Role(ROLE_TUTOR.name)
         val studentRole = Role(ROLE_STUDENT.name)
         roleRepository.save(hashSetOf(adminRole, tutorRole, studentRole))
 
-        val adminUser = User(
+        val adminUser = AthenaUser(
                 username = "admin",
                 password = passwordEncoder.encode("admin"),
                 email = "admin@email.com"
         )
         adminUser.roles += roleRepository.findByAuthority(ROLE_ADMIN.name)
-        userRepository.save(adminUser)
+        athenaUserRepository.save(adminUser)
 
         val tutorUser = Tutor(
                 username = "tutor",

@@ -9,7 +9,7 @@ class Tutor(username: String,
             var firstName: String,
             var lastName: String,
             var otherDetails: String? = null)
-    : User(username,
+    : AthenaUser(username,
         password,
         email) {
     @Suppress("unused")

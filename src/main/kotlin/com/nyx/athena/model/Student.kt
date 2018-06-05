@@ -10,7 +10,7 @@ class Student(username: String,
               var lastName: String,
               var address: String? = null,
               var otherDetails: String? = null)
-    : User(username,
+    : AthenaUser(username,
         password,
         email) {
     @Suppress("unused")

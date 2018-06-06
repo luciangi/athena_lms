@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.authority.AuthorityUtils
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
@@ -27,7 +28,7 @@ class AthenaUserDetailService : UserDetailsService {
         val authorities = athenaUser.roles
                 .fold(ArrayList<String>(), { accumulator, item -> accumulator.add(item.authority); accumulator })
                 .toTypedArray()
-        return org.springframework.security.core.userdetails.User(username,
+        return User(username,
                 athenaUser.password,
                 AuthorityUtils.createAuthorityList(*authorities))
     }

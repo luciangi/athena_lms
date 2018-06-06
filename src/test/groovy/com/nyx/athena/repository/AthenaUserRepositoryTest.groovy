@@ -10,9 +10,9 @@ import static com.nyx.athena.model.Role.Authority.ROLE_STUDENT
 
 class AthenaUserRepositoryTest extends BaseIntegrationTest {
     @Autowired
-    RoleRepository roleRepository
+    private RoleRepository roleRepository
     @Autowired
-    AthenaUserRepository athenaUserRepository
+    private AthenaUserRepository athenaUserRepository
 
     def "test save"() {
         given:

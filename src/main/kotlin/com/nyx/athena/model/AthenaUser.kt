@@ -2,27 +2,32 @@ package com.nyx.athena.model
 
 import org.hibernate.validator.constraints.Email
 import org.hibernate.validator.constraints.Length
+import org.hibernate.validator.constraints.NotBlank
 import org.hibernate.validator.constraints.NotEmpty
 import org.springframework.data.annotation.Transient
 import javax.persistence.CascadeType.ALL
+import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.JoinTable
 import javax.persistence.ManyToMany
 
 @Entity
-open class AthenaUser(@NotEmpty(message = "{athenaUser.username.notEmpty}")
-                      var username: String, @NotEmpty(message = "{athenaUser.password.notEmpty}")
-                      @Length(min = 5, message = "{athenaUser.password.length}")
+open class AthenaUser(@Column(unique = true, nullable = false)
+                      @NotBlank
+                      var username: String,
+                      @Column(nullable = false)
+                      @Length(min = 5)
+                      @NotBlank
                       @Transient
-                      var password: String, @NotEmpty(message = "{athenaUser.email.notEmpty}")
-                      @Email(message = "{athenaUser.email.email}")
+                      var password: String,
+                      @Column(unique = true, nullable = false)
+                      @Email
+                      @NotBlank
                       var email: String) : CoreEntity() {
-    @Suppress("unused")
-    constructor() : this(username = "", password = "", email = "")
-
     var active: Boolean = true
 
     @ManyToMany(cascade = [ALL])
     @JoinTable
+    @NotEmpty
     var roles: Set<Role> = hashSetOf()
 }

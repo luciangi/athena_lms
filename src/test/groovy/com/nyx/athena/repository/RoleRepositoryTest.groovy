@@ -12,19 +12,19 @@ class RoleRepositoryTest extends BaseIntegrationTest {
     private RoleRepository roleRepository
 
     def "test save"() {
-        when:
+        when: "A new role is saved"
         roleRepository.save(new Role(ROLE_STUDENT.name()))
 
-        then:
+        then: "The role is present in the repository"
         roleRepository.findAll().size() == 1
     }
 
     def "test authority unique constraint"() {
-        when:
+        when: "Trying to save 2 roles with the same authority"
         roleRepository.save(new Role(ROLE_STUDENT.name()))
         roleRepository.save(new Role(ROLE_STUDENT.name()))
 
-        then:
+        then: "The authority unique constraint is thrown"
         thrown(DataIntegrityViolationException)
         roleRepository.findAll().size() == 1
     }

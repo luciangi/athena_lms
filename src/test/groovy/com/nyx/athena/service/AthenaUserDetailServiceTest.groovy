@@ -27,41 +27,45 @@ class AthenaUserDetailServiceTest extends Specification {
                 roles: [new Role(ROLE_ADMIN.name())]
         )
 
-        when:
+        when: "Calling the loadUserByUsername method"
         UserDetails user = athenaUserDetailService.loadUserByUsername(username)
 
-        then:
+        then: "The spring security user returned has the correct values"
         user != null
-        user.username == username
-        user.password == password
-        user.authorities.size() == 1
-        user.authorities[0].authority == ROLE_ADMIN.name()
+        with(user) {
+            username == username
+            password == password
+            authorities.size() == 1
+            authorities[0].authority == ROLE_ADMIN.name()
+        }
     }
 
     def "test userDetail for no user authenticated"() {
-        given:
+        given: "An guest user (not an authenticated user)"
         SecurityContextHolder.getContext().setAuthentication(
                 new AnonymousAuthenticationToken("GUEST", "USERNAME", AuthorityUtils.createAuthorityList("GUEST")))
 
-        when:
+        when: "Calling the userDetail method"
         Map detail = athenaUserDetailService.userDetail()
 
-        then:
+        then: "The method returns null"
         detail == null
     }
 
     def "test userDetail for a user authenticated"() {
-        given:
+        given: "An authenticated user"
         String username = "ADMIN"
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken(username, "PASSWORD", AuthorityUtils.createAuthorityList(ROLE_ADMIN.name())))
 
-        when:
+        when: "Calling userDetail method"
         Map detail = athenaUserDetailService.userDetail()
 
-        then:
+        then: "The user detail is correct"
         detail != null
-        detail.username == username
-        detail.roles == [ROLE_ADMIN.name()]
+        with(detail) {
+            username == username
+            roles == [ROLE_ADMIN.name()]
+        }
     }
 }

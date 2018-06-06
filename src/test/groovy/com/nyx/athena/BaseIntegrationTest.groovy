@@ -1,7 +1,9 @@
 package com.nyx.athena
 
+import com.jayway.restassured.RestAssured
 import groovy.sql.Sql
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.context.embedded.LocalServerPort
 import org.springframework.boot.test.context.SpringBootTest
 import spock.lang.Specification
 
@@ -14,6 +16,13 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 class BaseIntegrationTest extends Specification {
     @Autowired
     private DataSource dataSource
+
+    @LocalServerPort
+    private int port
+
+    def setup() {
+        RestAssured.port = port
+    }
 
     def cleanup() {
         Connection connection = dataSource.getConnection()

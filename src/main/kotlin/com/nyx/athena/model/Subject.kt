@@ -1,12 +1,14 @@
 package com.nyx.athena.model
 
+import org.hibernate.validator.constraints.NotBlank
+import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Table
 
 @Entity
 @Table
-class Subject(var name: String,
-              var description: String? = null) : CoreEntity() {
-    @Suppress("unused")
-    constructor() : this(name = "", description = "")
-}
+class Subject(@Column(unique = true, nullable = false)
+              @NotBlank
+              var name: String,
+              var description: String? = null)
+    : CoreEntity()

@@ -1,19 +1,21 @@
 package com.nyx.athena.model
 
-import org.hibernate.validator.constraints.NotEmpty
+import javax.persistence.CascadeType
 import javax.persistence.Entity
 import javax.persistence.ManyToOne
 import javax.persistence.Table
+import javax.validation.constraints.NotNull
 
 @Entity
 @Table
-class Course(@NotEmpty(message = "{course.author.notEmpty}")
-             @ManyToOne
+class Course(@ManyToOne(cascade = [(CascadeType.ALL)])
+             @NotNull
              val author: Tutor,
-             @NotEmpty(message = "{course.subject.notEmpty}")
-             @ManyToOne
+             @ManyToOne(cascade = [(CascadeType.ALL)])
+             @NotNull
              var subject: Subject,
-             @NotEmpty(message = "{course.name.notEmpty}")
+             @NotNull
              var name: String,
              var content: String?,
-             var description: String?) : CoreEntity()
+             var description: String?)
+    : CoreEntity()

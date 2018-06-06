@@ -1,17 +1,23 @@
 package com.nyx.athena.model
 
-import org.hibernate.validator.constraints.NotEmpty
 import java.util.*
-import javax.persistence.*
+import javax.persistence.CascadeType
+import javax.persistence.Entity
+import javax.persistence.ManyToOne
+import javax.persistence.Table
+import javax.validation.constraints.Future
+import javax.validation.constraints.NotNull
 
 @Entity
 @Table
-class Assignment(@NotEmpty(message = "{assignments.course.notEmpty}")
-                 @ManyToOne
+class Assignment(@ManyToOne(cascade = [(CascadeType.ALL)])
+                 @NotNull
                  var course: Course,
-                 @NotEmpty(message = "{assignments.student.notEmpty}")
-                 @ManyToMany(cascade = [(CascadeType.ALL)])
-                 @JoinTable
-                 var solutions: Set<Solution>,
-                 @NotEmpty(message = "{assignments.due.notEmpty}")
-                 var due: Date) : CoreEntity()
+                 @NotNull
+                 var name: String,
+                 var content: String?,
+                 var description: String?,
+                 @NotNull
+                 @Future
+                 var due: Date)
+    : CoreEntity()

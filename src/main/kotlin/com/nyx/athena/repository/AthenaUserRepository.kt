@@ -1,11 +1,11 @@
 package com.nyx.athena.repository
 
-import com.nyx.athena.model.User
+import com.nyx.athena.model.AthenaUser
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-interface UserRepository : CrudRepository<User, UUID> {
-    fun findByUsername(username: String): User
+interface AthenaUserRepository : CrudRepository<AthenaUser, UUID> {
+    fun findByUsername(username: String): AthenaUser
 }

@@ -10,7 +10,5 @@ class RootController {
     fun index(): String = "forward:/"
 
     @GetMapping("/genericError")
-    fun genericError(): String {
-        return "forward:/"
-    }
+    fun genericError(): String = "forward:/"
 }

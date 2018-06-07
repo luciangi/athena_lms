@@ -1,9 +1,8 @@
 package com.nyx.athena.configuration
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.nyx.athena.service.UserDetailService
+import com.nyx.athena.service.AthenaUserDetailService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
 import org.springframework.security.access.AccessDeniedException
@@ -19,13 +18,12 @@ import javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED
 import javax.sql.DataSource
 
 @Component
-open class WebSecurityComponent : WebSecurityConfigurerAdapter() {
+class WebSecurityComponent : WebSecurityConfigurerAdapter() {
     @Autowired
-    @Qualifier("dataSource")
     private lateinit var dataSource: DataSource
 
     @Autowired
-    private lateinit var userDetailService: UserDetailService
+    private lateinit var athenaUserDetailService: AthenaUserDetailService
 
     @Autowired
     private lateinit var passwordEncoder: PasswordEncoder
@@ -62,14 +60,18 @@ open class WebSecurityComponent : WebSecurityConfigurerAdapter() {
                 ).hasRole("STUDENT")
                 .antMatchers(
                         HttpMethod.GET,
-                        "/subjects/**",
-                        "/api/subjects"
+                        "/subjects/**"
                 ).hasAnyRole("TUTOR", "ADMIN")
+                .antMatchers(
+                        HttpMethod.GET,
+                        "/api/subjects"
+                ).authenticated()
                 .antMatchers(
                         HttpMethod.GET,
                         "/assignments/**"
                 ).hasAnyRole("TUTOR", "STUDENT")
-                .antMatchers("/api/**").hasRole("ADMIN")
+                .antMatchers("/api/**")
+                .hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().loginPage("/api/login")
@@ -79,7 +81,7 @@ open class WebSecurityComponent : WebSecurityConfigurerAdapter() {
                 .successHandler({ _, response: HttpServletResponse, _ ->
                     response.contentType = APPLICATION_JSON_VALUE
                     val out = response.writer
-                    out.print(ObjectMapper().writeValueAsString(userDetailService.userDetail()))
+                    out.print(ObjectMapper().writeValueAsString(athenaUserDetailService.userDetail()))
                     out.flush()
                 }).permitAll()
                 .and()
@@ -96,13 +98,25 @@ open class WebSecurityComponent : WebSecurityConfigurerAdapter() {
                     response.sendRedirect("/genericError?error=403")
                 })
                 .and()
-                .userDetailsService(userDetailService)
+                .userDetailsService(athenaUserDetailService)
     }
 
     @Throws(Exception::class)
     override fun configure(auth: AuthenticationManagerBuilder) {
-        val queryUsersByUsername = "SELECT username, password, active FROM \"user\" WHERE username=?"
-        val authoritiesByUsernameQuery = "SELECT u.username, r.authority FROM \"user\" u INNER JOIN user_roles ur ON(u.id=ur.user_id) INNER JOIN role r ON(ur.roles_id=r.id) WHERE u.username=?"
+        val queryUsersByUsername = """SELECT username,
+                                             password,
+                                             active
+                                      FROM "athena_user"
+                                      WHERE username=?"""
+                .trimIndent()
+        val authoritiesByUsernameQuery = """SELECT u.username,
+                                                   r.authority
+                                            FROM "athena_user" u
+                                            INNER JOIN athena_user_roles ur
+                                             ON(u.id=ur.athena_user_id)
+                                            INNER JOIN role r
+                                             ON(ur.roles_id=r.id) WHERE u.username=?"""
+                .trimIndent()
         auth.jdbcAuthentication()
                 .usersByUsernameQuery(queryUsersByUsername)
                 .authoritiesByUsernameQuery(authoritiesByUsernameQuery)

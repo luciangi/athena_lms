@@ -9,6 +9,8 @@ import {
 import Card from "material-ui/es/Card/Card";
 import CardActions from "material-ui/es/Card/CardActions";
 import Paper from "material-ui/es/Paper/Paper";
+import { connect } from "react-redux";
+import { initCourses } from "../../redux/actions/courses";
 
 const styles = {
     card: {
@@ -36,163 +38,174 @@ const styles = {
     }
 };
 
-const Home = ({ classes }) => (
-    <div>
-        <Paper elevation={1}>
-            <Card className={classes.card}>
-                <CardMedia
-                    className={classes.media}
-                    image="/images/back-to-school.jpg"
-                    title="Back to school"
-                />
-                <CardContent>
-                    <Typography gutterBottom variant="headline" component="h2">
-                        Welcome to Athena
-                    </Typography>
-                    <Typography component="p">
-                        Athena is a Learning Management System.
-                    </Typography>
-                    <Typography component="p">
-                        A software for the administration, documentation, tracking, reporting and delivery of educational courses or training
-                        programs.
-                    </Typography>
-                </CardContent>
-                <CardActions>
-                    <Button size="small" color="primary">
-                        Share
-                    </Button>
-                    <Button size="small" color="primary">
-                        Learn More
-                    </Button>
-                </CardActions>
-            </Card>
-        </Paper>
-        <br/>
-        <Paper elevation={1}>
-            <Card className={classes.card}>
-                <CardContent>
-                    <Typography variant="headline" component="h2">
-                        Please take a look at some of our courses
-                    </Typography>
-                    <br/>
-                    <div className={classes.grid}>
-                        <Card className={classes.box}>
-                            <CardContent>
-                                <Typography variant="headline" component="h2">
-                                    Course 1
-                                </Typography>
-                                <Typography component="p">
-                                    well meaning and kindly.<br/>
-                                    {"\"a benevolent smile\""}
-                                </Typography>
-                            </CardContent>
-                            <CardActions>
-                                <Button size="small">Learn More</Button>
-                            </CardActions>
-                        </Card>
-                        <Card className={classes.box}>
-                            <CardContent>
-                                <Typography variant="headline" component="h2">
-                                    Course 1
-                                </Typography>
-                                <Typography component="p">
-                                    well meaning and kindly.<br/>
-                                    {"\"a benevolent smile\""}
-                                </Typography>
-                            </CardContent>
-                            <CardActions>
-                                <Button size="small">Learn More</Button>
-                            </CardActions>
-                        </Card>
-                        <Card className={classes.box}>
-                            <CardContent>
-                                <Typography variant="headline" component="h2">
-                                    Course 1
-                                </Typography>
-                                <Typography component="p">
-                                    well meaning and kindly.<br/>
-                                    {"\"a benevolent smile\""}
-                                </Typography>
-                            </CardContent>
-                            <CardActions>
-                                <Button size="small">Learn More</Button>
-                            </CardActions>
-                        </Card>
-                        <Card className={classes.box}>
-                            <CardContent>
-                                <Typography variant="headline" component="h2">
-                                    Course 1
-                                </Typography>
-                                <Typography component="p">
-                                    well meaning and kindly.<br/>
-                                    {"\"a benevolent smile\""}
-                                </Typography>
-                            </CardContent>
-                            <CardActions>
-                                <Button size="small">Learn More</Button>
-                            </CardActions>
-                        </Card>
-                        <Card className={classes.box}>
-                            <CardContent>
-                                <Typography variant="headline" component="h2">
-                                    Course 1
-                                </Typography>
-                                <Typography component="p">
-                                    well meaning and kindly.<br/>
-                                    {"\"a benevolent smile\""}
-                                </Typography>
-                            </CardContent>
-                            <CardActions>
-                                <Button size="small">Learn More</Button>
-                            </CardActions>
-                        </Card>
-                        <Card className={classes.box}>
-                            <CardContent>
-                                <Typography variant="headline" component="h2">
-                                    Course 1
-                                </Typography>
-                                <Typography component="p">
-                                    well meaning and kindly.<br/>
-                                    {"\"a benevolent smile\""}
-                                </Typography>
-                            </CardContent>
-                            <CardActions>
-                                <Button size="small">Learn More</Button>
-                            </CardActions>
-                        </Card>
-                        <Card className={classes.box}>
-                            <CardContent>
-                                <Typography variant="headline" component="h2">
-                                    Course 1
-                                </Typography>
-                                <Typography component="p">
-                                    well meaning and kindly.<br/>
-                                    {"\"a benevolent smile\""}
-                                </Typography>
-                            </CardContent>
-                            <CardActions>
-                                <Button size="small">Learn More</Button>
-                            </CardActions>
-                        </Card>
-                        <Card className={classes.box}>
-                            <CardContent>
-                                <Typography variant="headline" component="h2">
-                                    Course 1
-                                </Typography>
-                                <Typography component="p">
-                                    well meaning and kindly.<br/>
-                                    {"\"a benevolent smile\""}
-                                </Typography>
-                            </CardContent>
-                            <CardActions>
-                                <Button size="small">Learn More</Button>
-                            </CardActions>
-                        </Card>
-                    </div>
-                </CardContent>
-            </Card>
-        </Paper>
-    </div>
-);
+@withStyles(styles)
+@connect((store) => ({ courses: store.dataTable }))
+class Home extends React.Component {
+    componentWillMount() {
+        this.props.dispatch(initCourses())
+    };
 
-export default withStyles(styles)(Home)
+    render() {
+        const { classes } = this.props;
+        return (
+            <div>
+                <Paper elevation={1}>
+                    <Card className={classes.card}>
+                        <CardMedia
+                            className={classes.media}
+                            image="/images/back-to-school.jpg"
+                            title="Back to school"
+                        />
+                        <CardContent>
+                            <Typography gutterBottom variant="headline" component="h2">
+                                Welcome to Athena
+                            </Typography>
+                            <Typography component="p">
+                                Athena is a Learning Management System.
+                            </Typography>
+                            <Typography component="p">
+                                A software for the administration, documentation, tracking, reporting and delivery of educational courses or training
+                                programs.
+                            </Typography>
+                        </CardContent>
+                        <CardActions>
+                            <Button size="small" color="primary">
+                                Share
+                            </Button>
+                            <Button size="small" color="primary">
+                                Learn More
+                            </Button>
+                        </CardActions>
+                    </Card>
+                </Paper>
+                <br/>
+                <Paper elevation={1}>
+                    <Card className={classes.card}>
+                        <CardContent>
+                            <Typography variant="headline" component="h2">
+                                Please take a look at some of our courses
+                            </Typography>
+                            <br/>
+                            <div className={classes.grid}>
+                                <Card className={classes.box}>
+                                    <CardContent>
+                                        <Typography variant="headline" component="h2">
+                                            Course 1
+                                        </Typography>
+                                        <Typography component="p">
+                                            well meaning and kindly.<br/>
+                                            {"\"a benevolent smile\""}
+                                        </Typography>
+                                    </CardContent>
+                                    <CardActions>
+                                        <Button size="small">Learn More</Button>
+                                    </CardActions>
+                                </Card>
+                                <Card className={classes.box}>
+                                    <CardContent>
+                                        <Typography variant="headline" component="h2">
+                                            Course 1
+                                        </Typography>
+                                        <Typography component="p">
+                                            well meaning and kindly.<br/>
+                                            {"\"a benevolent smile\""}
+                                        </Typography>
+                                    </CardContent>
+                                    <CardActions>
+                                        <Button size="small">Learn More</Button>
+                                    </CardActions>
+                                </Card>
+                                <Card className={classes.box}>
+                                    <CardContent>
+                                        <Typography variant="headline" component="h2">
+                                            Course 1
+                                        </Typography>
+                                        <Typography component="p">
+                                            well meaning and kindly.<br/>
+                                            {"\"a benevolent smile\""}
+                                        </Typography>
+                                    </CardContent>
+                                    <CardActions>
+                                        <Button size="small">Learn More</Button>
+                                    </CardActions>
+                                </Card>
+                                <Card className={classes.box}>
+                                    <CardContent>
+                                        <Typography variant="headline" component="h2">
+                                            Course 1
+                                        </Typography>
+                                        <Typography component="p">
+                                            well meaning and kindly.<br/>
+                                            {"\"a benevolent smile\""}
+                                        </Typography>
+                                    </CardContent>
+                                    <CardActions>
+                                        <Button size="small">Learn More</Button>
+                                    </CardActions>
+                                </Card>
+                                <Card className={classes.box}>
+                                    <CardContent>
+                                        <Typography variant="headline" component="h2">
+                                            Course 1
+                                        </Typography>
+                                        <Typography component="p">
+                                            well meaning and kindly.<br/>
+                                            {"\"a benevolent smile\""}
+                                        </Typography>
+                                    </CardContent>
+                                    <CardActions>
+                                        <Button size="small">Learn More</Button>
+                                    </CardActions>
+                                </Card>
+                                <Card className={classes.box}>
+                                    <CardContent>
+                                        <Typography variant="headline" component="h2">
+                                            Course 1
+                                        </Typography>
+                                        <Typography component="p">
+                                            well meaning and kindly.<br/>
+                                            {"\"a benevolent smile\""}
+                                        </Typography>
+                                    </CardContent>
+                                    <CardActions>
+                                        <Button size="small">Learn More</Button>
+                                    </CardActions>
+                                </Card>
+                                <Card className={classes.box}>
+                                    <CardContent>
+                                        <Typography variant="headline" component="h2">
+                                            Course 1
+                                        </Typography>
+                                        <Typography component="p">
+                                            well meaning and kindly.<br/>
+                                            {"\"a benevolent smile\""}
+                                        </Typography>
+                                    </CardContent>
+                                    <CardActions>
+                                        <Button size="small">Learn More</Button>
+                                    </CardActions>
+                                </Card>
+                                <Card className={classes.box}>
+                                    <CardContent>
+                                        <Typography variant="headline" component="h2">
+                                            Course 1
+                                        </Typography>
+                                        <Typography component="p">
+                                            well meaning and kindly.<br/>
+                                            {"\"a benevolent smile\""}
+                                        </Typography>
+                                    </CardContent>
+                                    <CardActions>
+                                        <Button size="small">Learn More</Button>
+                                    </CardActions>
+                                </Card>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </Paper>
+            </div>
+        );
+    }
+}
+
+export default Home

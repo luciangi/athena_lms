@@ -29,3 +29,7 @@ export const dataTableConstants = {
     CHANGE_PAGE_SIZE: "CHANGE_PAGE_SIZE",
     CHANGE_PAGE_SORTING: "CHANGE_PAGE_SORTING"
 };
+
+export const coursesConstants = {
+    LOAD_COURSES: "LOAD_COURSES"
+};

@@ -39,6 +39,7 @@ class WebSecurityComponent : WebSecurityConfigurerAdapter() {
                         "/images/**",
                         "/",
                         "/api/userDetails",
+                        "/api/courses",
                         "/genericError",
                         "/swagger-resources/**"
                 ).permitAll()

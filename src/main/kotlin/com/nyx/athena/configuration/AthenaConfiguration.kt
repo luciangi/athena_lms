@@ -24,17 +24,8 @@ class AthenaConfiguration {
                        tutorRepository: TutorRepository,
                        studentRepository: StudentRepository,
                        passwordEncoder: PasswordEncoder,
-                       subjectRepository: SubjectRepository) = InitializingBean {
-        authInit(roleRepository, passwordEncoder, tutorRepository, studentRepository, athenaUserRepository)
-
-        subjectsInit(subjectRepository)
-    }
-
-    private fun authInit(roleRepository: RoleRepository,
-                         passwordEncoder: PasswordEncoder,
-                         tutorRepository: TutorRepository,
-                         studentRepository: StudentRepository,
-                         athenaUserRepository: AthenaUserRepository) {
+                       subjectRepository: SubjectRepository,
+                       courseRepository: CourseRepository) = InitializingBean {
         val adminRole = Role(ROLE_ADMIN.name)
         val tutorRole = Role(ROLE_TUTOR.name)
         val studentRole = Role(ROLE_STUDENT.name)
@@ -45,10 +36,10 @@ class AthenaConfiguration {
                 password = passwordEncoder.encode("admin"),
                 email = "admin@email.com"
         )
-        adminUser.roles += roleRepository.findByAuthority(ROLE_ADMIN.name)
+        adminUser.roles += adminRole
         athenaUserRepository.save(adminUser)
 
-        val tutorUser = Tutor(
+        val tutorUser1 = Tutor(
                 username = "tutor",
                 password = passwordEncoder.encode("tutor"),
                 email = "tutor@email.com",
@@ -56,8 +47,19 @@ class AthenaConfiguration {
                 lastName = "Demo",
                 otherDetails = "A tutor user for demo purposes"
         )
-        tutorUser.roles += roleRepository.findByAuthority(ROLE_TUTOR.name)
-        tutorRepository.save(tutorUser)
+        tutorUser1.roles += tutorRole
+        tutorRepository.save(tutorUser1)
+
+        val tutorUser2 = Tutor(
+                username = "tutor2",
+                password = passwordEncoder.encode("tutor2"),
+                email = "tutor2@email.com",
+                firstName = "Tutor2",
+                lastName = "Demo",
+                otherDetails = "A tutor user for demo purposes"
+        )
+        tutorUser2.roles += tutorRole
+        tutorRepository.save(tutorUser2)
 
         val studentUser = Student(
                 username = "student",
@@ -68,16 +70,15 @@ class AthenaConfiguration {
                 address = "Street address",
                 otherDetails = "A student for demo purposes"
         )
-        studentUser.roles += roleRepository.findByAuthority(ROLE_STUDENT.name)
+        studentUser.roles += studentRole
 
         studentRepository.save(studentUser)
-    }
 
-    private fun subjectsInit(subjectRepository: SubjectRepository) {
-        subjectRepository.save(Subject(
+        val developmentSubject = Subject(
                 name = "Development",
                 description = "Software development"
-        ))
+        )
+        subjectRepository.save(developmentSubject)
         subjectRepository.save(Subject(
                 name = "OOP",
                 description = "Object Oriented Programming"
@@ -114,13 +115,71 @@ class AthenaConfiguration {
                 name = "Data Science",
                 description = "Data Science courses and programs"
         ))
-        subjectRepository.save(Subject(
+        val mathSubject = Subject(
                 name = "Math",
                 description = "Algebra and Geometry"
-        ))
-        subjectRepository.save(Subject(
+        )
+        subjectRepository.save(mathSubject)
+        val physicsSubject = Subject(
                 name = "Physics",
                 description = "Mechanics and Thermodynamics"
+        )
+        subjectRepository.save(physicsSubject)
+
+        courseRepository.save(Course(
+                author = tutorUser1,
+                subject = developmentSubject,
+                name = "Java Development",
+                content = "",
+                description = "A new course on Java development"
+        ))
+
+        courseRepository.save(Course(
+                author = tutorUser1,
+                subject = developmentSubject,
+                name = "Kotlin Development",
+                content = "",
+                description = "A new course on Kotlin development"
+        ))
+
+        courseRepository.save(Course(
+                author = tutorUser1,
+                subject = developmentSubject,
+                name = "Groovy Development",
+                content = "",
+                description = "A new course on Groovy development"
+        ))
+
+        courseRepository.save(Course(
+                author = tutorUser2,
+                subject = mathSubject,
+                name = "Trigonometry for beginners",
+                content = "",
+                description = "A new course regarding Trigonometry"
+        ))
+
+        courseRepository.save(Course(
+                author = tutorUser2,
+                subject = mathSubject,
+                name = "Trigonometry Advanced Level",
+                content = "",
+                description = "A second course regarding Trigonometry"
+        ))
+
+        courseRepository.save(Course(
+                author = tutorUser2,
+                subject = physicsSubject,
+                name = "Mechanics",
+                content = "",
+                description = "A new course regarding Mechanics"
+        ))
+
+        courseRepository.save(Course(
+                author = tutorUser2,
+                subject = physicsSubject,
+                name = "Thermodynamics",
+                content = "",
+                description = "A new course regarding Thermodynamics"
         ))
     }
 }

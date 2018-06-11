@@ -6,6 +6,7 @@ import {
 } from "material-ui";
 import DataTable from "../DataTable";
 import { FolderOpen } from "@material-ui/icons/es/index";
+import { isAdminUser } from "../../redux/actions";
 
 const styles = theme => ({
     root: theme.mixins.gutters({
@@ -27,7 +28,11 @@ class Subjects extends React.Component {
                                columns={[
                                    { name: "name", title: "Name" },
                                    { name: "description", title: "Description" }
-                               ]}/>
+                               ]}
+                               showAddCommand={isAdminUser()}
+                               showEditCommand={isAdminUser()}
+                               showDeleteCommand={isAdminUser()}
+                    />
                 </Paper>
             </div>
         )

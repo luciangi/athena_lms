@@ -99,7 +99,7 @@ class DataTable extends React.Component {
     }
 
     render() {
-        const { profile, columns, data: data, dispatch } = this.props;
+        const { profile, columns, data, showAddCommand, showEditCommand, showDeleteCommand, dispatch } = this.props;
         const defaultOrder = columns.map((column) => column.name);
         const { rows, currentPage, totalCount, sorting } = (!!data[ profile ] && data[ profile ]) || dataTableInitialState;
 
@@ -134,9 +134,9 @@ class DataTable extends React.Component {
                 <Table/>
                 <TableEditRow/>
                 <TableEditColumn
-                    showAddCommand
-                    showEditCommand
-                    showDeleteCommand
+                    showAddCommand={showAddCommand}
+                    showEditCommand={showEditCommand}
+                    showDeleteCommand={showDeleteCommand}
                     commandComponent={Command}
                 />
 

@@ -181,5 +181,13 @@ class AthenaConfiguration {
                 content = "",
                 description = "A new course regarding Thermodynamics"
         ))
+
+        courseRepository.save(Course(
+                author = tutorUser2,
+                subject = physicsSubject,
+                name = "Advanced Thermodynamics",
+                content = "",
+                description = "A new course regarding Advanced Thermodynamics"
+        ))
     }
 }

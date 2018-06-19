@@ -50,7 +50,6 @@ module.exports = (env, argv) => ({
     plugins: [
         new HtmlWebPackPlugin({
             template: resolve(__dirname, "src/main/js/index.html")
-        }),
-        new CleanWebpackPlugin(resolve(__dirname, "src/main/resources/static/"))
+        })
     ]
 });

@@ -8,7 +8,6 @@ import {
     AppBar,
     Button,
     Card,
-    CardActions,
     CardContent,
     Dialog,
     FormControl,
@@ -25,6 +24,9 @@ import {
     Typography,
     withStyles
 } from "material-ui";
+import { initCourses } from "../../redux/actions/courses";
+import { connect } from "react-redux";
+import Course from "../Course";
 
 const styles = theme => ({
     root: {
@@ -124,7 +126,12 @@ const Transition = (props) => {
 };
 
 @withStyles(styles, { withTheme: true })
+@connect((store) => ({ courses: store.courses.filter(c => c.author.id === store.auth.user.id) }))
 class Courses extends React.Component {
+    componentDidMount() {
+        this.props.dispatch(initCourses())
+    };
+
     constructor(props) {
         super(props);
         this.state = {
@@ -216,146 +223,7 @@ class Courses extends React.Component {
                                 </Button>
                             </div>
                             <div className={classes.grid}>
-                                <Card className={classes.box}>
-                                    <CardContent>
-                                        <Typography variant="headline" component="h2">
-                                            Course 1
-                                        </Typography>
-                                        <Typography component="p">
-                                            well meaning and kindly.<br/>
-                                            {"\"a benevolent smile\""}
-                                        </Typography>
-                                    </CardContent>
-                                    <CardActions>
-                                        <Button color="primary" onClick={openEditor}>Manage</Button>
-                                    </CardActions>
-                                </Card>
-                                <Card className={classes.box}>
-                                    <CardContent>
-                                        <Typography variant="headline" component="h2">
-                                            Course 1
-                                        </Typography>
-                                        <Typography component="p">
-                                            well meaning and kindly.<br/>
-                                            {"\"a benevolent smile\""}
-                                        </Typography>
-                                    </CardContent>
-                                    <CardActions>
-                                        <Button color="primary" onClick={openEditor}>Manage</Button>
-                                    </CardActions>
-                                </Card>
-                                <Card className={classes.box}>
-                                    <CardContent>
-                                        <Typography variant="headline" component="h2">
-                                            Course 1
-                                        </Typography>
-                                        <Typography component="p">
-                                            well meaning and kindly.<br/>
-                                            {"\"a benevolent smile\""}
-                                        </Typography>
-                                    </CardContent>
-                                    <CardActions>
-                                        <Button color="primary" onClick={openEditor}>Manage</Button>
-                                    </CardActions>
-                                </Card>
-                                <Card className={classes.box}>
-                                    <CardContent>
-                                        <Typography variant="headline" component="h2">
-                                            Course 1
-                                        </Typography>
-                                        <Typography component="p">
-                                            well meaning and kindly.<br/>
-                                            {"\"a benevolent smile\""}
-                                        </Typography>
-                                    </CardContent>
-                                    <CardActions>
-                                        <Button color="primary" onClick={openEditor}>Manage</Button>
-                                    </CardActions>
-                                </Card>
-                                <Card className={classes.box}>
-                                    <CardContent>
-                                        <Typography variant="headline" component="h2">
-                                            Course 1
-                                        </Typography>
-                                        <Typography component="p">
-                                            well meaning and kindly.<br/>
-                                            {"\"a benevolent smile\""}
-                                        </Typography>
-                                    </CardContent>
-                                    <CardActions>
-                                        <Button color="primary" onClick={openEditor}>Manage</Button>
-                                    </CardActions>
-                                </Card>
-                                <Card className={classes.box}>
-                                    <CardContent>
-                                        <Typography variant="headline" component="h2">
-                                            Course 1
-                                        </Typography>
-                                        <Typography component="p">
-                                            well meaning and kindly.<br/>
-                                            {"\"a benevolent smile\""}
-                                        </Typography>
-                                    </CardContent>
-                                    <CardActions>
-                                        <Button color="primary" onClick={openEditor}>Manage</Button>
-                                    </CardActions>
-                                </Card>
-                                <Card className={classes.box}>
-                                    <CardContent>
-                                        <Typography variant="headline" component="h2">
-                                            Course 1
-                                        </Typography>
-                                        <Typography component="p">
-                                            well meaning and kindly.<br/>
-                                            {"\"a benevolent smile\""}
-                                        </Typography>
-                                    </CardContent>
-                                    <CardActions>
-                                        <Button color="primary" onClick={openEditor}>Manage</Button>
-                                    </CardActions>
-                                </Card>
-                                <Card className={classes.box}>
-                                    <CardContent>
-                                        <Typography variant="headline" component="h2">
-                                            Course 1
-                                        </Typography>
-                                        <Typography component="p">
-                                            well meaning and kindly.<br/>
-                                            {"\"a benevolent smile\""}
-                                        </Typography>
-                                    </CardContent>
-                                    <CardActions>
-                                        <Button color="primary" onClick={openEditor}>Manage</Button>
-                                    </CardActions>
-                                </Card>
-                                <Card className={classes.box}>
-                                    <CardContent>
-                                        <Typography variant="headline" component="h2">
-                                            Course 1
-                                        </Typography>
-                                        <Typography component="p">
-                                            well meaning and kindly.<br/>
-                                            {"\"a benevolent smile\""}
-                                        </Typography>
-                                    </CardContent>
-                                    <CardActions>
-                                        <Button color="primary" onClick={openEditor}>Manage</Button>
-                                    </CardActions>
-                                </Card>
-                                <Card className={classes.box}>
-                                    <CardContent>
-                                        <Typography variant="headline" component="h2">
-                                            Course 1
-                                        </Typography>
-                                        <Typography component="p">
-                                            well meaning and kindly.<br/>
-                                            {"\"a benevolent smile\""}
-                                        </Typography>
-                                    </CardContent>
-                                    <CardActions>
-                                        <Button color="primary" onClick={openEditor}>Manage</Button>
-                                    </CardActions>
-                                </Card>
+                                {this.props.courses.map(course => <Course key={course.id} course={course}/>)}
                             </div>
                         </CardContent>
                     </Card>

@@ -1,9 +1,6 @@
 package com.nyx.athena.model
 
-import javax.persistence.CascadeType
-import javax.persistence.Entity
-import javax.persistence.ManyToOne
-import javax.persistence.Table
+import javax.persistence.*
 import javax.validation.constraints.NotNull
 
 @Entity
@@ -16,6 +13,9 @@ class Course(@ManyToOne(cascade = [(CascadeType.ALL)])
              var subject: Subject,
              @NotNull
              var name: String,
+             @Lob
+             @Column
+             var image: ByteArray? = null,
              var content: String?,
              var description: String?)
     : CoreEntity()

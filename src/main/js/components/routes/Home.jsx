@@ -10,7 +10,8 @@ import Card from "material-ui/es/Card/Card";
 import CardActions from "material-ui/es/Card/CardActions";
 import Paper from "material-ui/es/Paper/Paper";
 import { connect } from "react-redux";
-import { initCourses } from "../../redux/actions/home";
+import { initCourses } from "../../redux/actions/courses";
+import Course from "../Course";
 
 const styles = {
     card: {
@@ -32,14 +33,20 @@ const styles = {
     },
     box: {
         width: 400,
-        height: 400,
         marginLeft: 10,
         marginTop: 10
+    },
+    image: {
+        height: 0,
+        paddingTop: "56.25%" // 16:9
+    },
+    cardContent: {
+        height: 384
     }
 };
 
 @withStyles(styles)
-@connect((store) => ({ courses: store.home }))
+@connect((store) => ({ courses: store.courses }))
 class Home extends React.Component {
     componentDidMount() {
         this.props.dispatch(initCourses())
@@ -87,26 +94,7 @@ class Home extends React.Component {
                             </Typography>
                             <br/>
                             <div className={classes.grid}>
-                                {this.props.courses.map(course => (
-                                    <Card className={classes.box}>
-                                        <CardContent>
-                                            <Typography variant="title" component="span">
-                                                {course.name}
-                                            </Typography>
-                                            <br/>
-                                            <Typography variant="subheading" component="span">
-                                                {`Author: ${course.author.firstName} ${course.author.lastName}`}
-                                            </Typography>
-                                            <br/>
-                                            <Typography variant="subheading" component="span">
-                                                {course.description}
-                                            </Typography>
-                                        </CardContent>
-                                        <CardActions>
-                                            <Button size="small" color="secondary">Learn More</Button>
-                                        </CardActions>
-                                    </Card>
-                                ))}
+                                {this.props.courses.map(course => <Course key={course.id} course={course}/>)}
                             </div>
                         </CardContent>
                     </Card>

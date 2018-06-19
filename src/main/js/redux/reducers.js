@@ -4,7 +4,7 @@ import auth from "./reducers/auth";
 import notification from "./reducers/notification";
 import menu from "./reducers/menu";
 import dataTable from "./reducers/dataTable";
-import home from "./reducers/home";
+import courses from "./reducers/courses";
 
 export default combineReducers({
     routing: routerReducer,
@@ -12,5 +12,5 @@ export default combineReducers({
     auth,
     notification,
     dataTable,
-    home
+    courses
 })

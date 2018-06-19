@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.util.ResourceUtils
+
 
 @Configuration
 class AthenaConfiguration {
@@ -131,7 +133,8 @@ class AthenaConfiguration {
                 subject = developmentSubject,
                 name = "Java Development",
                 content = "",
-                description = "A new course on Java development"
+                description = "A new course on Java development",
+                image = ResourceUtils.getFile("classpath:static/images/courses/course1.jpg").readBytes()
         ))
 
         courseRepository.save(Course(
@@ -139,7 +142,8 @@ class AthenaConfiguration {
                 subject = developmentSubject,
                 name = "Kotlin Development",
                 content = "",
-                description = "A new course on Kotlin development"
+                description = "A new course on Kotlin development",
+                image = ResourceUtils.getFile("classpath:static/images/courses/course2.jpg").readBytes()
         ))
 
         courseRepository.save(Course(
@@ -147,7 +151,8 @@ class AthenaConfiguration {
                 subject = developmentSubject,
                 name = "Groovy Development",
                 content = "",
-                description = "A new course on Groovy development"
+                description = "A new course on Groovy development",
+                image = ResourceUtils.getFile("classpath:static/images/courses/course3.jpg").readBytes()
         ))
 
         courseRepository.save(Course(
@@ -155,7 +160,8 @@ class AthenaConfiguration {
                 subject = mathSubject,
                 name = "Trigonometry for beginners",
                 content = "",
-                description = "A new course regarding Trigonometry"
+                description = "A new course regarding Trigonometry",
+                image = ResourceUtils.getFile("classpath:static/images/courses/course4.jpg").readBytes()
         ))
 
         courseRepository.save(Course(
@@ -163,7 +169,8 @@ class AthenaConfiguration {
                 subject = mathSubject,
                 name = "Trigonometry Advanced Level",
                 content = "",
-                description = "A second course regarding Trigonometry"
+                description = "A second course regarding Trigonometry",
+                image = ResourceUtils.getFile("classpath:static/images/courses/course5.jpg").readBytes()
         ))
 
         courseRepository.save(Course(
@@ -171,7 +178,8 @@ class AthenaConfiguration {
                 subject = physicsSubject,
                 name = "Mechanics",
                 content = "",
-                description = "A new course regarding Mechanics"
+                description = "A new course regarding Mechanics",
+                image = ResourceUtils.getFile("classpath:static/images/courses/course6.jpg").readBytes()
         ))
 
         courseRepository.save(Course(
@@ -179,7 +187,8 @@ class AthenaConfiguration {
                 subject = physicsSubject,
                 name = "Thermodynamics",
                 content = "",
-                description = "A new course regarding Thermodynamics"
+                description = "A new course regarding Thermodynamics",
+                image = ResourceUtils.getFile("classpath:static/images/courses/course7.jpg").readBytes()
         ))
 
         courseRepository.save(Course(
@@ -187,7 +196,8 @@ class AthenaConfiguration {
                 subject = physicsSubject,
                 name = "Advanced Thermodynamics",
                 content = "",
-                description = "A new course regarding Advanced Thermodynamics"
+                description = "A new course regarding Advanced Thermodynamics",
+                image = ResourceUtils.getFile("classpath:static/images/courses/course8.jpg").readBytes()
         ))
     }
 }

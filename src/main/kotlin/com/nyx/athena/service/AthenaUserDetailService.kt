@@ -36,8 +36,11 @@ class AthenaUserDetailService : UserDetailsService {
     fun userDetail(): Map<String, Serializable>? {
         val authentication: Authentication = SecurityContextHolder.getContext().authentication
         if (authentication !is AnonymousAuthenticationToken) {
-            return hashMapOf("username" to authentication.name,
-                    "roles" to authentication.authorities.fold(ArrayList<String>(), { accumulator, item -> accumulator.add(item.authority); accumulator }))
+            val athenaUser: AthenaUser = repositoryAthena.findByUsername(authentication.name)
+            return hashMapOf(
+                    "id" to athenaUser.id,
+                    "username" to athenaUser.username,
+                    "roles" to athenaUser.roles.fold(ArrayList<String>(), { accumulator, item -> accumulator.add(item.authority); accumulator }))
         }
         return null
     }

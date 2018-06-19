@@ -14,5 +14,5 @@ class CourseController {
     private lateinit var courseService: CourseService
 
     @GetMapping("/courses/all")
-    fun userDetail(): Set<Course> = courseService.findAll()
+    fun getAllCourses(): Set<Course> = courseService.findAll()
 }

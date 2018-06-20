@@ -1,7 +1,6 @@
 import React from "react";
 import {
     Avatar,
-    Button,
     Card,
     CardActions,
     CardContent,
@@ -44,7 +43,7 @@ const styles = {
     }
 };
 
-export default withStyles(styles)(({ course, classes }) => (
+export default withStyles(styles)(({ children, course, classes }) => (
     <Card className={classes.box}>
         <CardMedia
             className={classes.image}
@@ -73,6 +72,6 @@ export default withStyles(styles)(({ course, classes }) => (
             </Typography>
         </CardContent>
         <CardActions>
-            <Button size="small" color="secondary">Learn More</Button>
+            {children}
         </CardActions>
     </Card>))

@@ -94,7 +94,11 @@ class Home extends React.Component {
                             </Typography>
                             <br/>
                             <div className={classes.grid}>
-                                {this.props.courses.map(course => <Course key={course.id} course={course}/>)}
+                                {this.props.courses.map(course => (
+                                    <Course key={course.id} course={course}>
+                                        <Button size="small" color="primary" variant="raised">Learn More</Button>
+                                    </Course>
+                                ))}}
                             </div>
                         </CardContent>
                     </Card>

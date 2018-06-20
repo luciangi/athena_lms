@@ -20,6 +20,7 @@ import {
     Step,
     StepLabel,
     Stepper,
+    TextField,
     Toolbar,
     Typography,
     withStyles
@@ -73,50 +74,90 @@ const styles = theme => ({
     },
     paper: {
         margin: "3% 5% 3% 5%"
+    },
+    rootForm: {
+        display: "flex",
+        flexWrap: "wrap"
+    },
+    formControl: {
+        margin: theme.spacing.unit,
+        minWidth: 120
+    },
+    selectEmpty: {
+        marginTop: theme.spacing.unit * 2
+    },
+    textField: {
+        marginLeft: theme.spacing.unit,
+        marginRight: theme.spacing.unit,
+        width: 200
     }
 });
 
 function getSteps() {
-    return [ "Select subject", "Edit course content", "Enrolment type" ];
+    return [ "Course general information", "Course content", "Course enrolment" ];
 }
 
-const Step1 = () => {
-    return (
-        <div style={{ height: "400px" }}>
-            <div style={{ padding: "30px" }}>
-                <FormControl>
-                    <InputLabel htmlFor="subject">Subject</InputLabel>
-                    <Select
-                        value={2}
-                        // onChange={this.handleChange}
-                        native
-                    >
-                        <MenuItem value="">
-                            <em>None</em>
-                        </MenuItem>
-                        <MenuItem value={1}>Math</MenuItem>
-                        <MenuItem value={2}>Physics</MenuItem>
-                    </Select>
-                </FormControl>
-            </div>
-        </div>)
-};
-
-function getStepContent(step) {
+function getStepContent(step, classes) {
     switch (step) {
         case 0:
-            return <Step1/>;
+            return (
+                <div>
+                    <TextField
+                        id="name"
+                        label="Name"
+                        className={classes.textField}
+                        value={""}
+                        onChange={() => {
+                        }}
+                        margin="normal"
+                    />
+                    <TextField
+                        id="multiline-flexible"
+                        label="Description"
+                        multiline
+                        rowsMax="4"
+                        value={""}
+                        onChange={() => {
+                        }}
+                        className={classes.textField}
+                        margin="normal"
+                    />
+                    <FormControl className={classes.formControl}>
+                        <InputLabel>Subject</InputLabel>
+                        <Select
+                            value={""}
+                            onChange={() => {
+                            }}
+                        >
+                            <MenuItem value="">
+                                <em>None</em>
+                            </MenuItem>
+                            <MenuItem value={10}>Ten</MenuItem>
+                            <MenuItem value={20}>Twenty</MenuItem>
+                            <MenuItem value={30}>Thirty</MenuItem>
+                        </Select>
+                    </FormControl>
+                    <Button
+                        // onClick={handleSave}
+                        className={classes.button}
+                        color="primary"
+                        variant="raised"
+                    >
+                        <input type="file" style={{ display: "none" }}/>
+                        Select Image
+                    </Button>
+                </div>);
         case 1:
             return (
-                <div style={{ height: "400px" }}>WYSWYG</div>
+                <div>WYSWYG</div>
             );
         case 2:
             return (
-                <div style={{ height: "400px" }}>Enrolment Type</div>
+                <div>Enrolment Type</div>
             );
         default:
             return (
-                <div style={{ height: "400px" }}>Unknown step</div>
+                <div>Unknown step</div>
             );
     }
 }
@@ -137,21 +178,22 @@ class Courses extends React.Component {
         this.state = {
             openedEditor: false,
             activeStep: 0,
-            skipped: new Set()
+            skipped: new Set(),
+            editedCourse: null
         };
     }
 
     render() {
         const { classes } = this.props;
-        const { openedEditor, activeStep } = this.state;
+        const { openedEditor, activeStep, editedCourse } = this.state;
         const steps = getSteps();
 
         const closeEditor = () => {
-            this.setState({ openedEditor: false, activeStep: 0 })
+            this.setState({ openedEditor: false, activeStep: 0, editedCourse: null })
         };
 
-        const openEditor = () => {
-            this.setState({ openedEditor: true })
+        const editCourse = (course) => {
+            this.setState({ openedEditor: true, editedCourse: course })
         };
 
         const isStepOptional = step => {
@@ -197,10 +239,9 @@ class Courses extends React.Component {
             });
         };
 
-        const handleReset = () => {
-            this.setState({
-                activeStep: 0
-            });
+        const handleSave = () => {
+            this.props.dispatch(initCourses());
+            closeEditor()
         };
 
         return (
@@ -218,12 +259,16 @@ class Courses extends React.Component {
                                     color="primary"
                                     aria-label="add"
                                     className={classes.add}
-                                    onClick={openEditor}>
+                                    onClick={editCourse}>
                                     <Add/>
                                 </Button>
                             </div>
                             <div className={classes.grid}>
-                                {this.props.courses.map(course => <Course key={course.id} course={course}/>)}
+                                {this.props.courses.map(course => (
+                                    <Course key={course.id} course={course}>
+                                        <Button size="small" color="secondary" onClick={() => editCourse(course)}>Learn More</Button>
+                                    </Course>
+                                ))}
                             </div>
                         </CardContent>
                     </Card>
@@ -239,8 +284,8 @@ class Courses extends React.Component {
                                 <IconButton color="inherit" onClick={closeEditor} aria-label="Close">
                                     <Close/>
                                 </IconButton>
-                                <Typography variant="title" color="inherit">
-                                    Edit Course 1
+                                <Typography variant="title" color="inherit" component="h1">
+                                    {editedCourse && editedCourse.id ? `Editing ${editedCourse.name}` : (editedCourse && editedCourse.name) || "New course"}
                                 </Typography>
                             </Toolbar>
                         </AppBar>
@@ -253,9 +298,9 @@ class Courses extends React.Component {
                                         {steps.map((label, index) => {
                                             const props = {};
                                             const labelProps = {};
-                                            // if (isStepOptional(index)) {
-                                            //     labelProps.optional = <Typography variant="caption">Optional</Typography>;
-                                            // }
+                                            if (isStepOptional(index)) {
+                                                labelProps.optional = <Typography variant="caption" component="h1">Optional</Typography>;
+                                            }
                                             if (isStepSkipped(index)) {
                                                 props.completed = false;
                                             }
@@ -267,19 +312,30 @@ class Courses extends React.Component {
                                         })}
                                     </Stepper>
                                     <div>
-                                        {activeStep === steps.length ? (
-                                            <div>
-                                                <Typography className={classes.instructions}>
-                                                    All steps completed - you're finished
-                                                </Typography>
-                                                <Button onClick={handleReset} className={classes.button}>
-                                                    Reset
-                                                </Button>
-                                            </div>
-                                        ) : (
-                                            <div>
-                                                <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
+                                        <div style={{ height: "400px" }}>
+                                            {activeStep === steps.length ? (
                                                 <div>
+                                                    <Typography component="h1" variant="headline" className={classes.instructions}>
+                                                        You're new course is finished!
+                                                    </Typography>
+                                                </div>
+                                            ) : (
+                                                <div>
+                                                    {getStepContent(activeStep, classes)}
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div>
+                                            {activeStep === steps.length ?
+                                                (<Button
+                                                    onClick={handleSave}
+                                                    className={classes.button}
+                                                    color="primary"
+                                                    variant="raised"
+                                                >
+                                                    SAVE
+                                                </Button>) :
+                                                (<div>
                                                     <Button
                                                         disabled={activeStep === 0}
                                                         onClick={handleBack}
@@ -290,7 +346,6 @@ class Courses extends React.Component {
                                                     {isStepOptional(activeStep) && (
                                                         <Button
                                                             variant="raised"
-                                                            color="primary"
                                                             onClick={handleSkip}
                                                             className={classes.button}
                                                         >
@@ -299,15 +354,14 @@ class Courses extends React.Component {
                                                     )}
                                                     <Button
                                                         variant="raised"
-                                                        color="primary"
                                                         onClick={handleNext}
                                                         className={classes.button}
+                                                        color={activeStep === steps.length - 1 ? "primary" : null}
                                                     >
                                                         {activeStep === steps.length - 1 ? "Finish" : "Next"}
                                                     </Button>
-                                                </div>
-                                            </div>
-                                        )}
+                                                </div>)}
+                                        </div>
                                     </div>
                                 </div>
                             </Card>

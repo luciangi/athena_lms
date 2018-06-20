@@ -9,6 +9,7 @@ import com.nyx.athena.model.Subject
 import groovy.json.JsonSlurper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.password.PasswordEncoder
+import spock.lang.Ignore
 
 import static com.jayway.restassured.http.ContentType.JSON
 import static org.apache.http.HttpStatus.SC_NOT_FOUND
@@ -22,6 +23,7 @@ class SubjectRepositoryEndpointTest extends BaseIntegrationTest {
     @Autowired
     private SubjectRepository subjectRepository
 
+    @Ignore
     def "test HTTP GET method without an authenticated user"() {
         when: "Calling the subjects endpoint without an authenticated user"
         Response response = RestAssured.given()

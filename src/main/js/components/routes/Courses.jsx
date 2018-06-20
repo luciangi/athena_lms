@@ -27,13 +27,30 @@ import {
 } from "material-ui";
 import {
     initCourses,
-    initStudents,
-    initSubjects
+    initSubjects,
+    saveCourse
 } from "../../redux/actions/courses";
+import {
+    convertFromRaw,
+    convertToRaw,
+    EditorState
+} from "draft-js";
 import { connect } from "react-redux";
 import Course from "../Course";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import { stateToHTML } from "draft-js-export-html";
+import renderHTML from "react-render-html";
+
+
+function getBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result.split(",")[ 1 ]);
+        reader.onerror = error => reject(error);
+    });
+}
 
 const styles = theme => ({
     root: {
@@ -106,6 +123,7 @@ const styles = theme => ({
     },
     center: {
         height: "100%",
+        width: "100%",
         padding: 0,
         margin: 0,
         display: "flex",
@@ -123,78 +141,122 @@ function getSteps() {
     return [ "Course general information", "Course content", "Content Preview" ];
 }
 
-function getStepContent(editedCourse, subjects, step, classes) {
-    switch (step) {
-        case 0:
-            return (
-                <div className={classes.center}>
-                    <div className={classes.inputs}>
-                        <TextField
-                            id="name"
-                            label="Name"
-                            className={classes.textField}
-                            value={editedCourse.name}
-                            onChange={() => {
-                            }}
-                            margin="normal"
+class StepContent extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {};
+
+        if (this.props.editedCourse.content && this.props.editedCourse.content !== "") {
+            this.state.editorState = EditorState.createWithContent(convertFromRaw(JSON.parse(content)));
+        } else {
+            this.state.editorState = EditorState.createEmpty();
+        }
+    }
+
+    render() {
+        const {
+            editedCourse,
+            subjects,
+            activeStep,
+            classes,
+            handleCourseNameChange,
+            handleCourseDescriptionChange,
+            handleCourseSubjectChange,
+            handleCourseContentChange,
+            handleCourseImageChange
+        } = this.props;
+
+        const { editorState } = this.state;
+
+        const handleEditorChange = (editorState) => {
+            const contentState = editorState.getCurrentContent();
+            this.setState({
+                editorState
+            });
+            handleCourseContentChange(JSON.stringify(convertToRaw(contentState)))
+        };
+
+        switch (activeStep) {
+            case 0:
+                return (
+                    <div className={classes.center}>
+                        <div className={classes.inputs}>
+                            <TextField
+                                id="name"
+                                label="Name"
+                                className={classes.textField}
+                                onChange={handleCourseNameChange}
+                                value={editedCourse.name}
+                                margin="normal"
+                            />
+                            <br/>
+                            <TextField
+                                id="multiline-flexible"
+                                label="Description"
+                                multiline
+                                rowsMax="4"
+                                value={editedCourse.description}
+                                onChange={handleCourseDescriptionChange}
+                                className={classes.textField}
+                                margin="normal"
+                            />
+                            <br/>
+                            <FormControl className={classes.textField}>
+                                <InputLabel>Subject</InputLabel>
+                                <Select
+                                    value={(editedCourse.subject && editedCourse.subject.id) || subjects.find(() => true).id}
+                                    onChange={handleCourseSubjectChange}
+                                >
+                                    {subjects.map(subject => (
+                                        <MenuItem key={subject.id} value={subject.id}>{subject.name}</MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                            <br/>
+                            <div>
+                                <input
+                                    accept="image/*"
+                                    className={classes.input}
+                                    id="raised-button-file"
+                                    multiple
+                                    type="file"
+                                    style={{ display: "none" }}
+                                    onChange={handleCourseImageChange}
+                                />
+                                <label htmlFor="raised-button-file">
+                                    <Button variant="raised" component="span" className={classes.button}>
+                                        Thumbnail
+                                    </Button>
+                                </label>
+                                {editedCourse.image && <img src={`data:image/png;base64,${editedCourse.image}`}/>}
+                            </div>
+                        </div>
+                    </div>);
+            case 1:
+                return (
+                    <div>
+                        <Editor
+                            editorState={editorState}
+                            toolbarClassName="toolbarClassName"
+                            wrapperClassName="wrapperClassName"
+                            editorClassName="editorClassName"
+                            onEditorStateChange={handleEditorChange}
                         />
-                        <TextField
-                            id="multiline-flexible"
-                            label="Description"
-                            multiline
-                            rowsMax="4"
-                            value={editedCourse.description}
-                            onChange={() => {
-                            }}
-                            className={classes.textField}
-                            margin="normal"
-                        />
-                        <FormControl className={classes.formControl}>
-                            <InputLabel>Subject</InputLabel>
-                            <Select
-                                value={editedCourse && editedCourse.subject ? editedCourse.subject.id : ""}
-                                onChange={() => {
-                                }}
-                            >
-                                {subjects.map(subject => (
-                                    <MenuItem value={subject.id}>{subject.name}</MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                        <Button
-                            className={classes.button}
-                            color="primary"
-                            variant="raised"
-                        >
-                            <input type="file" style={{ display: "none" }}/>
-                            Select Image
-                        </Button>
                     </div>
-                </div>);
-        case 1:
-            return (
-                <div>
-                    <Editor
-                        editorState={editedCourse.content}
-                        toolbarClassName="toolbarClassName"
-                        wrapperClassName="wrapperClassName"
-                        editorClassName="editorClassName"
-                        // onEditorStateChange={this.onEditorStateChange}
-                    />
-                </div>
-            );
-        case 2:
-            return (
-                <div className={classes.center}>
-                    <div className={classes.inputs}>
-                        {editedCourse.content}
+                );
+            case 2:
+                return (
+                    <div className={classes.center}>
+                        <div className={classes.inputs}>
+                            {renderHTML(stateToHTML(editorState.getCurrentContent()))}
+                        </div>
                     </div>
-                </div>
-            );
-        default:
-            return (
-                <div>Unknown step</div>
-            );
+                );
+            default:
+                return (
+                    <div>Unknown step</div>
+                );
+        }
     }
 }
 
@@ -280,8 +342,30 @@ class Courses extends React.Component {
         };
 
         const handleSave = () => {
-            this.props.dispatch(initCourses());
+            this.props.dispatch(saveCourse(this.state.editedCourse));
             closeEditor()
+        };
+
+        const handleCourseNameChange = (event) => {
+            this.setState({ editedCourse: { ...editedCourse, name: event.target.value } })
+        };
+
+        const handleCourseDescriptionChange = (event) => {
+            this.setState({ editedCourse: { ...editedCourse, description: event.target.value } })
+        };
+
+        const handleCourseSubjectChange = (event) => {
+            this.setState({ editedCourse: { ...editedCourse, subject: subjects.find(subject => subject.id === event.target.value) } })
+        };
+
+        const handleCourseImageChange = (event) => {
+            getBase64(event.target.files[ 0 ]).then(
+                data => this.setState({ editedCourse: { ...editedCourse, image: data } })
+            );
+        };
+
+        const handleCourseContentChange = (content) => {
+            this.setState({ editedCourse: { ...editedCourse, content: content } })
         };
 
         return (
@@ -352,7 +436,7 @@ class Courses extends React.Component {
                                         })}
                                     </Stepper>
                                     <div>
-                                        <div style={{ height: "400px" }}>
+                                        <div style={{ minHeight: "400px" }}>
                                             {activeStep === steps.length ? (
                                                 <div>
                                                     <Typography component="h1" variant="headline" className={classes.instructions}>
@@ -361,7 +445,17 @@ class Courses extends React.Component {
                                                 </div>
                                             ) : (
                                                 <div>
-                                                    {getStepContent(editedCourse, subjects, activeStep, classes)}
+                                                    <StepContent
+                                                        editedCourse={editedCourse}
+                                                        subjects={subjects}
+                                                        activeStep={activeStep}
+                                                        classes={classes}
+                                                        handleCourseNameChange={handleCourseNameChange}
+                                                        handleCourseDescriptionChange={handleCourseDescriptionChange}
+                                                        handleCourseSubjectChange={handleCourseSubjectChange}
+                                                        handleCourseImageChange={handleCourseImageChange}
+                                                        handleCourseContentChange={handleCourseContentChange}
+                                                    />
                                                 </div>
                                             )}
                                         </div>

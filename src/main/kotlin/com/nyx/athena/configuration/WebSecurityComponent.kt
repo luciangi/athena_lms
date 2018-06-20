@@ -72,8 +72,6 @@ class WebSecurityComponent : WebSecurityConfigurerAdapter() {
                         HttpMethod.GET,
                         "/assignments/**"
                 ).hasAnyRole("TUTOR", "STUDENT")
-                .antMatchers("/api/**")
-                .hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().loginPage("/api/login")

@@ -8,7 +8,7 @@ export const initCourses = () => async (dispatch) => {
         dispatch({ type: coursesConstants.LOAD_COURSES, courses: courses.data })
     } catch (e) {
         console.error(error);
-        dispatch(openNotification(`Fetch user error: ${error.response.data.message}`, true));
+        dispatch(openNotification(`Fetch courses error: ${error.response.data.message}`, true));
     }
 };
 
@@ -18,6 +18,22 @@ export const initSubjects = () => async (dispatch) => {
         dispatch({ type: coursesConstants.LOAD_SUBJECTS, subjects: subjects.data.content })
     } catch (e) {
         console.error(error);
-        dispatch(openNotification(`Fetch user error: ${error.response.data.message}`, true));
+        dispatch(openNotification(`Fetch subjects error: ${error.response.data.message}`, true));
+    }
+};
+
+export const saveCourse = (course) => async (dispatch) => {
+    course.author = undefined;
+    course.subject = undefined;
+    try {
+        if (course.id) {
+            await axios.patch(`api/courses/${course.id}`, course);
+        } else {
+            await axios.post(`api/courses`, course);
+        }
+        dispatch(initCourses())
+    } catch (e) {
+        console.error(error);
+        dispatch(openNotification(`Save courses error: ${error.response.data.message}`, true));
     }
 };

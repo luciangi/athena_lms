@@ -132,7 +132,6 @@ class AthenaConfiguration {
                 author = tutorUser1,
                 subject = developmentSubject,
                 name = "Java Development",
-                content = "",
                 description = "A new course on Java development",
                 image = ResourceUtils.getFile("classpath:static/images/courses/course1.jpg").readBytes()
         ))
@@ -141,7 +140,6 @@ class AthenaConfiguration {
                 author = tutorUser1,
                 subject = developmentSubject,
                 name = "Kotlin Development",
-                content = "",
                 description = "A new course on Kotlin development",
                 image = ResourceUtils.getFile("classpath:static/images/courses/course2.jpg").readBytes()
         ))
@@ -150,7 +148,6 @@ class AthenaConfiguration {
                 author = tutorUser1,
                 subject = developmentSubject,
                 name = "Groovy Development",
-                content = "",
                 description = "A new course on Groovy development",
                 image = ResourceUtils.getFile("classpath:static/images/courses/course3.jpg").readBytes()
         ))
@@ -159,7 +156,6 @@ class AthenaConfiguration {
                 author = tutorUser2,
                 subject = mathSubject,
                 name = "Trigonometry for beginners",
-                content = "",
                 description = "A new course regarding Trigonometry",
                 image = ResourceUtils.getFile("classpath:static/images/courses/course4.jpg").readBytes()
         ))
@@ -168,7 +164,6 @@ class AthenaConfiguration {
                 author = tutorUser2,
                 subject = mathSubject,
                 name = "Trigonometry Advanced Level",
-                content = "",
                 description = "A second course regarding Trigonometry",
                 image = ResourceUtils.getFile("classpath:static/images/courses/course5.jpg").readBytes()
         ))
@@ -177,7 +172,6 @@ class AthenaConfiguration {
                 author = tutorUser2,
                 subject = physicsSubject,
                 name = "Mechanics",
-                content = "",
                 description = "A new course regarding Mechanics",
                 image = ResourceUtils.getFile("classpath:static/images/courses/course6.jpg").readBytes()
         ))
@@ -186,7 +180,6 @@ class AthenaConfiguration {
                 author = tutorUser2,
                 subject = physicsSubject,
                 name = "Thermodynamics",
-                content = "",
                 description = "A new course regarding Thermodynamics",
                 image = ResourceUtils.getFile("classpath:static/images/courses/course7.jpg").readBytes()
         ))
@@ -195,7 +188,6 @@ class AthenaConfiguration {
                 author = tutorUser2,
                 subject = physicsSubject,
                 name = "Advanced Thermodynamics",
-                content = "",
                 description = "A new course regarding Advanced Thermodynamics",
                 image = ResourceUtils.getFile("classpath:static/images/courses/course8.jpg").readBytes()
         ))

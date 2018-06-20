@@ -23,14 +23,8 @@ export const initSubjects = () => async (dispatch) => {
 };
 
 export const saveCourse = (course) => async (dispatch) => {
-    course.author = undefined;
-    course.subject = undefined;
     try {
-        if (course.id) {
-            await axios.patch(`api/courses/${course.id}`, course);
-        } else {
-            await axios.post(`api/courses`, course);
-        }
+        await axios.post(`api/courses/save`, course);
         dispatch(initCourses())
     } catch (e) {
         console.error(error);

@@ -16,6 +16,7 @@ class Course(@ManyToOne(cascade = [(CascadeType.ALL)])
              @Lob
              @Column
              var image: ByteArray? = null,
-             var content: String?,
+             @Column(columnDefinition = "text")
+             var courseContent: String? = null,
              var description: String?)
     : CoreEntity()

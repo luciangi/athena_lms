@@ -3,9 +3,7 @@ package com.nyx.athena.controller
 import com.nyx.athena.model.Course
 import com.nyx.athena.service.CourseService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api")
@@ -15,4 +13,9 @@ class CourseController {
 
     @GetMapping("/courses/all")
     fun getAllCourses(): Set<Course> = courseService.findAll()
+
+    @PostMapping("/courses/save")
+    fun saveCourse(@RequestBody course: Course) {
+        courseService.save(course)
+    }
 }

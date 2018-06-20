@@ -146,8 +146,8 @@ class StepContent extends React.Component {
         super(props);
         this.state = {};
 
-        if (this.props.editedCourse.content && this.props.editedCourse.content !== "") {
-            this.state.editorState = EditorState.createWithContent(convertFromRaw(JSON.parse(content)));
+        if (this.props.editedCourse.courseContent && this.props.editedCourse.courseContent !== "") {
+            this.state.editorState = EditorState.createWithContent(convertFromRaw(JSON.parse(this.props.editedCourse.courseContent)));
         } else {
             this.state.editorState = EditorState.createEmpty();
         }
@@ -364,8 +364,8 @@ class Courses extends React.Component {
             );
         };
 
-        const handleCourseContentChange = (content) => {
-            this.setState({ editedCourse: { ...editedCourse, content: content } })
+        const handleCourseContentChange = (courseContent) => {
+            this.setState({ editedCourse: { ...editedCourse, courseContent: courseContent } })
         };
 
         return (

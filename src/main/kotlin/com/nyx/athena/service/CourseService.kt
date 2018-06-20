@@ -10,7 +10,11 @@ import javax.transaction.Transactional
 @Transactional
 class CourseService {
     @Autowired
-    private lateinit var courseRequestMapping: CourseRepository
+    private lateinit var courseRepository: CourseRepository
 
-    fun findAll(): Set<Course> = courseRequestMapping.findAll().iterator().asSequence().toSet()
+    fun findAll(): Set<Course> = courseRepository.findAll().iterator().asSequence().toSet()
+
+    fun save(course: Course) {
+        courseRepository.save(course)
+    }
 }

@@ -31,5 +31,6 @@ export const dataTableConstants = {
 };
 
 export const coursesConstants = {
-    LOAD_COURSES: "LOAD_COURSES"
+    LOAD_COURSES: "LOAD_COURSES",
+    LOAD_SUBJECTS: "LOAD_SUBJECTS"
 };

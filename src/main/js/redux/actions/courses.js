@@ -11,3 +11,13 @@ export const initCourses = () => async (dispatch) => {
         dispatch(openNotification(`Fetch user error: ${error.response.data.message}`, true));
     }
 };
+
+export const initSubjects = () => async (dispatch) => {
+    try {
+        const subjects = await axios.get("api/subjects");
+        dispatch({ type: coursesConstants.LOAD_SUBJECTS, subjects: subjects.data.content })
+    } catch (e) {
+        console.error(error);
+        dispatch(openNotification(`Fetch user error: ${error.response.data.message}`, true));
+    }
+};

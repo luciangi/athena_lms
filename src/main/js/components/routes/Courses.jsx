@@ -25,9 +25,15 @@ import {
     Typography,
     withStyles
 } from "material-ui";
-import { initCourses } from "../../redux/actions/courses";
+import {
+    initCourses,
+    initStudents,
+    initSubjects
+} from "../../redux/actions/courses";
 import { connect } from "react-redux";
 import Course from "../Course";
+import { Editor } from "react-draft-wysiwyg";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
 const styles = theme => ({
     root: {
@@ -90,70 +96,100 @@ const styles = theme => ({
         marginLeft: theme.spacing.unit,
         marginRight: theme.spacing.unit,
         width: 200
+    },
+    chips: {
+        display: "flex",
+        flexWrap: "wrap"
+    },
+    chip: {
+        margin: theme.spacing.unit / 4
+    },
+    center: {
+        height: "100%",
+        padding: 0,
+        margin: 0,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexFlow: "row wrap"
+    },
+    inputs: {
+        display: "flex",
+        flexDirection: "column"
     }
 });
 
 function getSteps() {
-    return [ "Course general information", "Course content", "Course enrolment" ];
+    return [ "Course general information", "Course content", "Content Preview" ];
 }
 
-function getStepContent(step, classes) {
+function getStepContent(editedCourse, subjects, step, classes) {
     switch (step) {
         case 0:
             return (
-                <div>
-                    <TextField
-                        id="name"
-                        label="Name"
-                        className={classes.textField}
-                        value={""}
-                        onChange={() => {
-                        }}
-                        margin="normal"
-                    />
-                    <TextField
-                        id="multiline-flexible"
-                        label="Description"
-                        multiline
-                        rowsMax="4"
-                        value={""}
-                        onChange={() => {
-                        }}
-                        className={classes.textField}
-                        margin="normal"
-                    />
-                    <FormControl className={classes.formControl}>
-                        <InputLabel>Subject</InputLabel>
-                        <Select
-                            value={""}
+                <div className={classes.center}>
+                    <div className={classes.inputs}>
+                        <TextField
+                            id="name"
+                            label="Name"
+                            className={classes.textField}
+                            value={editedCourse.name}
                             onChange={() => {
                             }}
+                            margin="normal"
+                        />
+                        <TextField
+                            id="multiline-flexible"
+                            label="Description"
+                            multiline
+                            rowsMax="4"
+                            value={editedCourse.description}
+                            onChange={() => {
+                            }}
+                            className={classes.textField}
+                            margin="normal"
+                        />
+                        <FormControl className={classes.formControl}>
+                            <InputLabel>Subject</InputLabel>
+                            <Select
+                                value={editedCourse && editedCourse.subject ? editedCourse.subject.id : ""}
+                                onChange={() => {
+                                }}
+                            >
+                                {subjects.map(subject => (
+                                    <MenuItem value={subject.id}>{subject.name}</MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        <Button
+                            className={classes.button}
+                            color="primary"
+                            variant="raised"
                         >
-                            <MenuItem value="">
-                                <em>None</em>
-                            </MenuItem>
-                            <MenuItem value={10}>Ten</MenuItem>
-                            <MenuItem value={20}>Twenty</MenuItem>
-                            <MenuItem value={30}>Thirty</MenuItem>
-                        </Select>
-                    </FormControl>
-                    <Button
-                        // onClick={handleSave}
-                        className={classes.button}
-                        color="primary"
-                        variant="raised"
-                    >
-                        <input type="file" style={{ display: "none" }}/>
-                        Select Image
-                    </Button>
+                            <input type="file" style={{ display: "none" }}/>
+                            Select Image
+                        </Button>
+                    </div>
                 </div>);
         case 1:
             return (
-                <div>WYSWYG</div>
+                <div>
+                    <Editor
+                        editorState={editedCourse.content}
+                        toolbarClassName="toolbarClassName"
+                        wrapperClassName="wrapperClassName"
+                        editorClassName="editorClassName"
+                        // onEditorStateChange={this.onEditorStateChange}
+                    />
+                </div>
             );
         case 2:
             return (
-                <div>Enrolment Type</div>
+                <div className={classes.center}>
+                    <div className={classes.inputs}>
+                        {editedCourse.content}
+                    </div>
+                </div>
             );
         default:
             return (
@@ -167,29 +203,33 @@ const Transition = (props) => {
 };
 
 @withStyles(styles, { withTheme: true })
-@connect((store) => ({ courses: store.courses.filter(c => c.author.id === store.auth.user.id) }))
+@connect((store) => ({
+    courses: store.courses.activeCourses.filter(c => c.author.id === store.auth.user.id),
+    subjects: store.courses.activeSubjects
+}))
 class Courses extends React.Component {
-    componentDidMount() {
-        this.props.dispatch(initCourses())
-    };
-
     constructor(props) {
         super(props);
         this.state = {
             openedEditor: false,
             activeStep: 0,
             skipped: new Set(),
-            editedCourse: null
+            editedCourse: {}
         };
     }
 
+    componentDidMount() {
+        this.props.dispatch(initCourses());
+        this.props.dispatch(initSubjects());
+    };
+
     render() {
-        const { classes } = this.props;
+        const { classes, subjects, courses } = this.props;
         const { openedEditor, activeStep, editedCourse } = this.state;
         const steps = getSteps();
 
         const closeEditor = () => {
-            this.setState({ openedEditor: false, activeStep: 0, editedCourse: null })
+            this.setState({ openedEditor: false, activeStep: 0, editedCourse: {} })
         };
 
         const editCourse = (course) => {
@@ -264,7 +304,7 @@ class Courses extends React.Component {
                                 </Button>
                             </div>
                             <div className={classes.grid}>
-                                {this.props.courses.map(course => (
+                                {courses.map(course => (
                                     <Course key={course.id} course={course}>
                                         <Button size="small" color="secondary" onClick={() => editCourse(course)}>Learn More</Button>
                                     </Course>
@@ -285,7 +325,7 @@ class Courses extends React.Component {
                                     <Close/>
                                 </IconButton>
                                 <Typography variant="title" color="inherit" component="h1">
-                                    {editedCourse && editedCourse.id ? `Editing ${editedCourse.name}` : (editedCourse && editedCourse.name) || "New course"}
+                                    {editedCourse.id ? `Editing ${editedCourse.name}` : editedCourse.name || "New course"}
                                 </Typography>
                             </Toolbar>
                         </AppBar>
@@ -321,7 +361,7 @@ class Courses extends React.Component {
                                                 </div>
                                             ) : (
                                                 <div>
-                                                    {getStepContent(activeStep, classes)}
+                                                    {getStepContent(editedCourse, subjects, activeStep, classes)}
                                                 </div>
                                             )}
                                         </div>

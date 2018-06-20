@@ -52,7 +52,8 @@ class WebSecurityComponent : WebSecurityConfigurerAdapter() {
                 .antMatchers(
                         HttpMethod.GET,
                         "/tutor/**",
-                        "/courses/**"
+                        "/courses/**",
+                        "/api/students"
                 ).hasRole("TUTOR")
                 .antMatchers(
                         HttpMethod.GET,

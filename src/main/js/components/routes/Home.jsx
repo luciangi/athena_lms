@@ -46,7 +46,7 @@ const styles = {
 };
 
 @withStyles(styles)
-@connect((store) => ({ courses: store.courses }))
+@connect((store) => ({ courses: store.courses.activeCourses }))
 class Home extends React.Component {
     componentDidMount() {
         this.props.dispatch(initCourses())

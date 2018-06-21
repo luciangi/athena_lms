@@ -16,9 +16,13 @@ import {
 import Course from "../Course";
 import { connect } from "react-redux";
 import { initEnrolledCourses } from "../../redux/actions/enrolment";
-import { convertFromRaw } from "draft-js";
+import {
+    convertFromRaw,
+    convertToRaw,
+    EditorState
+} from "draft-js";
 import { stateToHTML } from "draft-js-export-html";
-import renderHTML from "react-render-html";
+import { Editor } from "react-draft-wysiwyg";
 
 const styles = {
     card: {
@@ -27,6 +31,9 @@ const styles = {
     grid: {
         display: "flex",
         flexWrap: "wrap"
+    },
+    hideToolbar: {
+        display: "none"
     }
 };
 
@@ -56,6 +63,16 @@ class Enrolments extends React.Component {
         const closeCourse = () => {
             this.setState({ activeCourse: {} })
         };
+
+        const getEditorState = () => {
+            if (this.state.activeCourse.courseContent && this.state.activeCourse.courseContent !== "") {
+                return EditorState.createWithContent(convertFromRaw(JSON.parse(this.state.activeCourse.courseContent)));
+            } else {
+                return EditorState.createEmpty();
+            }
+        };
+
+        const editorState = getEditorState();
 
         return (
             <div>
@@ -90,7 +107,12 @@ class Enrolments extends React.Component {
                         <DialogContentText>
                             <div className={classes.center}>
                                 <div className={classes.inputs}>
-                                    {activeCourse.courseContent && renderHTML(stateToHTML(convertFromRaw(JSON.parse(activeCourse.courseContent))))}
+                                    {activeCourse.courseContent &&
+                                    <Editor
+                                        editorState={editorState}
+                                        toolbarClassName={classes.hideToolbar}
+                                        readOnly={true}
+                                    />}
                                 </div>
                             </div>
                         </DialogContentText>

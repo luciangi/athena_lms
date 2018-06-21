@@ -40,7 +40,6 @@ import Course from "../Course";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { stateToHTML } from "draft-js-export-html";
-import renderHTML from "react-render-html";
 
 
 function getBase64(file) {
@@ -134,6 +133,9 @@ const styles = theme => ({
     inputs: {
         display: "flex",
         flexDirection: "column"
+    },
+    hideToolbar: {
+        display: "none"
     }
 });
 
@@ -237,9 +239,6 @@ class StepContent extends React.Component {
                     <div>
                         <Editor
                             editorState={editorState}
-                            toolbarClassName="toolbarClassName"
-                            wrapperClassName="wrapperClassName"
-                            editorClassName="editorClassName"
                             onEditorStateChange={handleEditorChange}
                         />
                     </div>
@@ -248,7 +247,11 @@ class StepContent extends React.Component {
                 return (
                     <div className={classes.center}>
                         <div className={classes.inputs}>
-                            {renderHTML(stateToHTML(editorState.getCurrentContent()))}
+                            <Editor
+                                editorState={editorState}
+                                toolbarClassName={classes.hideToolbar}
+                                readOnly={true}
+                            />
                         </div>
                     </div>
                 );

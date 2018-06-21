@@ -18,10 +18,8 @@ import { connect } from "react-redux";
 import { initEnrolledCourses } from "../../redux/actions/enrolment";
 import {
     convertFromRaw,
-    convertToRaw,
     EditorState
 } from "draft-js";
-import { stateToHTML } from "draft-js-export-html";
 import { Editor } from "react-draft-wysiwyg";
 
 const styles = {
@@ -73,7 +71,6 @@ class Enrolments extends React.Component {
         };
 
         const editorState = getEditorState();
-
         return (
             <div>
                 <Paper elevation={1}>
@@ -84,7 +81,11 @@ class Enrolments extends React.Component {
                             </Typography>
                             <br/>
                             <div className={classes.grid}>
-                                {courses.map(course => (
+                                {!courses || courses.length === 0 ? (
+                                    <Typography variant="body1" component="h2">
+                                        You don't have any enrolments at the moment. Please enrol to a course from the home screen.
+                                    </Typography>
+                                ) : courses.map(course => (
                                     <Course key={course.id} course={course}>
                                         <Button
                                             variant="raised"

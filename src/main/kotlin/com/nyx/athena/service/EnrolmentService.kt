@@ -7,6 +7,8 @@ import com.nyx.athena.repository.CourseRepository
 import com.nyx.athena.repository.EnrolmentRepository
 import com.nyx.athena.repository.StudentRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.User
 import org.springframework.stereotype.Service
@@ -22,6 +24,8 @@ class EnrolmentService {
     private lateinit var studentRepository: StudentRepository
     @Autowired
     private lateinit var enrolmentRepository: EnrolmentRepository
+
+    fun findAll(pageable: Pageable): Page<Enrolment> = enrolmentRepository.findAll(pageable)
 
     fun enrol(courseId: UUID) {
         val course: Course = courseRepository.findOne(courseId)

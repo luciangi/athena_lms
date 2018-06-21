@@ -42,11 +42,11 @@ class AthenaConfiguration {
         athenaUserRepository.save(adminUser)
 
         val tutorUser1 = Tutor(
-                username = "tutor",
-                password = passwordEncoder.encode("tutor"),
-                email = "tutor@email.com",
-                firstName = "Tutor",
-                lastName = "Demo",
+                username = "tutor1",
+                password = passwordEncoder.encode("tutor1"),
+                email = "sionescu@email.com",
+                firstName = "Simion",
+                lastName = "Ionescu",
                 otherDetails = "A tutor user for demo purposes"
         )
         tutorUser1.roles += tutorRole
@@ -55,26 +55,39 @@ class AthenaConfiguration {
         val tutorUser2 = Tutor(
                 username = "tutor2",
                 password = passwordEncoder.encode("tutor2"),
-                email = "tutor2@email.com",
-                firstName = "Tutor2",
-                lastName = "Demo",
+                email = "bvianu@email.com",
+                firstName = "Bodgan",
+                lastName = "Vianu",
                 otherDetails = "A tutor user for demo purposes"
         )
         tutorUser2.roles += tutorRole
         tutorRepository.save(tutorUser2)
 
-        val studentUser = Student(
-                username = "student",
-                password = passwordEncoder.encode("student"),
+        val studentUser1 = Student(
+                username = "student1",
+                password = passwordEncoder.encode("student1"),
                 email = "student@email.com",
-                firstName = "Student",
-                lastName = "Demo",
+                firstName = "Gabriel",
+                lastName = "Mironescu",
                 address = "Street address",
                 otherDetails = "A student for demo purposes"
         )
-        studentUser.roles += studentRole
+        studentUser1.roles += studentRole
 
-        studentRepository.save(studentUser)
+        studentRepository.save(studentUser1)
+
+        val studentUser2 = Student(
+                username = "student2",
+                password = passwordEncoder.encode("student2"),
+                email = "tcovaci@email.com",
+                firstName = "Toma",
+                lastName = "Covaci",
+                address = "Street address",
+                otherDetails = "A student for demo purposes"
+        )
+        studentUser2.roles += studentRole
+
+        studentRepository.save(studentUser2)
 
         val developmentSubject = Subject(
                 name = "Development",

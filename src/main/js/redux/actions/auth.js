@@ -91,7 +91,7 @@ export const getDefaultRouteByHighestPriorityAuthority = (user = store.getState(
     } else if (isTutorUser(user)) {
         return "/tutor"
     } else if (isStudentUser(user)) {
-        return "/student"
+        return "/enrolments"
     }
     return "/";
 };

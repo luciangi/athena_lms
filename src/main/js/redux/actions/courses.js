@@ -4,6 +4,7 @@ import { coursesConstants } from "../constants";
 
 export const initCourses = () => async (dispatch) => {
     try {
+        dispatch({ type: coursesConstants.CLEAR_COURSES });
         const courses = await axios.get("api/courses/all");
         dispatch({ type: coursesConstants.LOAD_COURSES, courses: courses.data })
     } catch (e) {

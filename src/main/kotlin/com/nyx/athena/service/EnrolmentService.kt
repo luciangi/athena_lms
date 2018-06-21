@@ -15,26 +15,18 @@ import javax.transaction.Transactional
 
 @Service
 @Transactional
-class CourseService {
+class EnrolmentService {
     @Autowired
     private lateinit var courseRepository: CourseRepository
-
     @Autowired
     private lateinit var studentRepository: StudentRepository
-
     @Autowired
     private lateinit var enrolmentRepository: EnrolmentRepository
 
-    fun findAll(): Set<Course> = courseRepository.findAll().iterator().asSequence().toSet()
-
-    fun save(course: Course) {
-        courseRepository.save(course)
-    }
-
-    fun getEnrolCourses(): Set<Course> {
+    fun enrol(courseId: UUID) {
+        val course: Course = courseRepository.findOne(courseId)
         val student: Student = studentRepository.findByUsername((SecurityContextHolder.getContext().authentication.principal as User).username)
-        val enrolments: Set<Enrolment> = enrolmentRepository.findByStudent(student)
-        return courseRepository.findAll(enrolments.fold(ArrayList<UUID>(), { accumulator, item -> accumulator.add(item.course.id); accumulator }))
-                .iterator().asSequence().toSet()
+
+        enrolmentRepository.save(Enrolment(student = student, course = course))
     }
 }

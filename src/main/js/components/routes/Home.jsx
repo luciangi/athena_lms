@@ -3,6 +3,11 @@ import {
     Button,
     CardContent,
     CardMedia,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
     Typography,
     withStyles
 } from "material-ui";
@@ -12,13 +17,15 @@ import Paper from "material-ui/es/Paper/Paper";
 import { connect } from "react-redux";
 import { initCourses } from "../../redux/actions/courses";
 import Course from "../Course";
+import { isStudentUser } from "../../redux/actions";
+import { enrol } from "../../redux/actions/enrolment";
 
 const styles = {
     card: {
         width: "100%"
     },
     media: {
-        height: 700
+        height: 400
     },
     containingPaper: {
         width: "100%"
@@ -48,12 +55,34 @@ const styles = {
 @withStyles(styles)
 @connect((store) => ({ courses: store.courses.activeCourses }))
 class Home extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            openedCourse: {}
+        };
+    }
+
     componentDidMount() {
-        this.props.dispatch(initCourses())
+        this.props.dispatch(initCourses());
     };
 
     render() {
+        const { openedCourse } = this.state;
         const { classes } = this.props;
+
+        const openEnrolment = (course) => {
+            this.setState({ openedCourse: course })
+        };
+
+        const closeEnrolment = () => {
+            this.setState({ openedCourse: {} })
+        };
+
+        const onEnrol = () => {
+            this.props.dispatch(enrol(openedCourse.id));
+            closeEnrolment();
+        };
+
         return (
             <div>
                 <Paper elevation={1}>
@@ -96,13 +125,37 @@ class Home extends React.Component {
                             <div className={classes.grid}>
                                 {this.props.courses.map(course => (
                                     <Course key={course.id} course={course}>
-                                        <Button size="small" color="primary" variant="raised">Learn More</Button>
+                                        {isStudentUser() &&
+                                        <Button size="small" color="primary" variant="raised" onClick={() => openEnrolment(course)}>Enrol</Button>}
                                     </Course>
                                 ))}}
                             </div>
                         </CardContent>
                     </Card>
                 </Paper>
+                <Dialog
+                    open={openedCourse.id}
+                    onClose={closeEnrolment}
+                    aria-labelledby="form-dialog-title">
+                    <DialogTitle id="form-dialog-title">Enrol to {openedCourse.name}?</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            {openedCourse.description}
+                        </DialogContentText>
+                        <br/>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button
+                            onClick={closeEnrolment}
+                            color="secondary">Cancel</Button>
+                        <Button
+                            onClick={onEnrol}
+                            variant="raised"
+                            color="primary">
+                            Submit
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </div>
         );
     }

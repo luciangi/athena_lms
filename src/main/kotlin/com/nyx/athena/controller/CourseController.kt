@@ -11,6 +11,9 @@ class CourseController {
     @Autowired
     private lateinit var courseService: CourseService
 
+    @GetMapping("/courses/enrolments")
+    fun getEnrolCourses(): Set<Course> = courseService.getEnrolCourses()
+
     @GetMapping("/courses/all")
     fun getAllCourses(): Set<Course> = courseService.findAll()
 

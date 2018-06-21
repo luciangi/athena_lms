@@ -390,7 +390,7 @@ class Courses extends React.Component {
                             <div className={classes.grid}>
                                 {courses.map(course => (
                                     <Course key={course.id} course={course}>
-                                        <Button size="small" color="secondary" onClick={() => editCourse(course)}>Learn More</Button>
+                                        <Button size="small" color="primary" variant="raised" onClick={() => editCourse(course)}>Manage</Button>
                                     </Course>
                                 ))}
                             </div>

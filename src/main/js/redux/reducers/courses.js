@@ -8,6 +8,9 @@ export default (state = { activeCourses: [], activeSubjects: [] }, action) => {
         case coursesConstants.LOAD_SUBJECTS: {
             return { ...state, activeSubjects: action.subjects }
         }
+        case coursesConstants.CLEAR_COURSES: {
+            return { ...state, activeCourses: [] }
+        }
     }
     return state
 }

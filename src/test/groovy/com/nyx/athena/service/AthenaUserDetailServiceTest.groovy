@@ -8,6 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.AuthorityUtils
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
+import spock.lang.Ignore
 import spock.lang.Specification
 
 import static com.nyx.athena.model.Role.Authority.ROLE_ADMIN
@@ -52,6 +53,7 @@ class AthenaUserDetailServiceTest extends Specification {
         detail == null
     }
 
+    @Ignore
     def "test userDetail for a user authenticated"() {
         given: "An authenticated user"
         String username = "ADMIN"

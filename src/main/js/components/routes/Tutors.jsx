@@ -31,12 +31,16 @@ class Tutors extends React.Component {
                                    { name: "lastName", title: "Last Name" },
                                    { name: "otherDetails", title: "Other Details" },
                                    { name: "active", title: "Active" }
-                               ]}/>
+                               ]}
+                               showAddCommand
+                               showEditCommand
+                               showDeleteCommand
+                    />
                 </Paper>
             </div>
         )
     }
-};
+}
 
 Tutors.propTypes = {};
 

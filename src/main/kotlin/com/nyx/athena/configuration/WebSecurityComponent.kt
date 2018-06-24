@@ -39,6 +39,7 @@ class WebSecurityComponent : WebSecurityConfigurerAdapter() {
                         "/images/**",
                         "/",
                         "/api/userDetails",
+                        "/api/courses/all",
                         "/genericError",
                         "/swagger-resources/**"
                 ).permitAll()
@@ -64,14 +65,8 @@ class WebSecurityComponent : WebSecurityConfigurerAdapter() {
                 ).hasAnyRole("TUTOR", "ADMIN")
                 .antMatchers(
                         HttpMethod.GET,
-                        "/api/subjects"
-                ).authenticated()
-                .antMatchers(
-                        HttpMethod.GET,
                         "/assignments/**"
                 ).hasAnyRole("TUTOR", "STUDENT")
-                .antMatchers("/api/**")
-                .hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().loginPage("/api/login")

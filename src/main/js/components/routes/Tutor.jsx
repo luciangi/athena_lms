@@ -33,21 +33,24 @@ const Tutor = ({ classes }) => {
         <div>
             <ExpansionPanel>
                 <ExpansionPanelSummary expandIcon={<ExpandMore/>}>
-                    <Typography className={classes.heading}><Assignment/> Active Assignments</Typography>
+                    <Typography className={classes.heading}><AssignmentInd/> Active Enrolments</Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails className={classes.root}>
                     <div className={classes.row}>
-                        <DataTable profile="subjects"
+                        <DataTable profile="enrolment"
                                    columns={[
-                                       { name: "name", title: "Name" },
-                                       { name: "description", title: "Description" }
+                                       { name: "course", title: "Course" },
+                                       { name: "studentFirstName", title: "Student First Name" },
+                                       { name: "studentLastName", title: "Student Last Name" },
+                                       { name: "enrolmentDate", title: "Enrolment Date" },
+                                       { name: "completionDate", title: "Completion Date" }
                                    ]}/>
                     </div>
                 </ExpansionPanelDetails>
             </ExpansionPanel>
-            <ExpansionPanel>
+            <ExpansionPanel disabled>
                 <ExpansionPanelSummary expandIcon={<ExpandMore/>}>
-                    <Typography className={classes.heading}><AssignmentInd/> Active Enrolments</Typography>
+                    <Typography className={classes.heading}><Assignment/> Submitted Assignments</Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails className={classes.root}>
                     <div className={classes.row}>

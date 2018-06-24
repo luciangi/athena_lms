@@ -8,7 +8,6 @@ import {
     AppBar,
     Button,
     Card,
-    CardActions,
     CardContent,
     Dialog,
     FormControl,
@@ -21,10 +20,36 @@ import {
     Step,
     StepLabel,
     Stepper,
+    TextField,
     Toolbar,
     Typography,
     withStyles
 } from "material-ui";
+import {
+    initCourses,
+    initSubjects,
+    saveCourse
+} from "../../redux/actions/courses";
+import {
+    convertFromRaw,
+    convertToRaw,
+    EditorState
+} from "draft-js";
+import { connect } from "react-redux";
+import Course from "../Course";
+import { Editor } from "react-draft-wysiwyg";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import { stateToHTML } from "draft-js-export-html";
+
+
+function getBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result.split(",")[ 1 ]);
+        reader.onerror = error => reject(error);
+    });
+}
 
 const styles = theme => ({
     root: {
@@ -71,51 +96,170 @@ const styles = theme => ({
     },
     paper: {
         margin: "3% 5% 3% 5%"
+    },
+    rootForm: {
+        display: "flex",
+        flexWrap: "wrap"
+    },
+    formControl: {
+        margin: theme.spacing.unit,
+        minWidth: 120
+    },
+    selectEmpty: {
+        marginTop: theme.spacing.unit * 2
+    },
+    textField: {
+        marginLeft: theme.spacing.unit,
+        marginRight: theme.spacing.unit,
+        width: 200
+    },
+    chips: {
+        display: "flex",
+        flexWrap: "wrap"
+    },
+    chip: {
+        margin: theme.spacing.unit / 4
+    },
+    center: {
+        height: "100%",
+        width: "100%",
+        padding: 0,
+        margin: 0,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexFlow: "row wrap"
+    },
+    inputs: {
+        display: "flex",
+        flexDirection: "column"
+    },
+    hideToolbar: {
+        display: "none"
     }
 });
 
 function getSteps() {
-    return [ "Select subject", "Edit course content", "Enrolment type" ];
+    return [ "Course general information", "Course content", "Content Preview" ];
 }
 
-const Step1 = () => {
-    return (
-        <div style={{ height: "400px" }}>
-            <div style={{ padding: "30px" }}>
-                <FormControl>
-                    <InputLabel htmlFor="subject">Subject</InputLabel>
-                    <Select
-                        value={2}
-                        // onChange={this.handleChange}
-                        native
-                    >
-                        <MenuItem value="">
-                            <em>None</em>
-                        </MenuItem>
-                        <MenuItem value={1}>Math</MenuItem>
-                        <MenuItem value={2}>Physics</MenuItem>
-                    </Select>
-                </FormControl>
-            </div>
-        </div>)
-};
+class StepContent extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {};
 
-function getStepContent(step) {
-    switch (step) {
-        case 0:
-            return <Step1/>;
-        case 1:
-            return (
-                <div style={{ height: "400px" }}>WYSWYG</div>
-            );
-        case 2:
-            return (
-                <div style={{ height: "400px" }}>Enrolment Type</div>
-            );
-        default:
-            return (
-                <div style={{ height: "400px" }}>Unknown step</div>
-            );
+        if (this.props.editedCourse.courseContent && this.props.editedCourse.courseContent !== "") {
+            this.state.editorState = EditorState.createWithContent(convertFromRaw(JSON.parse(this.props.editedCourse.courseContent)));
+        } else {
+            this.state.editorState = EditorState.createEmpty();
+        }
+    }
+
+    render() {
+        const {
+            editedCourse,
+            subjects,
+            activeStep,
+            classes,
+            handleCourseNameChange,
+            handleCourseDescriptionChange,
+            handleCourseSubjectChange,
+            handleCourseContentChange,
+            handleCourseImageChange
+        } = this.props;
+
+        const { editorState } = this.state;
+
+        const handleEditorChange = (editorState) => {
+            const contentState = editorState.getCurrentContent();
+            this.setState({
+                editorState
+            });
+            handleCourseContentChange(JSON.stringify(convertToRaw(contentState)))
+        };
+
+        switch (activeStep) {
+            case 0:
+                return (
+                    <div className={classes.center}>
+                        <div className={classes.inputs}>
+                            <TextField
+                                id="name"
+                                label="Name"
+                                className={classes.textField}
+                                onChange={handleCourseNameChange}
+                                value={editedCourse.name}
+                                margin="normal"
+                            />
+                            <br/>
+                            <TextField
+                                id="multiline-flexible"
+                                label="Description"
+                                multiline
+                                rowsMax="4"
+                                value={editedCourse.description}
+                                onChange={handleCourseDescriptionChange}
+                                className={classes.textField}
+                                margin="normal"
+                            />
+                            <br/>
+                            <FormControl className={classes.textField}>
+                                <InputLabel>Subject</InputLabel>
+                                <Select
+                                    value={(editedCourse.subject && editedCourse.subject.id) || subjects.find(() => true).id}
+                                    onChange={handleCourseSubjectChange}
+                                >
+                                    {subjects.map(subject => (
+                                        <MenuItem key={subject.id} value={subject.id}>{subject.name}</MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                            <br/>
+                            <div>
+                                <input
+                                    accept="image/*"
+                                    className={classes.input}
+                                    id="raised-button-file"
+                                    multiple
+                                    type="file"
+                                    style={{ display: "none" }}
+                                    onChange={handleCourseImageChange}
+                                />
+                                <label htmlFor="raised-button-file">
+                                    <Button variant="raised" component="span" className={classes.button}>
+                                        Thumbnail
+                                    </Button>
+                                </label>
+                                {editedCourse.image && <img src={`data:image/png;base64,${editedCourse.image}`}/>}
+                            </div>
+                        </div>
+                    </div>);
+            case 1:
+                return (
+                    <div>
+                        <Editor
+                            editorState={editorState}
+                            onEditorStateChange={handleEditorChange}
+                        />
+                    </div>
+                );
+            case 2:
+                return (
+                    <div className={classes.center}>
+                        <div className={classes.inputs}>
+                            <Editor
+                                editorState={editorState}
+                                toolbarClassName={classes.hideToolbar}
+                                readOnly={true}
+                            />
+                        </div>
+                    </div>
+                );
+            default:
+                return (
+                    <div>Unknown step</div>
+                );
+        }
     }
 }
 
@@ -124,27 +268,37 @@ const Transition = (props) => {
 };
 
 @withStyles(styles, { withTheme: true })
+@connect((store) => ({
+    courses: store.courses.activeCourses.filter(c => c.author.id === store.auth.user.id),
+    subjects: store.courses.activeSubjects
+}))
 class Courses extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             openedEditor: false,
             activeStep: 0,
-            skipped: new Set()
+            skipped: new Set(),
+            editedCourse: {}
         };
     }
 
+    componentDidMount() {
+        this.props.dispatch(initCourses());
+        this.props.dispatch(initSubjects());
+    };
+
     render() {
-        const { classes } = this.props;
-        const { openedEditor, activeStep } = this.state;
+        const { classes, subjects, courses } = this.props;
+        const { openedEditor, activeStep, editedCourse } = this.state;
         const steps = getSteps();
 
         const closeEditor = () => {
-            this.setState({ openedEditor: false, activeStep: 0 })
+            this.setState({ openedEditor: false, activeStep: 0, editedCourse: {} })
         };
 
-        const openEditor = () => {
-            this.setState({ openedEditor: true })
+        const editCourse = (course) => {
+            this.setState({ openedEditor: true, editedCourse: course })
         };
 
         const isStepOptional = step => {
@@ -190,10 +344,31 @@ class Courses extends React.Component {
             });
         };
 
-        const handleReset = () => {
-            this.setState({
-                activeStep: 0
-            });
+        const handleSave = () => {
+            this.props.dispatch(saveCourse(this.state.editedCourse));
+            closeEditor()
+        };
+
+        const handleCourseNameChange = (event) => {
+            this.setState({ editedCourse: { ...editedCourse, name: event.target.value } })
+        };
+
+        const handleCourseDescriptionChange = (event) => {
+            this.setState({ editedCourse: { ...editedCourse, description: event.target.value } })
+        };
+
+        const handleCourseSubjectChange = (event) => {
+            this.setState({ editedCourse: { ...editedCourse, subject: subjects.find(subject => subject.id === event.target.value) } })
+        };
+
+        const handleCourseImageChange = (event) => {
+            getBase64(event.target.files[ 0 ]).then(
+                data => this.setState({ editedCourse: { ...editedCourse, image: data } })
+            );
+        };
+
+        const handleCourseContentChange = (courseContent) => {
+            this.setState({ editedCourse: { ...editedCourse, courseContent: courseContent } })
         };
 
         return (
@@ -211,151 +386,16 @@ class Courses extends React.Component {
                                     color="primary"
                                     aria-label="add"
                                     className={classes.add}
-                                    onClick={openEditor}>
+                                    onClick={editCourse}>
                                     <Add/>
                                 </Button>
                             </div>
                             <div className={classes.grid}>
-                                <Card className={classes.box}>
-                                    <CardContent>
-                                        <Typography variant="headline" component="h2">
-                                            Course 1
-                                        </Typography>
-                                        <Typography component="p">
-                                            well meaning and kindly.<br/>
-                                            {"\"a benevolent smile\""}
-                                        </Typography>
-                                    </CardContent>
-                                    <CardActions>
-                                        <Button color="primary" onClick={openEditor}>Manage</Button>
-                                    </CardActions>
-                                </Card>
-                                <Card className={classes.box}>
-                                    <CardContent>
-                                        <Typography variant="headline" component="h2">
-                                            Course 1
-                                        </Typography>
-                                        <Typography component="p">
-                                            well meaning and kindly.<br/>
-                                            {"\"a benevolent smile\""}
-                                        </Typography>
-                                    </CardContent>
-                                    <CardActions>
-                                        <Button color="primary" onClick={openEditor}>Manage</Button>
-                                    </CardActions>
-                                </Card>
-                                <Card className={classes.box}>
-                                    <CardContent>
-                                        <Typography variant="headline" component="h2">
-                                            Course 1
-                                        </Typography>
-                                        <Typography component="p">
-                                            well meaning and kindly.<br/>
-                                            {"\"a benevolent smile\""}
-                                        </Typography>
-                                    </CardContent>
-                                    <CardActions>
-                                        <Button color="primary" onClick={openEditor}>Manage</Button>
-                                    </CardActions>
-                                </Card>
-                                <Card className={classes.box}>
-                                    <CardContent>
-                                        <Typography variant="headline" component="h2">
-                                            Course 1
-                                        </Typography>
-                                        <Typography component="p">
-                                            well meaning and kindly.<br/>
-                                            {"\"a benevolent smile\""}
-                                        </Typography>
-                                    </CardContent>
-                                    <CardActions>
-                                        <Button color="primary" onClick={openEditor}>Manage</Button>
-                                    </CardActions>
-                                </Card>
-                                <Card className={classes.box}>
-                                    <CardContent>
-                                        <Typography variant="headline" component="h2">
-                                            Course 1
-                                        </Typography>
-                                        <Typography component="p">
-                                            well meaning and kindly.<br/>
-                                            {"\"a benevolent smile\""}
-                                        </Typography>
-                                    </CardContent>
-                                    <CardActions>
-                                        <Button color="primary" onClick={openEditor}>Manage</Button>
-                                    </CardActions>
-                                </Card>
-                                <Card className={classes.box}>
-                                    <CardContent>
-                                        <Typography variant="headline" component="h2">
-                                            Course 1
-                                        </Typography>
-                                        <Typography component="p">
-                                            well meaning and kindly.<br/>
-                                            {"\"a benevolent smile\""}
-                                        </Typography>
-                                    </CardContent>
-                                    <CardActions>
-                                        <Button color="primary" onClick={openEditor}>Manage</Button>
-                                    </CardActions>
-                                </Card>
-                                <Card className={classes.box}>
-                                    <CardContent>
-                                        <Typography variant="headline" component="h2">
-                                            Course 1
-                                        </Typography>
-                                        <Typography component="p">
-                                            well meaning and kindly.<br/>
-                                            {"\"a benevolent smile\""}
-                                        </Typography>
-                                    </CardContent>
-                                    <CardActions>
-                                        <Button color="primary" onClick={openEditor}>Manage</Button>
-                                    </CardActions>
-                                </Card>
-                                <Card className={classes.box}>
-                                    <CardContent>
-                                        <Typography variant="headline" component="h2">
-                                            Course 1
-                                        </Typography>
-                                        <Typography component="p">
-                                            well meaning and kindly.<br/>
-                                            {"\"a benevolent smile\""}
-                                        </Typography>
-                                    </CardContent>
-                                    <CardActions>
-                                        <Button color="primary" onClick={openEditor}>Manage</Button>
-                                    </CardActions>
-                                </Card>
-                                <Card className={classes.box}>
-                                    <CardContent>
-                                        <Typography variant="headline" component="h2">
-                                            Course 1
-                                        </Typography>
-                                        <Typography component="p">
-                                            well meaning and kindly.<br/>
-                                            {"\"a benevolent smile\""}
-                                        </Typography>
-                                    </CardContent>
-                                    <CardActions>
-                                        <Button color="primary" onClick={openEditor}>Manage</Button>
-                                    </CardActions>
-                                </Card>
-                                <Card className={classes.box}>
-                                    <CardContent>
-                                        <Typography variant="headline" component="h2">
-                                            Course 1
-                                        </Typography>
-                                        <Typography component="p">
-                                            well meaning and kindly.<br/>
-                                            {"\"a benevolent smile\""}
-                                        </Typography>
-                                    </CardContent>
-                                    <CardActions>
-                                        <Button color="primary" onClick={openEditor}>Manage</Button>
-                                    </CardActions>
-                                </Card>
+                                {courses.map(course => (
+                                    <Course key={course.id} course={course}>
+                                        <Button size="small" color="primary" variant="raised" onClick={() => editCourse(course)}>Manage</Button>
+                                    </Course>
+                                ))}
                             </div>
                         </CardContent>
                     </Card>
@@ -371,8 +411,8 @@ class Courses extends React.Component {
                                 <IconButton color="inherit" onClick={closeEditor} aria-label="Close">
                                     <Close/>
                                 </IconButton>
-                                <Typography variant="title" color="inherit">
-                                    Edit Course 1
+                                <Typography variant="title" color="inherit" component="h1">
+                                    {editedCourse.id ? `Editing ${editedCourse.name}` : editedCourse.name || "New course"}
                                 </Typography>
                             </Toolbar>
                         </AppBar>
@@ -385,9 +425,9 @@ class Courses extends React.Component {
                                         {steps.map((label, index) => {
                                             const props = {};
                                             const labelProps = {};
-                                            // if (isStepOptional(index)) {
-                                            //     labelProps.optional = <Typography variant="caption">Optional</Typography>;
-                                            // }
+                                            if (isStepOptional(index)) {
+                                                labelProps.optional = <Typography variant="caption" component="h1">Optional</Typography>;
+                                            }
                                             if (isStepSkipped(index)) {
                                                 props.completed = false;
                                             }
@@ -399,19 +439,40 @@ class Courses extends React.Component {
                                         })}
                                     </Stepper>
                                     <div>
-                                        {activeStep === steps.length ? (
-                                            <div>
-                                                <Typography className={classes.instructions}>
-                                                    All steps completed - you're finished
-                                                </Typography>
-                                                <Button onClick={handleReset} className={classes.button}>
-                                                    Reset
-                                                </Button>
-                                            </div>
-                                        ) : (
-                                            <div>
-                                                <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
+                                        <div style={{ minHeight: "400px" }}>
+                                            {activeStep === steps.length ? (
                                                 <div>
+                                                    <Typography component="h1" variant="headline" className={classes.instructions}>
+                                                        You're new course is finished!
+                                                    </Typography>
+                                                </div>
+                                            ) : (
+                                                <div>
+                                                    <StepContent
+                                                        editedCourse={editedCourse}
+                                                        subjects={subjects}
+                                                        activeStep={activeStep}
+                                                        classes={classes}
+                                                        handleCourseNameChange={handleCourseNameChange}
+                                                        handleCourseDescriptionChange={handleCourseDescriptionChange}
+                                                        handleCourseSubjectChange={handleCourseSubjectChange}
+                                                        handleCourseImageChange={handleCourseImageChange}
+                                                        handleCourseContentChange={handleCourseContentChange}
+                                                    />
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div>
+                                            {activeStep === steps.length ?
+                                                (<Button
+                                                    onClick={handleSave}
+                                                    className={classes.button}
+                                                    color="primary"
+                                                    variant="raised"
+                                                >
+                                                    SAVE
+                                                </Button>) :
+                                                (<div>
                                                     <Button
                                                         disabled={activeStep === 0}
                                                         onClick={handleBack}
@@ -422,7 +483,6 @@ class Courses extends React.Component {
                                                     {isStepOptional(activeStep) && (
                                                         <Button
                                                             variant="raised"
-                                                            color="primary"
                                                             onClick={handleSkip}
                                                             className={classes.button}
                                                         >
@@ -431,15 +491,14 @@ class Courses extends React.Component {
                                                     )}
                                                     <Button
                                                         variant="raised"
-                                                        color="primary"
                                                         onClick={handleNext}
                                                         className={classes.button}
+                                                        color={activeStep === steps.length - 1 ? "primary" : null}
                                                     >
                                                         {activeStep === steps.length - 1 ? "Finish" : "Next"}
                                                     </Button>
-                                                </div>
-                                            </div>
-                                        )}
+                                                </div>)}
+                                        </div>
                                     </div>
                                 </div>
                             </Card>

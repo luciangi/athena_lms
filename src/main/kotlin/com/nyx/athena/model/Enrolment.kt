@@ -17,5 +17,5 @@ class Enrolment(@ManyToOne(cascade = [(CascadeType.ALL)])
                 var course: Course,
                 @NotNull
                 var enrolmentDate: Date = Date(),
-                val competionDate: Date?)
+                val completionDate: Date? = null)
     : CoreEntity()

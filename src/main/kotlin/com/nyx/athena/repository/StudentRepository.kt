@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-interface StudentRepository : PagingAndSortingRepository<Student, UUID>
+interface StudentRepository : PagingAndSortingRepository<Student, UUID> {
+    fun findByUsername(username: String): Student
+}

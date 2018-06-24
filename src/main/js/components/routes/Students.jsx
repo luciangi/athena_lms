@@ -32,7 +32,11 @@ class Students extends React.Component {
                                    { name: "address", title: "Address" },
                                    { name: "otherDetails", title: "Other Details" },
                                    { name: "active", title: "Active" }
-                               ]}/>
+                               ]}
+                               showAddCommand
+                               showEditCommand
+                               showDeleteCommand
+                    />
                 </Paper>
             </div>
         )

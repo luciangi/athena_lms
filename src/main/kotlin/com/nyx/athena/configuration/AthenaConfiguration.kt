@@ -27,7 +27,8 @@ class AthenaConfiguration {
                        studentRepository: StudentRepository,
                        passwordEncoder: PasswordEncoder,
                        subjectRepository: SubjectRepository,
-                       courseRepository: CourseRepository) = InitializingBean {
+                       courseRepository: CourseRepository,
+                       enrolmentRepository: EnrolmentRepository) = InitializingBean {
         val adminRole = Role(ROLE_ADMIN.name)
         val tutorRole = Role(ROLE_TUTOR.name)
         val studentRole = Role(ROLE_STUDENT.name)
@@ -141,13 +142,14 @@ class AthenaConfiguration {
         )
         subjectRepository.save(physicsSubject)
 
-        courseRepository.save(Course(
+        val course1 = Course(
                 author = tutorUser1,
                 subject = developmentSubject,
                 name = "Java Development",
                 description = "A new course on Java development",
                 image = ResourceUtils.getFile("classpath:static/images/courses/course1.jpg").readBytes()
-        ))
+        )
+        courseRepository.save(course1)
 
         courseRepository.save(Course(
                 author = tutorUser1,
@@ -157,13 +159,14 @@ class AthenaConfiguration {
                 image = ResourceUtils.getFile("classpath:static/images/courses/course2.jpg").readBytes()
         ))
 
-        courseRepository.save(Course(
+        val course2 = Course(
                 author = tutorUser1,
                 subject = developmentSubject,
                 name = "Groovy Development",
                 description = "A new course on Groovy development",
                 image = ResourceUtils.getFile("classpath:static/images/courses/course3.jpg").readBytes()
-        ))
+        )
+        courseRepository.save(course2)
 
         courseRepository.save(Course(
                 author = tutorUser2,
@@ -203,6 +206,15 @@ class AthenaConfiguration {
                 name = "Advanced Thermodynamics",
                 description = "A new course regarding Advanced Thermodynamics",
                 image = ResourceUtils.getFile("classpath:static/images/courses/course8.jpg").readBytes()
+        ))
+
+        enrolmentRepository.save(Enrolment(
+                student = studentUser1,
+                course = course1
+        ))
+        enrolmentRepository.save(Enrolment(
+                student = studentUser2,
+                course = course2
         ))
     }
 }
